@@ -1,0 +1,12 @@
+version: "0.1.0"
+description: Header-only Material Design GUI widget library for Arduino, drawn with TinyGPU.
+url: https://github.com/pschatzmann/TinyMaterialDesign
+
+dependencies:
+  tinygpu:
+    git: https://github.com/pschatzmann/TinyGPU.git
+
+# Several TinyGPU headers this library pulls in (TouchDriver.h,
+# DeviceOutput.h, ...) include Arduino.h unconditionally, so uncomment this
+# if you build with arduino-esp32 present as a component:
+#  espressif/arduino-esp32: "^3.3.8"
