@@ -112,6 +112,8 @@ of every widget) running on the SDL2 desktop backend, and
 
 ## Building the examples
 
+You can build the examples to run on the desktop using cmake:
+
 ```sh
 cmake -B build -S .
 cmake --build build
