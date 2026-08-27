@@ -86,6 +86,73 @@ MaterialTheme<RGB_T> defaultDarkTheme() {
   return theme;
 }
 
+/// Additional named seed-hue themes (see MaterialColors.h's
+/// colorSchemeFromHue()) - same shape as defaultTheme()/defaultDarkTheme(),
+/// just with a different accent hue baked into the color scheme.
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> blueTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = blueColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> blueDarkTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = blueDarkColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> greenTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = greenColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> greenDarkTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = greenDarkColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> redTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = redColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> redDarkTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = redDarkColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> orangeTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = orangeColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
+template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
+MaterialTheme<RGB_T> orangeDarkTheme() {
+  MaterialTheme<RGB_T> theme;
+  theme.colors = orangeDarkColorScheme<RGB_T>();
+  theme.typography = defaultTypography<RGB_T>();
+  return theme;
+}
+
 using MaterialThemeRGB565 = MaterialTheme<tinygpu::RGB565>;
 using MaterialThemeRGB666 = MaterialTheme<tinygpu::RGB666>;
 using MaterialThemeRGB888 = MaterialTheme<tinygpu::RGB888>;
