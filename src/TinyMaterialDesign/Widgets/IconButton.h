@@ -116,11 +116,13 @@ class IconButton : public Widget<RGB_T> {
     return true;
   }
 
-  void update(uint32_t nowMs) override {
+  bool update(uint32_t nowMs) override {
+    const bool wasActive = rippleActive_;
     lastUpdateMs_ = nowMs;
     if (rippleActive_ && (nowMs - rippleStartMs_) >= kRippleDurationMs) {
       rippleActive_ = false;
     }
+    return wasActive;
   }
 
  private:

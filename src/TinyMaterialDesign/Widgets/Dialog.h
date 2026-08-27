@@ -97,8 +97,10 @@ class Dialog : public Widget<RGB_T> {
     return true;
   }
 
-  void update(uint32_t nowMs) override {
-    for (int i = 0; i < actionCount_; ++i) actions_[i]->update(nowMs);
+  bool update(uint32_t nowMs) override {
+    bool changed = false;
+    for (int i = 0; i < actionCount_; ++i) changed |= actions_[i]->update(nowMs);
+    return changed;
   }
 
  private:

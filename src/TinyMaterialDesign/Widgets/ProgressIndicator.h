@@ -51,14 +51,15 @@ class LinearProgressIndicator : public Widget<RGB_T> {
     }
   }
 
-  void update(uint32_t nowMs) override {
-    if (!indeterminate_) return;
+  bool update(uint32_t nowMs) override {
+    if (!indeterminate_) return false;
     if (!started_) {
       started_ = true;
       startMs_ = nowMs;
     }
     const uint32_t elapsed = (nowMs - startMs_) % kCycleMs;
     phase_ = static_cast<float>(elapsed) / static_cast<float>(kCycleMs);
+    return true;
   }
 
  private:
@@ -113,14 +114,15 @@ class CircularProgressIndicator : public Widget<RGB_T> {
     }
   }
 
-  void update(uint32_t nowMs) override {
-    if (!indeterminate_) return;
+  bool update(uint32_t nowMs) override {
+    if (!indeterminate_) return false;
     if (!started_) {
       started_ = true;
       startMs_ = nowMs;
     }
     const uint32_t elapsed = (nowMs - startMs_) % kCycleMs;
     phase_ = static_cast<float>(elapsed) / static_cast<float>(kCycleMs);
+    return true;
   }
 
  private:

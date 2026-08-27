@@ -54,9 +54,15 @@ class Widget {
   }
 
   /// Called once per frame, before draw(), to advance any time-based
-  /// animation (ripple fade, indeterminate progress sweep, ...). Default:
-  /// no-op, so widgets that don't animate cost nothing extra.
-  virtual void update(uint32_t nowMs) { (void)nowMs; }
+  /// animation (ripple fade, indeterminate progress sweep, ...). Returns
+  /// true if that advance changed anything this widget will draw
+  /// differently, so Screen can decide whether a redraw is actually needed -
+  /// see Screen::isDirty(). Default: no-op, not dirty, so widgets that
+  /// don't animate cost nothing extra.
+  virtual bool update(uint32_t nowMs) {
+    (void)nowMs;
+    return false;
+  }
 
   /// Whether a continuous drag starting inside this widget's bounds should
   /// be classified as GestureType::kDrag (see GestureDetector::isDraggable

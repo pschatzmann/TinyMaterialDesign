@@ -29,8 +29,10 @@ namespace tinymd {
  *   void loop() {
  *     gestures.update(touchDriver);
  *     screen.update(millis());
- *     screen.draw(surface, theme);
- *     display.writeData(surface);
+ *     if (screen.isDirty()) {          // see isDirty() - skips the (slow)
+ *       screen.draw(surface, theme);   // redraw + display write when
+ *       display.writeData(surface);    // nothing changed this frame
+ *     }
  *   }
  *
  * Vertical scrolling: widgets added via addWidget() are laid out in one
@@ -57,12 +59,18 @@ template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Screen {
  public:
   /// Registers `widget` as scrollable content (see the class comment).
-  void addWidget(Widget<RGB_T>& widget) { scrollWidgets_.push_back(&widget); }
+  void addWidget(Widget<RGB_T>& widget) {
+    scrollWidgets_.push_back(&widget);
+    dirty_ = true;
+  }
 
   /// Registers `widget` pinned to its authored bounds regardless of
   /// scrolling - e.g. a top AppBar or bottom Keyboard. Always drawn and
   /// hit-tested on top of every scrollable widget.
-  void addFixedWidget(Widget<RGB_T>& widget) { fixedWidgets_.push_back(&widget); }
+  void addFixedWidget(Widget<RGB_T>& widget) {
+    fixedWidgets_.push_back(&widget);
+    dirty_ = true;
+  }
 
   /// Current vertical scroll offset (0 = content's natural top).
   int32_t scrollOffset() const { return scrollOffset_; }
@@ -72,7 +80,38 @@ class Screen {
   void setBackgroundColor(RGB_T color) {
     backgroundColor_ = color;
     hasBackgroundColor_ = true;
+    dirty_ = true;
   }
+
+  /// True if draw() would paint something different than last time - see
+  /// invalidate(). A typical loop() should skip draw()/writeData() while
+  /// this is false:
+  ///
+  ///   screen.update(millis());
+  ///   if (screen.isDirty()) {
+  ///     screen.draw(surface, theme);
+  ///     display.writeData(surface);
+  ///   }
+  ///
+  /// Starts true so the first frame always draws. Set whenever a gesture
+  /// reaches handleGesture() (tap/drag/scroll - covers ripple starts,
+  /// toggles, slider drags, and anything a click/change callback does to
+  /// this or any other widget, since those callbacks run synchronously
+  /// during dispatch) or when update() advances a time-based animation
+  /// (ripple fade, indeterminate progress sweep, cursor blink). Cleared
+  /// once draw() has run.
+  ///
+  /// This is a coarse, screen-wide flag, not per-widget dirty rects - one
+  /// changed widget still repaints the whole screen. It also can't see
+  /// state a sketch mutates directly on a widget from outside a gesture/
+  /// update callback (e.g. a Label updated from a sensor reading in
+  /// loop()) - call invalidate() explicitly after changes like that.
+  bool isDirty() const { return dirty_; }
+
+  /// Forces the next isDirty() to be true / the next draw() to run, for
+  /// widget state changed from outside a gesture or update() callback -
+  /// see isDirty().
+  void invalidate() { dirty_ = true; }
 
   void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) {
     viewportHeight_ = static_cast<int32_t>(target.height());
@@ -92,13 +131,17 @@ class Screen {
     if (dialog_ != nullptr && dialog_->visible) {
       dialog_->draw(target, theme);
     }
+    dirty_ = false;
   }
 
-  /// Advances any time-based widget animation. Call once per loop().
+  /// Advances any time-based widget animation. Call once per loop(), before
+  /// checking isDirty().
   void update(uint32_t nowMs) {
-    for (Widget<RGB_T>* widget : scrollWidgets_) widget->update(nowMs);
-    for (Widget<RGB_T>* widget : fixedWidgets_) widget->update(nowMs);
-    if (dialog_ != nullptr) dialog_->update(nowMs);
+    bool changed = false;
+    for (Widget<RGB_T>* widget : scrollWidgets_) changed |= widget->update(nowMs);
+    for (Widget<RGB_T>* widget : fixedWidgets_) changed |= widget->update(nowMs);
+    if (dialog_ != nullptr) changed |= dialog_->update(nowMs);
+    if (changed) dirty_ = true;
   }
 
   /// Wire this to GestureDetector::isDraggable so a drag starting on a
@@ -114,6 +157,12 @@ class Screen {
   void handleGesture(const tinygpu::GestureEvent& event) {
     using tinygpu::GesturePhase;
     using tinygpu::GestureType;
+
+    // Any gesture reaching here might change something on screen (a ripple
+    // starting, a drag position, a scroll offset, or anything a click/
+    // change callback touches) - see isDirty(). Coarse but cheap, and only
+    // as frequent as actual input, not the loop() rate.
+    dirty_ = true;
 
     if (dialog_ != nullptr) {
       // Modal: every gesture goes to the presented dialog while it's shown.
@@ -172,8 +221,14 @@ class Screen {
   /// Shows `dialog` modally: it receives every gesture and is drawn on top
   /// until dismissDialog() is called (typically from one of the dialog's
   /// own action-button callbacks).
-  void presentDialog(Widget<RGB_T>& dialog) { dialog_ = &dialog; }
-  void dismissDialog() { dialog_ = nullptr; }
+  void presentDialog(Widget<RGB_T>& dialog) {
+    dialog_ = &dialog;
+    dirty_ = true;
+  }
+  void dismissDialog() {
+    dialog_ = nullptr;
+    dirty_ = true;
+  }
   bool isDialogPresented() const { return dialog_ != nullptr; }
 
  private:
@@ -184,6 +239,7 @@ class Screen {
   bool scrollDragActive_ = false;
   int32_t scrollOffset_ = 0;
   int32_t viewportHeight_ = 0;
+  bool dirty_ = true;
   Widget<RGB_T>* dialog_ = nullptr;
   RGB_T backgroundColor_{};
   bool hasBackgroundColor_ = false;

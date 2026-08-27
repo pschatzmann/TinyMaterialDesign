@@ -80,9 +80,11 @@ class AppBar : public Widget<RGB_T> {
     return false;
   }
 
-  void update(uint32_t nowMs) override {
-    if (leading != nullptr) leading->update(nowMs);
-    if (trailing != nullptr) trailing->update(nowMs);
+  bool update(uint32_t nowMs) override {
+    bool changed = false;
+    if (leading != nullptr) changed |= leading->update(nowMs);
+    if (trailing != nullptr) changed |= trailing->update(nowMs);
+    return changed;
   }
 
  private:

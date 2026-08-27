@@ -150,15 +150,17 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
     return true;
   }
 
-  void update(uint32_t nowMs) override {
+  bool update(uint32_t nowMs) override {
+    const bool wasVisible = cursorVisible_;
     if (!focused_) {
       cursorVisible_ = false;
-      return;
+      return wasVisible != cursorVisible_;
     }
     if (nowMs - lastBlinkMs_ >= kBlinkIntervalMs) {
       cursorVisible_ = !cursorVisible_;
       lastBlinkMs_ = nowMs;
     }
+    return wasVisible != cursorVisible_;
   }
 
  private:

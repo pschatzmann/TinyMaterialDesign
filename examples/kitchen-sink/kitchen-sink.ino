@@ -321,6 +321,12 @@ void setup() {
 void loop() {
   gestures.update(*board.touch());
   screen.update(millis());
-  screen.draw(surface, theme);
-  display.writeData(surface);
+  // Screen tracks whether anything actually changed (touch input, ripple/
+  // cursor-blink/progress animation) - see Screen::isDirty() - so an idle
+  // frame skips both the full-screen redraw and the full-framebuffer
+  // display write.
+  if (screen.isDirty()) {
+    screen.draw(surface, theme);
+    display.writeData(surface);
+  }
 }

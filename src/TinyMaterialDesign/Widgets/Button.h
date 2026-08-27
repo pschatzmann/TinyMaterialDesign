@@ -120,11 +120,17 @@ class Button : public Widget<RGB_T> {
     return true;
   }
 
-  void update(uint32_t nowMs) override {
+  bool update(uint32_t nowMs) override {
+    const bool wasActive = rippleActive_;
     lastUpdateMs_ = nowMs;
     if (rippleActive_ && (nowMs - rippleStartMs_) >= kRippleDurationMs) {
       rippleActive_ = false;
     }
+    // The ripple's radius/opacity are a function of elapsed time recomputed
+    // in drawRipple() every frame, so any frame where it started the call
+    // active needs a redraw - including the final frame where it just
+    // finished fading out.
+    return wasActive;
   }
 
  private:
