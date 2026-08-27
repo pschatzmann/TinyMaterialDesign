@@ -13,9 +13,12 @@ for touch interaction.
 
 ## Features
 
-- Material 3 theming: `ColorScheme` (light/dark baseline palettes), shape
-  (corner radius) tokens, an 8px spacing unit, and 4 typography roles backed
-  by TinyGPU's bitmap fonts
+- Material 3 theming: `ColorScheme` (the baseline purple palette, plus
+  seed-hue-generated Blue/Green/Red/Orange presets, each with a light and
+  dark variant - see `MaterialTheme.h`'s `defaultTheme()`/`blueTheme()`/
+  `greenTheme()`/`redTheme()`/`orangeTheme()` and their `*DarkTheme()`
+  counterparts), shape (corner radius) tokens, an 8px spacing unit, and 4
+  typography roles backed by TinyGPU's bitmap fonts
 - Works with RGB565, RGB666 and RGB888 surfaces (every class is a template
   over `RGB_T`, same convention TinyGPU itself uses)
 - Widgets:
@@ -40,7 +43,11 @@ for touch interaction.
     fields of either kind via `keyboard.manage(field)`
 - `Screen`: owns your widgets, draws them, and routes gesture events to the
   right one - including correctly latching a `Slider` drag even if the
-  finger moves past the slider's own bounds
+  finger moves past the slider's own bounds. Content added via
+  `addWidget()` scrolls automatically (drag up/down) when it's taller than
+  the drawn surface, with an auto-appearing scrollbar; `addFixedWidget()`
+  pins a widget (an `AppBar`, a `Keyboard`) to its own screen position
+  regardless of scroll
 
 ## Requirements
 
@@ -106,8 +113,12 @@ void loop() {
 }
 ```
 
-See `examples/desktop-kitchen-sink` for a fully worked, clickable demo (one
-of every widget) running on the SDL2 desktop backend, and
+See `examples/kitchen-sink` for a fully worked, clickable demo (one of every
+widget, with scrolling and a color scheme picker) that runs unchanged on
+both a real ESP32 board (`LCDBoardGuitionESP32_LVGL_2_4Display` by default -
+swap in a different `LCDBoard` from `TinyGPU/Boards/LCDBoardsESP32.h` for
+other hardware) and, via `LCDBoardDesktopSDL`, in an identically-sized SDL2
+window on desktop for mouse-driven testing without touch hardware. See
 `examples/esp32-touch-buttons` for a smaller real-hardware-flavored sketch.
 
 ## Building the examples
@@ -117,7 +128,7 @@ You can build the examples to run on the desktop using cmake:
 ```sh
 cmake -B build -S .
 cmake --build build
-./build/examples/desktop-kitchen-sink/desktop-kitchen-sink
+./build/examples/kitchen-sink/kitchen-sink
 ```
 
 Pass `-DFETCHCONTENT_SOURCE_DIR_TINYGPU=/path/to/local/TinyGPU` to build
