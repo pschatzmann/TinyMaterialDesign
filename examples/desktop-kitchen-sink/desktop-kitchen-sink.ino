@@ -6,7 +6,7 @@
  */
 #include <TinyMaterialDesign.h>
 #include <TinyGPU/Drivers/DisplayDriverSDL.h>
-#include <TinyGPU/Drivers/TouchDriverSDL.h>
+#include <TinyGPU/Input/TouchDriverSDL.h>
 #include <cstdio>
 
 constexpr size_t kWidth = 340;

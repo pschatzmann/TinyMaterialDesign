@@ -24,6 +24,11 @@ else()
 
     option(TMD_BUILD_EXAMPLES "Build Examples" ON)
 
+    # TinyGPU builds its own examples (font-test, bouncing-ball, ...) when
+    # TGPU_BUILD_EXAMPLES is ON, which is its default. We only want our own
+    # examples/ built, so force it off before fetching TinyGPU.
+    set(TGPU_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
     # Fetch TinyGPU from GitHub. Override with
     # -DFETCHCONTENT_SOURCE_DIR_TINYGPU=/path/to/local/TinyGPU to build against a
     # local checkout instead (e.g. during development of both libraries side by
@@ -34,7 +39,6 @@ else()
       tinygpu
       GIT_REPOSITORY https://github.com/pschatzmann/TinyGPU.git
       GIT_TAG        main
-      GIT_CLONE_TIMEOUT 600
     )
     FetchContent_MakeAvailable(tinygpu)
 
@@ -44,6 +48,16 @@ else()
     target_include_directories(TinyMaterialDesign INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
     if(TMD_BUILD_EXAMPLES)
+      # Our examples are Arduino sketches built via arduino_sketch(), which
+      # TinyGPU only pulls in (from Arduino-Emulator) when it builds its own
+      # examples - since we just disabled that, fetch it ourselves.
+      FetchContent_Declare(
+        arduino_emulator
+        GIT_REPOSITORY https://github.com/pschatzmann/Arduino-Emulator.git
+        GIT_TAG        main
+      )
+      FetchContent_MakeAvailable(arduino_emulator)
+
       add_subdirectory(examples)
     endif()
 
