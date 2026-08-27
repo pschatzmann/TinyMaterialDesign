@@ -28,6 +28,16 @@ class AppBar : public Widget<RGB_T> {
 
   void setTitle(const char* title) { title_ = title; }
 
+  /// Overrides the theme's surface/onSurface colors for this bar only - e.g.
+  /// a blue title bar while the rest of the screen stays on the default
+  /// theme. Call clearColorOverride() to go back to theme.colors.surface.
+  void setColorOverride(RGB_T background, RGB_T foreground) {
+    hasColorOverride_ = true;
+    backgroundOverride_ = background;
+    foregroundOverride_ = foreground;
+  }
+  void clearColorOverride() { hasColorOverride_ = false; }
+
   /// Suggested square icon slot at the bar's left edge.
   Bounds leadingRect() const {
     const int32_t size = this->bounds.h - 8;
@@ -41,15 +51,18 @@ class AppBar : public Widget<RGB_T> {
   }
 
   void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
+    const RGB_T background = hasColorOverride_ ? backgroundOverride_ : theme.colors.surface;
+    const RGB_T foreground = hasColorOverride_ ? foregroundOverride_ : theme.colors.onSurface;
+
     target.fillRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
-                    toPx(this->bounds.h), theme.colors.surface);
+                    toPx(this->bounds.h), background);
 
     tinygpu::IFont<RGB_T>& font = *theme.typography.title;
     const size_t textHeight = font.getHeight(1);
     const int32_t textY = this->bounds.centerY() - static_cast<int32_t>(textHeight) / 2;
     const int32_t textX = leading != nullptr ? leadingRect().right() + 8 : this->bounds.x + 16;
     font.drawText(target, static_cast<int16_t>(textX), static_cast<int16_t>(textY),
-                 title_.c_str(), theme.colors.onSurface, theme.colors.surface, false);
+                 title_.c_str(), foreground, background, false);
 
     if (leading != nullptr && leading->visible) leading->draw(target, theme);
     if (trailing != nullptr && trailing->visible) trailing->draw(target, theme);
@@ -74,6 +87,9 @@ class AppBar : public Widget<RGB_T> {
 
  private:
   std::string title_;
+  bool hasColorOverride_ = false;
+  RGB_T backgroundOverride_;
+  RGB_T foregroundOverride_;
 };
 
 using AppBarRGB565 = AppBar<tinygpu::RGB565>;

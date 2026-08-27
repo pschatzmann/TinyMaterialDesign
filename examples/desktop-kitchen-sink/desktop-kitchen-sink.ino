@@ -115,6 +115,8 @@ void setup() {
   surface.begin();
   touch.begin();
 
+  appBar.setColorOverride(colorFromHex<RGB565>(0x1565C0), colorFromHex<RGB565>(0xFFFFFF));
+
   addButton = IconButton<RGB565>(appBar.trailingRect(), drawPlus<RGB565>);
   appBar.trailing = &addButton;
   addButton.onClick = []() { screen.presentDialog(infoDialog); };
