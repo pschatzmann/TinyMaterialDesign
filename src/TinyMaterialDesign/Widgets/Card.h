@@ -16,7 +16,7 @@ class Card : public Widget<RGB_T> {
  public:
   Card() = default;
   Card(Bounds bounds, const char* title = nullptr, const char* body = nullptr) {
-    this->bounds = bounds;
+    setBounds(bounds);
     if (title != nullptr) setTitle(title);
     if (body != nullptr) setBody(body);
   }
@@ -29,9 +29,14 @@ class Card : public Widget<RGB_T> {
     title_ = title;
     hasTitle_ = true;
   }
+
   void setBody(const char* body) {
     body_ = body;
     hasBody_ = true;
+  }
+
+  void setBounds(Bounds bounds) {
+    this->bounds = bounds;
   }
 
   void draw(tinygpu::ISurface<RGB_T>& target) override {
