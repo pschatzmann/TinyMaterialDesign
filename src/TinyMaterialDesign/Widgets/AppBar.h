@@ -64,8 +64,21 @@ class AppBar : public Widget<RGB_T> {
     font.drawText(target, static_cast<int16_t>(textX), static_cast<int16_t>(textY),
                  title_.c_str(), foreground, background, false);
 
-    if (leading != nullptr && leading->visible) leading->draw(target, theme);
-    if (trailing != nullptr && trailing->visible) trailing->draw(target, theme);
+    // See Widget::setThemeTint() - lets e.g. a standard-variant IconButton
+    // (whose own default color is tuned for theme.colors.surface, not
+    // whatever this bar's background actually is) read clearly against
+    // this bar by default, without needing its own explicit
+    // setColorOverride() call in the sketch. A no-op for any child that
+    // doesn't override setThemeTint(), and loses to that child's own
+    // explicit override when it has one (e.g. a status-dependent icon).
+    if (leading != nullptr && leading->visible) {
+      leading->setThemeTint(background, foreground);
+      leading->draw(target, theme);
+    }
+    if (trailing != nullptr && trailing->visible) {
+      trailing->setThemeTint(background, foreground);
+      trailing->draw(target, theme);
+    }
   }
 
   bool onGesture(const tinygpu::GestureEvent& event) override {

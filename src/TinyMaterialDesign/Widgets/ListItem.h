@@ -7,6 +7,7 @@
 #include "TinyGPU/Color/RGB888.h"
 #include "TinyMaterialDesign/Core/Widget.h"
 #include "TinyMaterialDesign/Widgets/IconButton.h"
+#include "TinyMaterialDesign/Widgets/Label.h"  // TypographyRole, fontForTypographyRole()
 
 namespace tinymd {
 
@@ -33,6 +34,11 @@ class ListItem : public Widget<RGB_T> {
 
   bool selected() const { return selected_; }
   void setSelected(bool selected) { selected_ = selected; }
+
+  /// Text size - kBody (the default, matching this row's original fixed
+  /// size) down to kLabel for a denser list (e.g. a navigation drawer
+  /// with several rows that don't need to be as prominent as body text).
+  void setTypographyRole(TypographyRole role) { role_ = role; }
 
   void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
     RGB_T background = selected_ ? theme.colors.secondaryContainer : theme.colors.surface;
@@ -61,7 +67,7 @@ class ListItem : public Widget<RGB_T> {
       textX = iconRect.right() + pad;
     }
 
-    tinygpu::IFont<RGB_T>& font = *theme.typography.body;
+    tinygpu::IFont<RGB_T>& font = *fontForTypographyRole(role_, theme);
     const int32_t textY = pill.centerY() - static_cast<int32_t>(font.getHeight(1)) / 2;
     font.drawText(target, static_cast<int16_t>(textX), static_cast<int16_t>(textY),
                  title_.c_str(), textColor, background, false);
@@ -77,6 +83,7 @@ class ListItem : public Widget<RGB_T> {
   std::string title_;
   IconPainter<RGB_T> icon_ = nullptr;
   bool selected_ = false;
+  TypographyRole role_ = TypographyRole::kBody;
 };
 
 using ListItemRGB565 = ListItem<tinygpu::RGB565>;

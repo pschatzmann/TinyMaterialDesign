@@ -11,6 +11,24 @@ namespace tinymd {
 enum class TypographyRole { kHeadline, kTitle, kBody, kLabel };
 enum class TextAlign { kStart, kCenter };
 
+/// Maps a TypographyRole to the theme's corresponding font - shared by
+/// every widget that lets a caller pick a text size (Label, ListItem, ...)
+/// rather than each duplicating this switch.
+template <typename RGB_T>
+tinygpu::IFont<RGB_T>* fontForTypographyRole(TypographyRole role, const MaterialTheme<RGB_T>& theme) {
+  switch (role) {
+    case TypographyRole::kHeadline:
+      return theme.typography.headline;
+    case TypographyRole::kTitle:
+      return theme.typography.title;
+    case TypographyRole::kLabel:
+      return theme.typography.label;
+    case TypographyRole::kBody:
+    default:
+      return theme.typography.body;
+  }
+}
+
 /// Single line of themed, non-interactive text.
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Label : public Widget<RGB_T> {
@@ -31,8 +49,13 @@ class Label : public Widget<RGB_T> {
     hasColorOverride_ = true;
   }
 
+  /// Explicit font, taking priority over the role-derived one in draw()
+  /// below - nullptr (the default) means "use the theme's font for role()".
+  void setFont(tinygpu::IFont<RGB_T>* font) { font_ = font; }
+  tinygpu::IFont<RGB_T>* font() const { return font_; }
+
   void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    tinygpu::IFont<RGB_T>& font = *fontFor(role_, theme);
+    tinygpu::IFont<RGB_T>& font = font_ != nullptr ? *font_ : *fontForTypographyRole(role_, theme);
     RGB_T color = hasColorOverride_ ? colorOverride_ : theme.colors.onSurface;
     if (!this->enabled) color = blend(color, theme.colors.surface, 0.5f);
 
@@ -53,20 +76,7 @@ class Label : public Widget<RGB_T> {
   TextAlign align_ = TextAlign::kStart;
   RGB_T colorOverride_{};
   bool hasColorOverride_ = false;
-
-  static tinygpu::IFont<RGB_T>* fontFor(TypographyRole role, const MaterialTheme<RGB_T>& theme) {
-    switch (role) {
-      case TypographyRole::kHeadline:
-        return theme.typography.headline;
-      case TypographyRole::kTitle:
-        return theme.typography.title;
-      case TypographyRole::kLabel:
-        return theme.typography.label;
-      case TypographyRole::kBody:
-      default:
-        return theme.typography.body;
-    }
-  }
+  tinygpu::IFont<RGB_T>* font_ = nullptr;
 };
 
 using LabelRGB565 = Label<tinygpu::RGB565>;

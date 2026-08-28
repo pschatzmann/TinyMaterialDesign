@@ -48,8 +48,7 @@ class Dialog : public Widget<RGB_T> {
   }
 
   void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    const RGB_T scrim = blend(theme.colors.onBackground, RGB_T(0, 0, 0), 0.35f);
-    target.fillRect(0, 0, target.width(), target.height(), scrim);
+    drawScrim(target);
 
     const size_t radius = toPx(theme.shape.large);
     target.fillRoundRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),

@@ -53,6 +53,14 @@ class IconButton : public Widget<RGB_T> {
   }
   void clearColorOverride() { hasColorOverride_ = false; }
 
+  /// See Widget::setThemeTint() - used only when this button has no
+  /// setColorOverride() of its own.
+  void setThemeTint(RGB_T background, RGB_T foreground) override {
+    hasAmbientTint_ = true;
+    ambientBackground_ = background;
+    ambientForeground_ = foreground;
+  }
+
   void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
     RGB_T background = theme.colors.surface;
     RGB_T foreground = theme.colors.onSurfaceVariant;
@@ -70,6 +78,12 @@ class IconButton : public Widget<RGB_T> {
       case IconButtonVariant::kStandard:
       default:
         break;
+    }
+    // Priority: explicit override > container's ambient tint > variant
+    // default - see setColorOverride()/setThemeTint().
+    if (hasAmbientTint_) {
+      background = ambientBackground_;
+      foreground = ambientForeground_;
     }
     if (hasColorOverride_) {
       background = backgroundOverride_;
@@ -133,6 +147,9 @@ class IconButton : public Widget<RGB_T> {
   bool hasColorOverride_ = false;
   RGB_T backgroundOverride_{};
   RGB_T foregroundOverride_{};
+  bool hasAmbientTint_ = false;
+  RGB_T ambientBackground_{};
+  RGB_T ambientForeground_{};
   bool rippleActive_ = false;
   uint32_t rippleStartMs_ = 0;
   uint32_t lastUpdateMs_ = 0;

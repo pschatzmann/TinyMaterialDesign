@@ -48,16 +48,27 @@ class Drawer : public Widget<RGB_T> {
   }
 
   void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    const RGB_T scrim = blend(theme.colors.onBackground, RGB_T(0, 0, 0), 0.35f);
-    target.fillRect(0, 0, target.width(), target.height(), scrim);
-
-    target.fillRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
-                    toPx(this->bounds.h), theme.colors.surface);
-
+    drawBackground(target, theme);
     for (int i = 0; i < itemCount_; ++i) {
       if (items_[i]->visible) items_[i]->draw(target, theme);
     }
   }
+
+  /// Scrim + panel fill only, no items - see Widget::drawBackground() and
+  /// childCount()/child() below, which together let
+  /// Screen::drawDirect() draw this (on a board without enough RAM for a
+  /// full-screen buffer) as this small background plus each item
+  /// individually, rather than needing one buffer sized to the whole
+  /// drawer (its own bounds are often nearly full-screen).
+  void drawBackground(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
+    drawScrim(target);
+
+    target.fillRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
+                    toPx(this->bounds.h), theme.colors.surface);
+  }
+
+  int childCount() const override { return itemCount_; }
+  Widget<RGB_T>* child(int index) override { return items_[index]; }
 
   /// Screen routes every gesture here while the drawer is presented, same
   /// as Dialog: taps on an item are forwarded to it; a tap outside the

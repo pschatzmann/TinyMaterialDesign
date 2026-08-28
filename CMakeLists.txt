@@ -51,6 +51,14 @@ else()
       # Our examples are Arduino sketches built via arduino_sketch(), which
       # TinyGPU only pulls in (from Arduino-Emulator) when it builds its own
       # examples - since we just disabled that, fetch it ourselves.
+      #
+      # USE_HTTPS pulls in wolfSSL (a real, if slow-to-build, TLS stack) so
+      # WiFiClientSecure works on the desktop debug build too - needed by
+      # esp32-radio.ino for https:// station streams. Must be set before
+      # FetchContent_MakeAvailable() below, since that's what actually runs
+      # Arduino-Emulator's own CMakeLists.txt (and its own `option(USE_HTTPS
+      # ...)`, which only takes the FIRST value the cache sees).
+      set(USE_HTTPS ON CACHE BOOL "" FORCE)
       FetchContent_Declare(
         arduino_emulator
         GIT_REPOSITORY https://github.com/pschatzmann/Arduino-Emulator.git

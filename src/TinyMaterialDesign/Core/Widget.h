@@ -25,6 +25,27 @@ inline bool isTapGesture(tinygpu::GestureType type) {
   return type == tinygpu::GestureType::kTap || type == tinygpu::GestureType::kDoubleTap;
 }
 
+/// Darkens every pixel already drawn across `target`'s full extent, in
+/// place - the modal scrim look shared by Dialog and Drawer. Reads each
+/// pixel back and blends it 35% toward black, rather than painting a
+/// flat precomputed color over everything: this format has no alpha
+/// channel, so a flat fill would just erase whatever's actually behind
+/// the modal (the real screen content) instead of dimming it. Relies on
+/// `target` already holding that real content when called - true for
+/// Screen::draw()'s single-buffer pass (widgets are drawn before the
+/// modal), and for Screen::drawDirect()'s modal band loop once it draws
+/// the regular content into each band first (see drawModalDirect()).
+template <typename RGB_T>
+void drawScrim(tinygpu::ISurface<RGB_T>& target) {
+  const size_t w = target.width();
+  const size_t h = target.height();
+  for (size_t y = 0; y < h; ++y) {
+    for (size_t x = 0; x < w; ++x) {
+      target.setPixel(x, y, blend(target.getPixel(x, y), RGB_T(0, 0, 0), 0.35f));
+    }
+  }
+}
+
 /**
  * @brief Base class every TinyMaterialDesign widget derives from.
  *
@@ -68,6 +89,50 @@ class Widget {
   /// be classified as GestureType::kDrag (see GestureDetector::isDraggable
   /// and Screen::isDraggableAt). Only Slider needs true.
   virtual bool isDraggable() const { return false; }
+
+  /// Number of child widgets this one draws as part of itself, if any (0
+  /// by default) - a composite widget like Drawer overrides this + child()
+  /// to expose its items (Dialog its actions, etc.), so
+  /// Screen::drawDirect() can draw a presented modal's children
+  /// individually, each into its own small right-sized buffer, instead of
+  /// needing one buffer big enough for the whole modal - see
+  /// drawBackground().
+  virtual int childCount() const { return 0; }
+
+  /// The `index`-th child (see childCount()); never called with an
+  /// out-of-range index. Not owned by this widget any more than by
+  /// whatever added it (addItem()/addAction()/...).
+  virtual Widget<RGB_T>* child(int index) {
+    (void)index;
+    return nullptr;
+  }
+
+  /// Draws everything this widget owns *except* its children (see
+  /// childCount()) - e.g. Drawer's scrim + panel fill, without its list
+  /// items. Default: draws everything via draw() itself, which is exactly
+  /// right for a widget that doesn't override childCount() (its "children"
+  /// are however many it reports - zero - so nothing is skipped).
+  /// Screen::drawDirect() calls this instead of draw() for a presented
+  /// modal, then draws each child (if any) separately.
+  virtual void drawBackground(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) {
+    draw(target, theme);
+  }
+
+  /// Lets a container (AppBar, chiefly) push its own background/foreground
+  /// color pair down onto a child it draws itself (leading/trailing), so
+  /// e.g. an IconButton in an app bar with a color override reads clearly
+  /// against it by default instead of staying on its own theme-wide
+  /// default (which is tuned to sit on theme.colors.surface, not
+  /// whatever color the app bar happens to be). Default: no-op, correct
+  /// for any widget with no notion of "ambient" vs. its own explicit
+  /// styling. IconButton overrides this as a fallback *only* used when it
+  /// has no explicit setColorOverride() of its own, so e.g. a record
+  /// button's active-red override still wins over the app bar's ambient
+  /// tint.
+  virtual void setThemeTint(RGB_T background, RGB_T foreground) {
+    (void)background;
+    (void)foreground;
+  }
 };
 
 }  // namespace tinymd

@@ -2,7 +2,9 @@
 #include <algorithm>
 #include <vector>
 
+#include "TinyGPU/Drivers/DisplayDriver.h"
 #include "TinyGPU/Input/GestureDetector.h"
+#include "TinyGPU/Surface/WindowedSurface.h"
 #include "TinyMaterialDesignConfig.h"
 #include "TinyMaterialDesign/Core/Widget.h"
 
@@ -134,6 +136,89 @@ class Screen {
     dirty_ = false;
   }
 
+  /// Renders the full layout straight to `driver` without ever needing a
+  /// full-screen framebuffer - for boards that can't spare a single
+  /// contiguous allocation the size of the whole screen (e.g. classic
+  /// ESP32 without PSRAM: a 240x320 RGB565 buffer is 153,600 bytes, which
+  /// can exceed the largest free block even with plenty of *total* free
+  /// heap, since the heap ends up split into multiple smaller regions).
+  ///
+  /// Each visible widget - scrollable or fixed, skipping anything
+  /// invisible or entirely outside the viewport (including scrolled off
+  /// it), same idea as content that's never drawn today - gets `scratch`
+  /// resized to exactly its own bounds, is drawn into it once, and is
+  /// blitted directly to the panel at its own position: genuinely one
+  /// small buffer and one write per control, not a shared full-screen (or
+  /// full-band) one. `scratch` is one small, reused, real
+  /// (non-owning, already-begin()'d) surface - since Surface::resize()
+  /// only reallocates when growing past its current capacity, repeatedly
+  /// resizing it this way settles down to zero reallocation once it's
+  /// been sized to the largest single widget this layout ever draws.
+  ///
+  /// The one case that can't work this way is a presented modal
+  /// (Dialog/Drawer): its scrim always covers the *full* viewport
+  /// regardless of the modal's own bounds (see Dialog.h/Drawer.h), and it
+  /// can itself span most of the screen (a full-height Drawer) - both too
+  /// much for one small per-widget buffer. So while a modal is presented,
+  /// everything else is skipped outright (it would just be fully
+  /// occluded) and only the modal is drawn: its drawBackground() (see
+  /// Widget.h) - scrim plus whatever chrome isn't one of its children -
+  /// one short horizontal strip at a time via a WindowedSurface (see that
+  /// class) that reports the full viewport size for the scrim's own math
+  /// but clips actual pixel writes to the current strip, followed by each
+  /// of its children (see childCount()/child()) individually via the same
+  /// per-widget path as everything else - e.g. Drawer's own list items,
+  /// each drawn once rather than redrawn on every strip.  A modal type
+  /// that doesn't override drawBackground()/childCount() (Dialog, as yet)
+  /// falls back to the default drawBackground() = draw() and childCount()
+  /// = 0, i.e. its *entire* contents (chrome + actions) drawn banded, same
+  /// as before.
+  ///
+  /// This is an alternative to draw()+writeData(surface) (unaffected by
+  /// this method's existence) - pick whichever fits your board.
+  void drawDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
+                  const MaterialTheme<RGB_T>& theme, int32_t viewportWidth,
+                  int32_t viewportHeight) {
+    viewportHeight_ = viewportHeight;
+    clampScroll();
+
+    if (dialog_ != nullptr && dialog_->visible) {
+      drawModalDirect(driver, scratch, theme, viewportWidth, viewportHeight);
+      dirty_ = false;
+      return;
+    }
+
+    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme.colors.background;
+
+    // Unlike draw() (which clears the whole target surface up front - see
+    // its target.clear() call above), per-widget rendering only ever
+    // touches each widget's own small bounds - nothing paints the gaps
+    // between/around them otherwise, which would just show whatever was
+    // on the panel before (stale content, or black on first boot).
+    // writeColor() is DisplayDriver's own cheap one-row-buffer solid
+    // fill (see its doc comment) - no full-viewport buffer needed here
+    // either.
+    driver.writeColor(static_cast<size_t>(viewportWidth), static_cast<size_t>(viewportHeight),
+                      background);
+
+    for (Widget<RGB_T>* widget : scrollWidgets_) {
+      if (!widget->visible) continue;
+      Bounds screenBounds = widget->bounds;
+      screenBounds.y -= scrollOffset_;
+      if (!intersectsViewport(screenBounds, viewportWidth, viewportHeight)) continue;
+      widget->bounds.y -= scrollOffset_;
+      drawWidgetDirect(driver, scratch, *widget, theme, background);
+      widget->bounds.y += scrollOffset_;
+    }
+    drawScrollbarDirect(driver, scratch, theme, viewportWidth, viewportHeight);
+    for (Widget<RGB_T>* widget : fixedWidgets_) {
+      if (!widget->visible) continue;
+      if (!intersectsViewport(widget->bounds, viewportWidth, viewportHeight)) continue;
+      drawWidgetDirect(driver, scratch, *widget, theme, background);
+    }
+    dirty_ = false;
+  }
+
   /// Advances any time-based widget animation. Call once per loop(), before
   /// checking isDirty().
   void update(uint32_t nowMs) {
@@ -232,6 +317,102 @@ class Screen {
   bool isDialogPresented() const { return dialog_ != nullptr; }
 
  private:
+  /// True if screen-space `bounds` overlaps the viewport at all - see
+  /// drawDirect().
+  static bool intersectsViewport(const Bounds& bounds, int32_t viewportWidth, int32_t viewportHeight) {
+    return bounds.bottom() > 0 && bounds.y < viewportHeight && bounds.right() > 0 &&
+           bounds.x < viewportWidth;
+  }
+
+  /// Draws one widget into `scratch` (resized to exactly its own bounds)
+  /// and blits it to `driver` at its own position - see drawDirect().
+  /// No-ops (leaving the display unwritten) if `widget`'s bounds are
+  /// empty or scratch.resize() fails.
+  void drawWidgetDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
+                        Widget<RGB_T>& widget, const MaterialTheme<RGB_T>& theme, RGB_T background) {
+    const int32_t x = widget.bounds.x;
+    const int32_t y = widget.bounds.y;
+    const int32_t w = widget.bounds.w;
+    const int32_t h = widget.bounds.h;
+    if (w <= 0 || h <= 0) return;
+    if (!scratch.resize(static_cast<size_t>(w), static_cast<size_t>(h))) return;
+
+    tinygpu::WindowedSurface<RGB_T> window(scratch, x, y, static_cast<size_t>(w),
+                                           static_cast<size_t>(h), scratch.font());
+    window.clear(background);
+    widget.draw(window, theme);
+    driver.writeData(scratch, x, y);
+  }
+
+  /// Draws the right-edge scroll position indicator directly - mirrors
+  /// drawScrollbar() (the draw()-path version) exactly, just resized/
+  /// blitted instead of drawn into the shared full-size target. Only
+  /// kBarWidth px wide regardless of viewport height, so - unlike a modal -
+  /// this always fits in one shot.
+  void drawScrollbarDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
+                           const MaterialTheme<RGB_T>& theme, int32_t viewportWidth,
+                           int32_t viewportHeight) {
+    const int32_t content = contentHeight();
+    if (content <= viewportHeight) return;
+
+    constexpr int32_t kBarWidth = 4;
+    const int32_t trackX = viewportWidth - kBarWidth;
+    if (!scratch.resize(static_cast<size_t>(kBarWidth), static_cast<size_t>(viewportHeight))) return;
+
+    tinygpu::WindowedSurface<RGB_T> window(scratch, trackX, 0, static_cast<size_t>(kBarWidth),
+                                           static_cast<size_t>(viewportHeight), scratch.font());
+    window.fillRect(trackX, 0, kBarWidth, viewportHeight,
+                    blend(theme.colors.surface, theme.colors.outline, 0.25f));
+
+    const int32_t maxScroll = content - viewportHeight;
+    const int32_t thumbHeight =
+        std::max(int32_t(24), viewportHeight * viewportHeight / content);
+    const int32_t thumbY = maxScroll > 0
+                               ? (scrollOffset_ * (viewportHeight - thumbHeight)) / maxScroll
+                               : 0;
+    window.fillRoundRect(trackX, thumbY, kBarWidth, thumbHeight, kBarWidth / 2, theme.colors.primary);
+    driver.writeData(scratch, trackX, 0);
+  }
+
+  /// Draws the presented modal - its drawBackground() banded (see
+  /// drawDirect() for why), then each of its children (if any)
+  /// individually via drawWidgetDirect(). `scratch` ends this method
+  /// resized to `viewportWidth x kModalBandHeight`.
+  void drawModalDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
+                       const MaterialTheme<RGB_T>& theme, int32_t viewportWidth,
+                       int32_t viewportHeight) {
+    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme.colors.background;
+
+    constexpr int32_t kModalBandHeight = 40;
+    if (scratch.resize(static_cast<size_t>(viewportWidth), static_cast<size_t>(kModalBandHeight))) {
+      for (int32_t bandY = 0; bandY < viewportHeight; bandY += kModalBandHeight) {
+        tinygpu::WindowedSurface<RGB_T> window(scratch, 0, bandY,
+                                               static_cast<size_t>(viewportWidth),
+                                               static_cast<size_t>(viewportHeight),
+                                               scratch.font());
+        // drawBackground() darkens whatever's already in `window` (see
+        // Widget::drawScrim()) rather than painting a flat scrim color -
+        // deliberately just a clean background here, not the real
+        // regular content, on this memory/CPU-constrained rendering
+        // path (see drawDirect()'s doc comment) - without this clear()
+        // it would darken whatever stale pixels `scratch` happened to
+        // still hold from the last (differently-sized) widget drawn
+        // into it.
+        window.clear(background);
+        dialog_->drawBackground(window, theme);
+        driver.writeData(scratch, 0, bandY);
+      }
+    }
+
+    const int childCount = dialog_->childCount();
+    for (int i = 0; i < childCount; ++i) {
+      Widget<RGB_T>* child = dialog_->child(i);
+      if (child != nullptr && child->visible) {
+        drawWidgetDirect(driver, scratch, *child, theme, background);
+      }
+    }
+  }
+
   std::vector<Widget<RGB_T>*> scrollWidgets_;
   std::vector<Widget<RGB_T>*> fixedWidgets_;
   Widget<RGB_T>* activeWidget_ = nullptr;
@@ -294,8 +475,8 @@ class Screen {
   }
 
   void clampScroll() {
-    const int32_t maxScroll = std::max(0, contentHeight() - viewportHeight_);
-    scrollOffset_ = std::min(std::max(scrollOffset_, 0), maxScroll);
+    const int32_t maxScroll = std::max(int32_t{0}, contentHeight() - viewportHeight_);
+    scrollOffset_ = std::min(std::max(scrollOffset_, int32_t{0}), maxScroll);
   }
 
   /// A thin right-edge indicator of scroll position/range - the only visual
