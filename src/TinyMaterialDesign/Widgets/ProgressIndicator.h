@@ -23,10 +23,10 @@ class LinearProgressIndicator : public Widget<RGB_T> {
   void setValue(float value) { value_ = clamp01(value); }
   void setIndeterminate(bool indeterminate) { indeterminate_ = indeterminate; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T trackColor = theme.colors.surfaceVariant;
-    RGB_T activeColor = this->enabled ? theme.colors.primary
-                                      : blend(theme.colors.primary, theme.colors.surface, 0.5f);
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T trackColor = this->theme().colors.surfaceVariant;
+    RGB_T activeColor = this->enabled ? this->theme().colors.primary
+                                      : blend(this->theme().colors.primary, this->theme().colors.surface, 0.5f);
     const size_t radius = toPx(this->bounds.h / 2);
 
     target.fillRoundRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
@@ -91,10 +91,10 @@ class CircularProgressIndicator : public Widget<RGB_T> {
   void setIndeterminate(bool indeterminate) { indeterminate_ = indeterminate; }
   void setThickness(uint8_t thickness) { thickness_ = thickness; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T trackColor = theme.colors.surfaceVariant;
-    RGB_T activeColor = this->enabled ? theme.colors.primary
-                                      : blend(theme.colors.primary, theme.colors.surface, 0.5f);
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T trackColor = this->theme().colors.surfaceVariant;
+    RGB_T activeColor = this->enabled ? this->theme().colors.primary
+                                      : blend(this->theme().colors.primary, this->theme().colors.surface, 0.5f);
 
     const int32_t diameter = this->bounds.w < this->bounds.h ? this->bounds.w : this->bounds.h;
     const size_t radius = toPx(diameter / 2 - thickness_ / 2);

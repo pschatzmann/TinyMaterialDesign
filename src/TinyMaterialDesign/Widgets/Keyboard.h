@@ -63,15 +63,15 @@ class Keyboard : public Widget<RGB_T> {
 
   void hide() { this->visible = false; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
     target.fillRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
-                    toPx(this->bounds.h), theme.colors.surfaceVariant);
+                    toPx(this->bounds.h), this->theme().colors.surfaceVariant);
 
     forEachKey([&](const Key& key, const Bounds& rect) {
       const bool highlighted = key.action == Action::kShift && shift_;
-      const RGB_T keyColor = highlighted ? theme.colors.secondaryContainer : theme.colors.surface;
+      const RGB_T keyColor = highlighted ? this->theme().colors.secondaryContainer : this->theme().colors.surface;
       target.fillRoundRect(toPx(rect.x + 2), toPx(rect.y + 2), toPx(rect.w - 4), toPx(rect.h - 4),
-                           toPx(theme.shape.small), keyColor);
+                           toPx(this->theme().shape.small), keyColor);
 
       char labelBuffer[2] = {0, 0};
       const char* labelText = key.label;
@@ -82,12 +82,12 @@ class Keyboard : public Widget<RGB_T> {
         labelText = (mode_ == Mode::kLetters) ? "123" : "ABC";
       }
 
-      const size_t textWidth = theme.typography.body->measureTextWidth(labelText);
+      const size_t textWidth = this->theme().typography.body->measureTextWidth(labelText);
       const int32_t textX = rect.centerX() - static_cast<int32_t>(textWidth) / 2;
-      const int32_t textY = rect.centerY() - static_cast<int32_t>(theme.typography.body->getHeight(1)) / 2;
-      theme.typography.body->drawText(target, static_cast<int16_t>(textX),
+      const int32_t textY = rect.centerY() - static_cast<int32_t>(this->theme().typography.body->getHeight(1)) / 2;
+      this->theme().typography.body->drawText(target, static_cast<int16_t>(textX),
                                       static_cast<int16_t>(textY), labelText,
-                                      theme.colors.onSurface, keyColor, false);
+                                      this->theme().colors.onSurface, keyColor, false);
       return false;
     });
   }

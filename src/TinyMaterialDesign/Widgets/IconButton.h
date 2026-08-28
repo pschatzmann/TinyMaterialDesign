@@ -61,19 +61,19 @@ class IconButton : public Widget<RGB_T> {
     ambientForeground_ = foreground;
   }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T background = theme.colors.surface;
-    RGB_T foreground = theme.colors.onSurfaceVariant;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T background = this->theme().colors.surface;
+    RGB_T foreground = this->theme().colors.onSurfaceVariant;
     const bool paintBackground = variant_ != IconButtonVariant::kStandard;
 
     switch (variant_) {
       case IconButtonVariant::kFilled:
-        background = theme.colors.primary;
-        foreground = theme.colors.onPrimary;
+        background = this->theme().colors.primary;
+        foreground = this->theme().colors.onPrimary;
         break;
       case IconButtonVariant::kTonal:
-        background = theme.colors.secondaryContainer;
-        foreground = theme.colors.onSecondaryContainer;
+        background = this->theme().colors.secondaryContainer;
+        foreground = this->theme().colors.onSecondaryContainer;
         break;
       case IconButtonVariant::kStandard:
       default:
@@ -90,8 +90,8 @@ class IconButton : public Widget<RGB_T> {
       foreground = foregroundOverride_;
     }
     if (!this->enabled) {
-      background = blend(background, theme.colors.surface, 0.6f);
-      foreground = blend(foreground, theme.colors.surface, 0.5f);
+      background = blend(background, this->theme().colors.surface, 0.6f);
+      foreground = blend(foreground, this->theme().colors.surface, 0.5f);
     }
 
     const int32_t diameter = this->bounds.w < this->bounds.h ? this->bounds.w : this->bounds.h;
@@ -99,7 +99,7 @@ class IconButton : public Widget<RGB_T> {
 
     if (paintBackground) {
       if (this->enabled) {
-        const RGB_T shadow = blend(theme.colors.surface, theme.colors.onBackground, 0.35f);
+        const RGB_T shadow = blend(this->theme().colors.surface, this->theme().colors.onBackground, 0.35f);
         target.fillCircle(toPx(this->bounds.centerX() + 1), toPx(this->bounds.centerY() + 2),
                           radius, shadow);
       }
@@ -107,7 +107,7 @@ class IconButton : public Widget<RGB_T> {
                         background);
     }
 
-    if (theme.enableRipple && rippleActive_) {
+    if (this->theme().enableRipple && rippleActive_) {
       const uint32_t elapsed = lastUpdateMs_ - rippleStartMs_;
       const float t = std::min(1.0f, static_cast<float>(elapsed) / kRippleDurationMs);
       const size_t rippleRadius = toPx(static_cast<int32_t>(t * diameter / 2));

@@ -36,14 +36,14 @@ class Slider : public Widget<RGB_T> {
 
   bool isDraggable() const override { return true; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T trackColor = theme.colors.surfaceVariant;
-    RGB_T activeColor = theme.colors.primary;
-    RGB_T thumbColor = theme.colors.primary;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T trackColor = this->theme().colors.surfaceVariant;
+    RGB_T activeColor = this->theme().colors.primary;
+    RGB_T thumbColor = this->theme().colors.primary;
     if (!this->enabled) {
-      trackColor = blend(trackColor, theme.colors.surface, 0.5f);
-      activeColor = blend(activeColor, theme.colors.surface, 0.5f);
-      thumbColor = blend(thumbColor, theme.colors.surface, 0.4f);
+      trackColor = blend(trackColor, this->theme().colors.surface, 0.5f);
+      activeColor = blend(activeColor, this->theme().colors.surface, 0.5f);
+      thumbColor = blend(thumbColor, this->theme().colors.surface, 0.4f);
     }
 
     const int32_t trackHeight = 4;

@@ -63,10 +63,16 @@ class Widget {
   bool visible = true;
   bool enabled = true;
 
-  /// Renders the widget into `target` using colors/fonts/tokens from
-  /// `theme`.
-  virtual void draw(tinygpu::ISurface<RGB_T>& target,
-                    const MaterialTheme<RGB_T>& theme) = 0;
+  /// Sets the theme this widget draws itself with - see theme(). Screen
+  /// pushes its own theme into a widget at registration time
+  /// (addWidget()/addFixedWidget()/presentDialog()) and again whenever
+  /// Screen::setTheme() is called; container widgets (Dialog, Drawer)
+  /// cascade this down to whatever children they already hold.
+  virtual void setTheme(const MaterialTheme<RGB_T>& theme) { theme_ = &theme; }
+
+  /// Renders the widget into `target` using colors/fonts/tokens from its
+  /// own theme (see theme()/setTheme()).
+  virtual void draw(tinygpu::ISurface<RGB_T>& target) = 0;
 
   /// Handles one gesture event. Returns true if this widget consumed it.
   virtual bool onGesture(const tinygpu::GestureEvent& event) {
@@ -114,8 +120,8 @@ class Widget {
   /// are however many it reports - zero - so nothing is skipped).
   /// Screen::drawDirect() calls this instead of draw() for a presented
   /// modal, then draws each child (if any) separately.
-  virtual void drawBackground(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) {
-    draw(target, theme);
+  virtual void drawBackground(tinygpu::ISurface<RGB_T>& target) {
+    draw(target);
   }
 
   /// Lets a container (AppBar, chiefly) push its own background/foreground
@@ -133,6 +139,16 @@ class Widget {
     (void)background;
     (void)foreground;
   }
+
+ protected:
+  /// The theme this widget draws itself with - set via setTheme(), pushed
+  /// in by Screen at registration time. Never dereferenced before that -
+  /// every widget is registered with a Screen (which always has a theme,
+  /// default-constructed if nothing else) before its first draw().
+  const MaterialTheme<RGB_T>* theme_ = nullptr;
+
+  /// Convenience accessor for draw() overrides - see theme_.
+  const MaterialTheme<RGB_T>& theme() const { return *theme_; }
 };
 
 }  // namespace tinymd

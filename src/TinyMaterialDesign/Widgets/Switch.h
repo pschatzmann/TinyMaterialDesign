@@ -21,14 +21,14 @@ class Switch : public Widget<RGB_T> {
   bool value() const { return value_; }
   void setValue(bool value) { value_ = value; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T trackColor = value_ ? theme.colors.primary : theme.colors.surfaceVariant;
-    RGB_T trackBorder = theme.colors.outline;
-    RGB_T thumbColor = value_ ? theme.colors.onPrimary : theme.colors.outline;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T trackColor = value_ ? this->theme().colors.primary : this->theme().colors.surfaceVariant;
+    RGB_T trackBorder = this->theme().colors.outline;
+    RGB_T thumbColor = value_ ? this->theme().colors.onPrimary : this->theme().colors.outline;
     if (!this->enabled) {
-      trackColor = blend(trackColor, theme.colors.surface, 0.5f);
-      trackBorder = blend(trackBorder, theme.colors.surface, 0.5f);
-      thumbColor = blend(thumbColor, theme.colors.surface, 0.4f);
+      trackColor = blend(trackColor, this->theme().colors.surface, 0.5f);
+      trackBorder = blend(trackBorder, this->theme().colors.surface, 0.5f);
+      thumbColor = blend(thumbColor, this->theme().colors.surface, 0.4f);
     }
 
     const size_t trackRadius = toPx(this->bounds.h / 2);

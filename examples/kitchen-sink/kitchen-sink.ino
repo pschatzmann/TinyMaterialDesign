@@ -36,8 +36,8 @@ Surface<RGB565> surface(kWidth, kHeight, FontRGB565);
 DeviceOutput<RGB565> display(board.display());
 
 GestureDetector gestures;
-Screen<RGB565> screen;
 MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
+Screen<RGB565> screen(theme);
 
 // --- App bar -----------------------------------------------------------
 AppBar<RGB565> appBar(Bounds(0, 0, kWidth, 48), "Kitchen Sink");
@@ -103,6 +103,10 @@ void applyScheme() {
       break;
   }
   appBar.setColorOverride(theme.colors.primary, theme.colors.onPrimary);
+  // Screen keeps its own copy of the theme (pushed into every widget at
+  // registration time - see Screen::setTheme()), so reassigning the global
+  // `theme` above doesn't reach it on its own; push it through explicitly.
+  screen.setTheme(theme);
 }
 
 RadioGroup<RGB565> radioGroup;
@@ -326,7 +330,7 @@ void loop() {
   // frame skips both the full-screen redraw and the full-framebuffer
   // display write.
   if (screen.isDirty()) {
-    screen.draw(surface, theme);
+    screen.draw(surface);
     display.writeData(surface);
   }
 }

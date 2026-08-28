@@ -36,7 +36,7 @@ class Button : public Widget<RGB_T> {
   const std::string& label() const { return label_; }
   void setVariant(ButtonVariant variant) { variant_ = variant; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
     RGB_T background;
     RGB_T foreground;
     bool paintBackground = true;
@@ -44,39 +44,39 @@ class Button : public Widget<RGB_T> {
 
     switch (variant_) {
       case ButtonVariant::kFilled:
-        background = theme.colors.primary;
-        foreground = theme.colors.onPrimary;
+        background = this->theme().colors.primary;
+        foreground = this->theme().colors.onPrimary;
         break;
       case ButtonVariant::kTonal:
-        background = theme.colors.secondaryContainer;
-        foreground = theme.colors.onSecondaryContainer;
+        background = this->theme().colors.secondaryContainer;
+        foreground = this->theme().colors.onSecondaryContainer;
         break;
       case ButtonVariant::kElevated:
-        background = theme.colors.surface;
-        foreground = theme.colors.primary;
+        background = this->theme().colors.surface;
+        foreground = this->theme().colors.primary;
         break;
       case ButtonVariant::kOutlined:
-        background = theme.colors.surface;
-        foreground = theme.colors.primary;
+        background = this->theme().colors.surface;
+        foreground = this->theme().colors.primary;
         paintOutline = true;
         break;
       case ButtonVariant::kText:
       default:
-        background = theme.colors.surface;
-        foreground = theme.colors.primary;
+        background = this->theme().colors.surface;
+        foreground = this->theme().colors.primary;
         paintBackground = false;
         break;
     }
 
     if (!this->enabled) {
-      foreground = blend(foreground, theme.colors.onSurface, 0.5f);
-      background = blend(background, theme.colors.onSurface, 0.7f);
+      foreground = blend(foreground, this->theme().colors.onSurface, 0.5f);
+      background = blend(background, this->theme().colors.onSurface, 0.7f);
     }
 
-    const int32_t radius = theme.shape.full;  // pill-shaped, standard M3
+    const int32_t radius = this->theme().shape.full;  // pill-shaped, standard M3
 
     if (variant_ == ButtonVariant::kElevated && this->enabled) {
-      const RGB_T shadow = blend(theme.colors.surface, theme.colors.onBackground, 0.35f);
+      const RGB_T shadow = blend(this->theme().colors.surface, this->theme().colors.onBackground, 0.35f);
       target.fillRoundRect(toPx(this->bounds.x + 1), toPx(this->bounds.y + 2),
                            toPx(this->bounds.w), toPx(this->bounds.h), toPx(radius),
                            shadow);
@@ -89,17 +89,17 @@ class Button : public Widget<RGB_T> {
     }
     if (paintOutline) {
       const RGB_T outlineColor =
-          this->enabled ? theme.colors.outline : blend(theme.colors.outline, theme.colors.surface, 0.5f);
+          this->enabled ? this->theme().colors.outline : blend(this->theme().colors.outline, this->theme().colors.surface, 0.5f);
       target.drawRoundRect(toPx(this->bounds.x), toPx(this->bounds.y),
                            toPx(this->bounds.w), toPx(this->bounds.h), toPx(radius),
                            outlineColor);
     }
 
-    if (theme.enableRipple && rippleActive_) {
+    if (this->theme().enableRipple && rippleActive_) {
       drawRipple(target, background, foreground);
     }
 
-    tinygpu::IFont<RGB_T>& font = *theme.typography.label;
+    tinygpu::IFont<RGB_T>& font = *this->theme().typography.label;
     const size_t textWidth = font.measureTextWidth(label_.c_str());
     const size_t textHeight = font.getHeight(1);
     const int32_t textX = this->bounds.centerX() - static_cast<int32_t>(textWidth) / 2;

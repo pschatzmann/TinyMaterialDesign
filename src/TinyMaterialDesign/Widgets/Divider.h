@@ -15,8 +15,8 @@ class Divider : public Widget<RGB_T> {
   Divider() = default;
   explicit Divider(Bounds bounds) { this->bounds = bounds; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    const RGB_T color = theme.colors.outline;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    const RGB_T color = this->theme().colors.outline;
     if (this->bounds.w >= this->bounds.h) {
       const int32_t y = this->bounds.centerY();
       target.drawLine(toPx(this->bounds.x), toPx(y), toPx(this->bounds.right() - 1), toPx(y),

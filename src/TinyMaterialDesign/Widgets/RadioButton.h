@@ -26,12 +26,12 @@ class RadioButton : public Widget<RGB_T> {
   bool selected() const { return selected_; }
   void setSelected(bool selected) { selected_ = selected; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T ring = selected_ ? theme.colors.primary : theme.colors.outline;
-    RGB_T dot = theme.colors.primary;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T ring = selected_ ? this->theme().colors.primary : this->theme().colors.outline;
+    RGB_T dot = this->theme().colors.primary;
     if (!this->enabled) {
-      ring = blend(ring, theme.colors.surface, 0.5f);
-      dot = blend(dot, theme.colors.surface, 0.4f);
+      ring = blend(ring, this->theme().colors.surface, 0.5f);
+      dot = blend(dot, this->theme().colors.surface, 0.4f);
     }
 
     const int32_t diameter = this->bounds.w < this->bounds.h ? this->bounds.w : this->bounds.h;

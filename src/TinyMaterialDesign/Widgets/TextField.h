@@ -99,48 +99,48 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
     return true;
   }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
     const int32_t labelHeight = hasLabel_ ? 14 : 0;
     const Bounds box(this->bounds.x, this->bounds.y + labelHeight, this->bounds.w,
                      this->bounds.h - labelHeight);
 
     if (hasLabel_) {
-      RGB_T labelColor = focused_ ? theme.colors.primary : theme.colors.onSurfaceVariant;
-      if (!this->enabled) labelColor = blend(labelColor, theme.colors.surface, 0.5f);
-      theme.typography.label->drawText(target, static_cast<int16_t>(this->bounds.x),
+      RGB_T labelColor = focused_ ? this->theme().colors.primary : this->theme().colors.onSurfaceVariant;
+      if (!this->enabled) labelColor = blend(labelColor, this->theme().colors.surface, 0.5f);
+      this->theme().typography.label->drawText(target, static_cast<int16_t>(this->bounds.x),
                                        static_cast<int16_t>(this->bounds.y), label_.c_str(),
-                                       labelColor, theme.colors.surface, false);
+                                       labelColor, this->theme().colors.surface, false);
     }
 
-    RGB_T borderColor = focused_ ? theme.colors.primary : theme.colors.outline;
-    if (!this->enabled) borderColor = blend(borderColor, theme.colors.surface, 0.5f);
-    const size_t radius = toPx(theme.shape.small);
+    RGB_T borderColor = focused_ ? this->theme().colors.primary : this->theme().colors.outline;
+    if (!this->enabled) borderColor = blend(borderColor, this->theme().colors.surface, 0.5f);
+    const size_t radius = toPx(this->theme().shape.small);
     target.fillRoundRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h), radius,
-                         theme.colors.surface);
+                         this->theme().colors.surface);
     target.drawRoundRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h), radius, borderColor);
 
     const int32_t pad = 8;
     const int32_t textX = box.x + pad;
-    const int32_t textY = box.centerY() - static_cast<int32_t>(theme.typography.body->getHeight(1)) / 2;
+    const int32_t textY = box.centerY() - static_cast<int32_t>(this->theme().typography.body->getHeight(1)) / 2;
 
     if (text_.empty() && !focused_) {
       if (!placeholder_.empty()) {
-        theme.typography.body->drawText(target, static_cast<int16_t>(textX),
+        this->theme().typography.body->drawText(target, static_cast<int16_t>(textX),
                                         static_cast<int16_t>(textY), placeholder_.c_str(),
-                                        theme.colors.onSurfaceVariant, theme.colors.surface, false);
+                                        this->theme().colors.onSurfaceVariant, this->theme().colors.surface, false);
       }
       return;
     }
 
-    theme.typography.body->drawText(target, static_cast<int16_t>(textX),
+    this->theme().typography.body->drawText(target, static_cast<int16_t>(textX),
                                     static_cast<int16_t>(textY), text_.c_str(),
-                                    theme.colors.onSurface, theme.colors.surface, false);
+                                    this->theme().colors.onSurface, this->theme().colors.surface, false);
 
     if (focused_ && cursorVisible_) {
-      const size_t textWidth = theme.typography.body->measureTextWidth(text_.c_str());
+      const size_t textWidth = this->theme().typography.body->measureTextWidth(text_.c_str());
       const int32_t cursorX = textX + static_cast<int32_t>(textWidth) + 1;
       target.drawLine(toPx(cursorX), toPx(box.y + 6), toPx(cursorX), toPx(box.bottom() - 6),
-                      theme.colors.primary);
+                      this->theme().colors.primary);
     }
   }
 

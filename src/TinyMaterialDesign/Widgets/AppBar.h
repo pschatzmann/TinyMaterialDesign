@@ -50,14 +50,14 @@ class AppBar : public Widget<RGB_T> {
                size, size);
   }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    const RGB_T background = hasColorOverride_ ? backgroundOverride_ : theme.colors.surface;
-    const RGB_T foreground = hasColorOverride_ ? foregroundOverride_ : theme.colors.onSurface;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    const RGB_T background = hasColorOverride_ ? backgroundOverride_ : this->theme().colors.surface;
+    const RGB_T foreground = hasColorOverride_ ? foregroundOverride_ : this->theme().colors.onSurface;
 
     target.fillRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
                     toPx(this->bounds.h), background);
 
-    tinygpu::IFont<RGB_T>& font = *theme.typography.title;
+    tinygpu::IFont<RGB_T>& font = *this->theme().typography.title;
     const size_t textHeight = font.getHeight(1);
     const int32_t textY = this->bounds.centerY() - static_cast<int32_t>(textHeight) / 2;
     const int32_t textX = leading != nullptr ? leadingRect().right() + 8 : this->bounds.x + 16;
@@ -71,13 +71,20 @@ class AppBar : public Widget<RGB_T> {
     // setColorOverride() call in the sketch. A no-op for any child that
     // doesn't override setThemeTint(), and loses to that child's own
     // explicit override when it has one (e.g. a status-dependent icon).
+    //
+    // leading/trailing are plain public pointer fields the sketch assigns
+    // directly (no registration hook to catch that assignment - see the
+    // class comment), so the theme is pushed into them lazily here, right
+    // before each draw(), rather than once at assignment time.
     if (leading != nullptr && leading->visible) {
+      leading->setTheme(this->theme());
       leading->setThemeTint(background, foreground);
-      leading->draw(target, theme);
+      leading->draw(target);
     }
     if (trailing != nullptr && trailing->visible) {
+      trailing->setTheme(this->theme());
       trailing->setThemeTint(background, foreground);
-      trailing->draw(target, theme);
+      trailing->draw(target);
     }
   }
 

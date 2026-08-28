@@ -54,10 +54,10 @@ class Label : public Widget<RGB_T> {
   void setFont(tinygpu::IFont<RGB_T>* font) { font_ = font; }
   tinygpu::IFont<RGB_T>* font() const { return font_; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    tinygpu::IFont<RGB_T>& font = font_ != nullptr ? *font_ : *fontForTypographyRole(role_, theme);
-    RGB_T color = hasColorOverride_ ? colorOverride_ : theme.colors.onSurface;
-    if (!this->enabled) color = blend(color, theme.colors.surface, 0.5f);
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    tinygpu::IFont<RGB_T>& font = font_ != nullptr ? *font_ : *fontForTypographyRole(role_, this->theme());
+    RGB_T color = hasColorOverride_ ? colorOverride_ : this->theme().colors.onSurface;
+    if (!this->enabled) color = blend(color, this->theme().colors.surface, 0.5f);
 
     const size_t textWidth = font.measureTextWidth(text_.c_str());
     const size_t textHeight = font.getHeight(1);
@@ -67,7 +67,7 @@ class Label : public Widget<RGB_T> {
     const int32_t textY = this->bounds.centerY() - static_cast<int32_t>(textHeight) / 2;
 
     font.drawText(target, static_cast<int16_t>(textX), static_cast<int16_t>(textY),
-                 text_.c_str(), color, theme.colors.surface, false);
+                 text_.c_str(), color, this->theme().colors.surface, false);
   }
 
  private:

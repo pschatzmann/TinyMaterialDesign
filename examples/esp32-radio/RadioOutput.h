@@ -12,6 +12,7 @@
 #include "AudioTools/AudioCodecs/CodecMP3Helix.h"
 #include "AudioTools/Communication/AudioHttp.h"
 #include "AudioTools/Concurrency.h"
+#include "AudioTools/CoreAudio/Analysis/AutomaticGainControlStream.h"
 #ifdef ESP32
 #include "AudioTools/AudioLibs/I2SCodecStream.h"
 #include "AudioBoards/ESP32S3HosyondDisplay.h"

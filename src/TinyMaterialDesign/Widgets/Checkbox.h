@@ -23,17 +23,17 @@ class Checkbox : public Widget<RGB_T> {
   bool checked() const { return checked_; }
   void setChecked(bool checked) { checked_ = checked; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T fill = checked_ ? theme.colors.primary : theme.colors.surface;
-    RGB_T border = checked_ ? theme.colors.primary : theme.colors.outline;
-    RGB_T mark = theme.colors.onPrimary;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T fill = checked_ ? this->theme().colors.primary : this->theme().colors.surface;
+    RGB_T border = checked_ ? this->theme().colors.primary : this->theme().colors.outline;
+    RGB_T mark = this->theme().colors.onPrimary;
     if (!this->enabled) {
-      fill = blend(fill, theme.colors.surface, 0.6f);
-      border = blend(border, theme.colors.surface, 0.5f);
-      mark = blend(mark, theme.colors.surface, 0.4f);
+      fill = blend(fill, this->theme().colors.surface, 0.6f);
+      border = blend(border, this->theme().colors.surface, 0.5f);
+      mark = blend(mark, this->theme().colors.surface, 0.4f);
     }
 
-    const size_t radius = toPx(theme.shape.small);
+    const size_t radius = toPx(this->theme().shape.small);
     if (checked_) {
       target.fillRoundRect(toPx(this->bounds.x), toPx(this->bounds.y),
                            toPx(this->bounds.w), toPx(this->bounds.h), radius, fill);

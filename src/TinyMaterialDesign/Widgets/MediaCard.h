@@ -42,15 +42,15 @@ class MediaCard : public Widget<RGB_T> {
   bool selected() const { return selected_; }
   void setSelected(bool selected) { selected_ = selected; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    const size_t radius = toPx(theme.shape.medium);
-    RGB_T background = selected_ ? theme.colors.secondaryContainer : theme.colors.surface;
-    RGB_T outline = selected_ ? theme.colors.primary : theme.colors.outline;
-    RGB_T captionColor = selected_ ? theme.colors.onSecondaryContainer : theme.colors.onSurface;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    const size_t radius = toPx(this->theme().shape.medium);
+    RGB_T background = selected_ ? this->theme().colors.secondaryContainer : this->theme().colors.surface;
+    RGB_T outline = selected_ ? this->theme().colors.primary : this->theme().colors.outline;
+    RGB_T captionColor = selected_ ? this->theme().colors.onSecondaryContainer : this->theme().colors.onSurface;
     if (!this->enabled) {
-      background = blend(background, theme.colors.surface, 0.5f);
-      outline = blend(outline, theme.colors.surface, 0.5f);
-      captionColor = blend(captionColor, theme.colors.surface, 0.5f);
+      background = blend(background, this->theme().colors.surface, 0.5f);
+      outline = blend(outline, this->theme().colors.surface, 0.5f);
+      captionColor = blend(captionColor, this->theme().colors.surface, 0.5f);
     }
 
     target.fillRoundRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
@@ -67,10 +67,10 @@ class MediaCard : public Widget<RGB_T> {
       target.drawSprite(toPx(imageArea.x), toPx(imageArea.y), *image_);
     } else if (imageArea.w > 0 && imageArea.h > 0) {
       target.fillRect(toPx(imageArea.x), toPx(imageArea.y), toPx(imageArea.w), toPx(imageArea.h),
-                      theme.colors.surfaceVariant);
+                      this->theme().colors.surfaceVariant);
     }
 
-    tinygpu::IFont<RGB_T>& font = *theme.typography.label;
+    tinygpu::IFont<RGB_T>& font = *this->theme().typography.label;
     const size_t textWidth = font.measureTextWidth(caption_.c_str());
     const int32_t textX = this->bounds.centerX() - static_cast<int32_t>(textWidth) / 2;
     const int32_t textY = this->bounds.bottom() - captionHeight - pad + 2;

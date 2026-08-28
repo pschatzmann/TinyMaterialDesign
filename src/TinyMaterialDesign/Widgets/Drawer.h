@@ -39,7 +39,21 @@ class Drawer : public Widget<RGB_T> {
   std::function<void()> onScrimTap;
 
   void addItem(Widget<RGB_T>& item) {
-    if (itemCount_ < kMaxItems) items_[itemCount_++] = &item;
+    if (itemCount_ < kMaxItems) {
+      items_[itemCount_++] = &item;
+      // Drawer might not have a theme yet if addItem() is called before the
+      // drawer itself is registered with Screen (via presentDialog()) - in
+      // that case setTheme() below will cascade to this item once it does.
+      if (this->theme_ != nullptr) item.setTheme(*this->theme_);
+    }
+  }
+
+  /// Cascades the theme down to every item already added - see addItem().
+  void setTheme(const MaterialTheme<RGB_T>& theme) override {
+    Widget<RGB_T>::setTheme(theme);
+    for (int i = 0; i < itemCount_; ++i) {
+      if (items_[i] != nullptr) items_[i]->setTheme(theme);
+    }
   }
 
   /// Suggested rect for the `index`-th item, stacked from the panel's top.
@@ -47,10 +61,10 @@ class Drawer : public Widget<RGB_T> {
     return Bounds(this->bounds.x, this->bounds.y + index * height, this->bounds.w, height);
   }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    drawBackground(target, theme);
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    drawBackground(target);
     for (int i = 0; i < itemCount_; ++i) {
-      if (items_[i]->visible) items_[i]->draw(target, theme);
+      if (items_[i]->visible) items_[i]->draw(target);
     }
   }
 
@@ -60,11 +74,11 @@ class Drawer : public Widget<RGB_T> {
   /// full-screen buffer) as this small background plus each item
   /// individually, rather than needing one buffer sized to the whole
   /// drawer (its own bounds are often nearly full-screen).
-  void drawBackground(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
+  void drawBackground(tinygpu::ISurface<RGB_T>& target) override {
     drawScrim(target);
 
     target.fillRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
-                    toPx(this->bounds.h), theme.colors.surface);
+                    toPx(this->bounds.h), this->theme().colors.surface);
   }
 
   int childCount() const override { return itemCount_; }

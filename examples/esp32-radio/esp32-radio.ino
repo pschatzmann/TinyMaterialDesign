@@ -33,8 +33,8 @@ LCDBoardDesktopSDL board(kWidth, kHeight);
 Surface<RGB565> surface(kWidth, kHeight, FontRGB565);
 DeviceOutput<RGB565> display(board.display());
 GestureDetector gestures;
-Screen<RGB565> screen;
 MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
+Screen<RGB565> screen(theme);
 
 struct TagEntry {
   const char* label;
@@ -67,9 +67,12 @@ constexpr TagEntry kCountries[] = {
 
 constexpr int kCountryCount = sizeof(kCountries) / sizeof(kCountries[0]);
 constexpr int kMaxStations = 12;
+
+constexpr int constexprMax(int a, int b) { return a > b ? a : b; }
+
 constexpr int kMaxListItems =
-    max(max(kGenreCount, kCountryCount),
-        kMaxStations);  // >= kGenreCount, kCountryCount, kMaxStations
+    constexprMax(constexprMax(kGenreCount, kCountryCount),
+                 kMaxStations);  // >= kGenreCount, kCountryCount, kMaxStations
 
 StationDirectory<kMaxStations> stationDirectory;
 RadioOutput audioOutput(kWifiSsid, kWifiPassword);
@@ -93,8 +96,8 @@ constexpr int32_t kListRowPitch = 36;
 ListItem<RGB565> listPool[kMaxListItems];
 
 constexpr int kMaxGridItems =
-    max(max(kGenreCount, kCountryCount),
-        kMaxStations);  // >= kGenreCount, kCountryCount
+    constexprMax(constexprMax(kGenreCount, kCountryCount),
+                 kMaxStations);  // >= kGenreCount, kCountryCount
 constexpr int32_t kGridCellSize = 80;
 constexpr int32_t kGridWidth = 2 * kGridCellSize + 8;
 GridLayout mediaGrid(Bounds((kWidth - kGridWidth) / 2, kListTop, kGridWidth, 0),
@@ -108,7 +111,7 @@ Button<RGB565> aboutDialogClose(Bounds(0, 0, 80, 36), "Close",
                                 ButtonVariant::kText);
 
 void renderNow() {
-  screen.draw(surface, theme);
+  screen.draw(surface);
   display.writeData(surface);
 }
 
@@ -159,12 +162,13 @@ void playStation(int index) {
   if (index < 0 || index >= stationDirectory.count()) return;
   for (int i = 0; i < stationDirectory.count(); ++i)
     listPool[i].setSelected(i == index);
+  String name = stationDirectory.name(index);
+  String url = stationDirectory.url(index);
   Serial.print("Selected station: ");
-  Serial.print(stationDirectory.name(index));
+  Serial.print(name);
   Serial.print(" -> ");
-  Serial.println(stationDirectory.url(index));
-  audioOutput.setStation(stationDirectory.name(index),
-                         stationDirectory.url(index));
+  Serial.println(url);
+  audioOutput.setStation(name, url);
 }
 
 void fetchStations(const String& url) {
@@ -315,7 +319,7 @@ void loop() {
   }
 
   if (screen.isDirty()) {
-    screen.draw(surface, theme);
+    screen.draw(surface);
     display.writeData(surface);
   }
 }

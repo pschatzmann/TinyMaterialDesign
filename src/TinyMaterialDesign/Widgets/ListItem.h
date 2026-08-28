@@ -40,14 +40,14 @@ class ListItem : public Widget<RGB_T> {
   /// with several rows that don't need to be as prominent as body text).
   void setTypographyRole(TypographyRole role) { role_ = role; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T background = selected_ ? theme.colors.secondaryContainer : theme.colors.surface;
-    RGB_T foreground = selected_ ? theme.colors.onSecondaryContainer : theme.colors.onSurfaceVariant;
-    RGB_T textColor = selected_ ? theme.colors.onSecondaryContainer : theme.colors.onSurface;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T background = selected_ ? this->theme().colors.secondaryContainer : this->theme().colors.surface;
+    RGB_T foreground = selected_ ? this->theme().colors.onSecondaryContainer : this->theme().colors.onSurfaceVariant;
+    RGB_T textColor = selected_ ? this->theme().colors.onSecondaryContainer : this->theme().colors.onSurface;
     if (!this->enabled) {
-      background = blend(background, theme.colors.surface, 0.5f);
-      foreground = blend(foreground, theme.colors.surface, 0.5f);
-      textColor = blend(textColor, theme.colors.surface, 0.5f);
+      background = blend(background, this->theme().colors.surface, 0.5f);
+      foreground = blend(foreground, this->theme().colors.surface, 0.5f);
+      textColor = blend(textColor, this->theme().colors.surface, 0.5f);
     }
 
     const int32_t margin = 8;
@@ -55,7 +55,7 @@ class ListItem : public Widget<RGB_T> {
 
     if (selected_) {
       target.fillRoundRect(toPx(pill.x), toPx(pill.y), toPx(pill.w), toPx(pill.h),
-                           toPx(theme.shape.full), background);
+                           toPx(this->theme().shape.full), background);
     }
 
     const int32_t pad = 16;
@@ -67,7 +67,7 @@ class ListItem : public Widget<RGB_T> {
       textX = iconRect.right() + pad;
     }
 
-    tinygpu::IFont<RGB_T>& font = *fontForTypographyRole(role_, theme);
+    tinygpu::IFont<RGB_T>& font = *fontForTypographyRole(role_, this->theme());
     const int32_t textY = pill.centerY() - static_cast<int32_t>(font.getHeight(1)) / 2;
     font.drawText(target, static_cast<int16_t>(textX), static_cast<int16_t>(textY),
                  title_.c_str(), textColor, background, false);

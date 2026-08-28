@@ -94,24 +94,24 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
     return true;
   }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
     const int32_t labelHeight = hasLabel_ ? 14 : 0;
     const Bounds box(this->bounds.x, this->bounds.y + labelHeight, this->bounds.w,
                      this->bounds.h - labelHeight);
 
     if (hasLabel_) {
-      RGB_T labelColor = focused_ ? theme.colors.primary : theme.colors.onSurfaceVariant;
-      if (!this->enabled) labelColor = blend(labelColor, theme.colors.surface, 0.5f);
-      theme.typography.label->drawText(target, static_cast<int16_t>(this->bounds.x),
+      RGB_T labelColor = focused_ ? this->theme().colors.primary : this->theme().colors.onSurfaceVariant;
+      if (!this->enabled) labelColor = blend(labelColor, this->theme().colors.surface, 0.5f);
+      this->theme().typography.label->drawText(target, static_cast<int16_t>(this->bounds.x),
                                        static_cast<int16_t>(this->bounds.y), label_.c_str(),
-                                       labelColor, theme.colors.surface, false);
+                                       labelColor, this->theme().colors.surface, false);
     }
 
-    RGB_T borderColor = focused_ ? theme.colors.primary : theme.colors.outline;
-    if (!this->enabled) borderColor = blend(borderColor, theme.colors.surface, 0.5f);
-    const size_t radius = toPx(theme.shape.small);
+    RGB_T borderColor = focused_ ? this->theme().colors.primary : this->theme().colors.outline;
+    if (!this->enabled) borderColor = blend(borderColor, this->theme().colors.surface, 0.5f);
+    const size_t radius = toPx(this->theme().shape.small);
     target.fillRoundRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h), radius,
-                         theme.colors.surface);
+                         this->theme().colors.surface);
     target.drawRoundRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h), radius, borderColor);
 
     const int32_t pad = 8;
@@ -130,9 +130,9 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
                                     : 0;
 
       tinygpu::LinePrinter<RGB_T> printer;
-      printer.setFont(*theme.typography.body);
+      printer.setFont(*this->theme().typography.body);
       printer.setTarget(target);
-      printer.setColor(showPlaceholder ? theme.colors.onSurfaceVariant : theme.colors.onSurface);
+      printer.setColor(showPlaceholder ? this->theme().colors.onSurfaceVariant : this->theme().colors.onSurface);
       printer.setTopBorder(toPx(box.y + pad));
       printer.setLeftBorder(toPx(box.x + pad));
       printer.setRightBorder(rightBorder);
@@ -142,10 +142,10 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
     }
 
     if (focused_ && cursorVisible_ && !showPlaceholder) {
-      const size_t lineHeight = theme.typography.body->getHeight(1);
+      const size_t lineHeight = this->theme().typography.body->getHeight(1);
       if (cursorY + lineHeight <= toPx(box.bottom())) {
         target.drawLine(cursorX + 1, cursorY, cursorX + 1, cursorY + lineHeight,
-                        theme.colors.primary);
+                        this->theme().colors.primary);
       }
     }
   }

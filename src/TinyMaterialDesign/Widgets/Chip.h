@@ -28,14 +28,14 @@ class Chip : public Widget<RGB_T> {
   bool selected() const { return selected_; }
   void setSelected(bool selected) { selected_ = selected; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    RGB_T background = selected_ ? theme.colors.secondaryContainer : theme.colors.surfaceVariant;
-    RGB_T foreground = selected_ ? theme.colors.onSecondaryContainer : theme.colors.onSurfaceVariant;
-    RGB_T outline = theme.colors.outline;
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    RGB_T background = selected_ ? this->theme().colors.secondaryContainer : this->theme().colors.surfaceVariant;
+    RGB_T foreground = selected_ ? this->theme().colors.onSecondaryContainer : this->theme().colors.onSurfaceVariant;
+    RGB_T outline = this->theme().colors.outline;
     if (!this->enabled) {
-      background = blend(background, theme.colors.surface, 0.5f);
-      foreground = blend(foreground, theme.colors.surface, 0.5f);
-      outline = blend(outline, theme.colors.surface, 0.5f);
+      background = blend(background, this->theme().colors.surface, 0.5f);
+      foreground = blend(foreground, this->theme().colors.surface, 0.5f);
+      outline = blend(outline, this->theme().colors.surface, 0.5f);
     }
 
     const size_t radius = toPx(this->bounds.h / 2);
@@ -46,7 +46,7 @@ class Chip : public Widget<RGB_T> {
                            toPx(this->bounds.h), radius, outline);
     }
 
-    tinygpu::IFont<RGB_T>& font = *theme.typography.label;
+    tinygpu::IFont<RGB_T>& font = *this->theme().typography.label;
     const size_t textWidth = font.measureTextWidth(label_.c_str());
     const size_t textHeight = font.getHeight(1);
     const int32_t textX = this->bounds.centerX() - static_cast<int32_t>(textWidth) / 2;

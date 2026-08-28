@@ -18,7 +18,7 @@ namespace tinymd {
  * the same non-owning-reference composition TinyGPU itself uses everywhere,
  * e.g. DeviceOutput(driver&)). Usage, mirroring TinyGPU's own examples:
  *
- *   Screen<RGB565> screen;
+ *   Screen<RGB565> screen(theme);
  *   Button<RGB565> okButton(...);
  *   screen.addWidget(okButton);
  *
@@ -32,7 +32,7 @@ namespace tinymd {
  *     gestures.update(touchDriver);
  *     screen.update(millis());
  *     if (screen.isDirty()) {          // see isDirty() - skips the (slow)
- *       screen.draw(surface, theme);   // redraw + display write when
+ *       screen.draw(surface);          // redraw + display write when
  *       display.writeData(surface);    // nothing changed this frame
  *     }
  *   }
@@ -60,9 +60,16 @@ namespace tinymd {
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Screen {
  public:
+  Screen() = default;
+
+  /// Constructs a Screen that starts with `theme` already set - pushed into
+  /// every widget registered afterward (see setTheme()).
+  explicit Screen(const MaterialTheme<RGB_T>& theme) : theme_(theme) {}
+
   /// Registers `widget` as scrollable content (see the class comment).
   void addWidget(Widget<RGB_T>& widget) {
     scrollWidgets_.push_back(&widget);
+    widget.setTheme(theme_);
     dirty_ = true;
   }
 
@@ -71,6 +78,19 @@ class Screen {
   /// hit-tested on top of every scrollable widget.
   void addFixedWidget(Widget<RGB_T>& widget) {
     fixedWidgets_.push_back(&widget);
+    widget.setTheme(theme_);
+    dirty_ = true;
+  }
+
+  /// Replaces the screen's theme and pushes it into every widget already
+  /// registered (scrollable, fixed, and a presented dialog if any).
+  /// Widgets registered later (addWidget()/addFixedWidget()/
+  /// presentDialog()) pick up whatever theme is current at that time.
+  void setTheme(const MaterialTheme<RGB_T>& theme) {
+    theme_ = theme;
+    for (Widget<RGB_T>* w : scrollWidgets_) if (w != nullptr) w->setTheme(theme_);
+    for (Widget<RGB_T>* w : fixedWidgets_) if (w != nullptr) w->setTheme(theme_);
+    if (dialog_ != nullptr) dialog_->setTheme(theme_);
     dirty_ = true;
   }
 
@@ -78,7 +98,7 @@ class Screen {
   int32_t scrollOffset() const { return scrollOffset_; }
 
   /// Overrides the theme's background color for this screen. Not required -
-  /// draw() falls back to theme.colors.background.
+  /// draw() falls back to theme_.colors.background.
   void setBackgroundColor(RGB_T color) {
     backgroundColor_ = color;
     hasBackgroundColor_ = true;
@@ -91,7 +111,7 @@ class Screen {
   ///
   ///   screen.update(millis());
   ///   if (screen.isDirty()) {
-  ///     screen.draw(surface, theme);
+  ///     screen.draw(surface);
   ///     display.writeData(surface);
   ///   }
   ///
@@ -115,23 +135,23 @@ class Screen {
   /// see isDirty().
   void invalidate() { dirty_ = true; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) {
+  void draw(tinygpu::ISurface<RGB_T>& target) {
     viewportHeight_ = static_cast<int32_t>(target.height());
     clampScroll();
 
-    target.clear(hasBackgroundColor_ ? backgroundColor_ : theme.colors.background);
+    target.clear(hasBackgroundColor_ ? backgroundColor_ : theme_.colors.background);
     for (Widget<RGB_T>* widget : scrollWidgets_) {
       if (!widget->visible) continue;
       widget->bounds.y -= scrollOffset_;
-      widget->draw(target, theme);
+      widget->draw(target);
       widget->bounds.y += scrollOffset_;
     }
-    drawScrollbar(target, theme);
+    drawScrollbar(target);
     for (Widget<RGB_T>* widget : fixedWidgets_) {
-      if (widget->visible) widget->draw(target, theme);
+      if (widget->visible) widget->draw(target);
     }
     if (dialog_ != nullptr && dialog_->visible) {
-      dialog_->draw(target, theme);
+      dialog_->draw(target);
     }
     dirty_ = false;
   }
@@ -177,18 +197,17 @@ class Screen {
   /// This is an alternative to draw()+writeData(surface) (unaffected by
   /// this method's existence) - pick whichever fits your board.
   void drawDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
-                  const MaterialTheme<RGB_T>& theme, int32_t viewportWidth,
-                  int32_t viewportHeight) {
+                  int32_t viewportWidth, int32_t viewportHeight) {
     viewportHeight_ = viewportHeight;
     clampScroll();
 
     if (dialog_ != nullptr && dialog_->visible) {
-      drawModalDirect(driver, scratch, theme, viewportWidth, viewportHeight);
+      drawModalDirect(driver, scratch, viewportWidth, viewportHeight);
       dirty_ = false;
       return;
     }
 
-    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme.colors.background;
+    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme_.colors.background;
 
     // Unlike draw() (which clears the whole target surface up front - see
     // its target.clear() call above), per-widget rendering only ever
@@ -207,14 +226,14 @@ class Screen {
       screenBounds.y -= scrollOffset_;
       if (!intersectsViewport(screenBounds, viewportWidth, viewportHeight)) continue;
       widget->bounds.y -= scrollOffset_;
-      drawWidgetDirect(driver, scratch, *widget, theme, background);
+      drawWidgetDirect(driver, scratch, *widget, background);
       widget->bounds.y += scrollOffset_;
     }
-    drawScrollbarDirect(driver, scratch, theme, viewportWidth, viewportHeight);
+    drawScrollbarDirect(driver, scratch, viewportWidth, viewportHeight);
     for (Widget<RGB_T>* widget : fixedWidgets_) {
       if (!widget->visible) continue;
       if (!intersectsViewport(widget->bounds, viewportWidth, viewportHeight)) continue;
-      drawWidgetDirect(driver, scratch, *widget, theme, background);
+      drawWidgetDirect(driver, scratch, *widget, background);
     }
     dirty_ = false;
   }
@@ -308,6 +327,7 @@ class Screen {
   /// own action-button callbacks).
   void presentDialog(Widget<RGB_T>& dialog) {
     dialog_ = &dialog;
+    dialog.setTheme(theme_);
     dirty_ = true;
   }
   void dismissDialog() {
@@ -329,7 +349,7 @@ class Screen {
   /// No-ops (leaving the display unwritten) if `widget`'s bounds are
   /// empty or scratch.resize() fails.
   void drawWidgetDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
-                        Widget<RGB_T>& widget, const MaterialTheme<RGB_T>& theme, RGB_T background) {
+                        Widget<RGB_T>& widget, RGB_T background) {
     const int32_t x = widget.bounds.x;
     const int32_t y = widget.bounds.y;
     const int32_t w = widget.bounds.w;
@@ -340,7 +360,7 @@ class Screen {
     tinygpu::WindowedSurface<RGB_T> window(scratch, x, y, static_cast<size_t>(w),
                                            static_cast<size_t>(h), scratch.font());
     window.clear(background);
-    widget.draw(window, theme);
+    widget.draw(window);
     driver.writeData(scratch, x, y);
   }
 
@@ -350,8 +370,7 @@ class Screen {
   /// kBarWidth px wide regardless of viewport height, so - unlike a modal -
   /// this always fits in one shot.
   void drawScrollbarDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
-                           const MaterialTheme<RGB_T>& theme, int32_t viewportWidth,
-                           int32_t viewportHeight) {
+                           int32_t viewportWidth, int32_t viewportHeight) {
     const int32_t content = contentHeight();
     if (content <= viewportHeight) return;
 
@@ -362,7 +381,7 @@ class Screen {
     tinygpu::WindowedSurface<RGB_T> window(scratch, trackX, 0, static_cast<size_t>(kBarWidth),
                                            static_cast<size_t>(viewportHeight), scratch.font());
     window.fillRect(trackX, 0, kBarWidth, viewportHeight,
-                    blend(theme.colors.surface, theme.colors.outline, 0.25f));
+                    blend(theme_.colors.surface, theme_.colors.outline, 0.25f));
 
     const int32_t maxScroll = content - viewportHeight;
     const int32_t thumbHeight =
@@ -370,7 +389,7 @@ class Screen {
     const int32_t thumbY = maxScroll > 0
                                ? (scrollOffset_ * (viewportHeight - thumbHeight)) / maxScroll
                                : 0;
-    window.fillRoundRect(trackX, thumbY, kBarWidth, thumbHeight, kBarWidth / 2, theme.colors.primary);
+    window.fillRoundRect(trackX, thumbY, kBarWidth, thumbHeight, kBarWidth / 2, theme_.colors.primary);
     driver.writeData(scratch, trackX, 0);
   }
 
@@ -379,9 +398,8 @@ class Screen {
   /// individually via drawWidgetDirect(). `scratch` ends this method
   /// resized to `viewportWidth x kModalBandHeight`.
   void drawModalDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
-                       const MaterialTheme<RGB_T>& theme, int32_t viewportWidth,
-                       int32_t viewportHeight) {
-    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme.colors.background;
+                       int32_t viewportWidth, int32_t viewportHeight) {
+    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme_.colors.background;
 
     constexpr int32_t kModalBandHeight = 40;
     if (scratch.resize(static_cast<size_t>(viewportWidth), static_cast<size_t>(kModalBandHeight))) {
@@ -399,7 +417,7 @@ class Screen {
         // still hold from the last (differently-sized) widget drawn
         // into it.
         window.clear(background);
-        dialog_->drawBackground(window, theme);
+        dialog_->drawBackground(window);
         driver.writeData(scratch, 0, bandY);
       }
     }
@@ -408,7 +426,7 @@ class Screen {
     for (int i = 0; i < childCount; ++i) {
       Widget<RGB_T>* child = dialog_->child(i);
       if (child != nullptr && child->visible) {
-        drawWidgetDirect(driver, scratch, *child, theme, background);
+        drawWidgetDirect(driver, scratch, *child, background);
       }
     }
   }
@@ -424,6 +442,7 @@ class Screen {
   Widget<RGB_T>* dialog_ = nullptr;
   RGB_T backgroundColor_{};
   bool hasBackgroundColor_ = false;
+  MaterialTheme<RGB_T> theme_{};
 
   struct HitResult {
     Widget<RGB_T>* widget;
@@ -485,14 +504,14 @@ class Screen {
   /// the scrollable content and the fixed widgets, so a pinned AppBar/
   /// Keyboard naturally occludes it where they overlap (top/bottom), and
   /// only omitted entirely when content already fits (nothing to scroll).
-  void drawScrollbar(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) {
+  void drawScrollbar(tinygpu::ISurface<RGB_T>& target) {
     const int32_t content = contentHeight();
     if (content <= viewportHeight_) return;
 
     constexpr int32_t kBarWidth = 4;
     const int32_t trackX = static_cast<int32_t>(target.width()) - kBarWidth;
     target.fillRect(toPx(trackX), 0, toPx(kBarWidth), toPx(viewportHeight_),
-                    blend(theme.colors.surface, theme.colors.outline, 0.25f));
+                    blend(theme_.colors.surface, theme_.colors.outline, 0.25f));
 
     const int32_t maxScroll = content - viewportHeight_;
     const int32_t thumbHeight =
@@ -501,7 +520,7 @@ class Screen {
                                ? (scrollOffset_ * (viewportHeight_ - thumbHeight)) / maxScroll
                                : 0;
     target.fillRoundRect(toPx(trackX), toPx(thumbY), toPx(kBarWidth), toPx(thumbHeight),
-                         toPx(kBarWidth / 2), theme.colors.primary);
+                         toPx(kBarWidth / 2), theme_.colors.primary);
   }
 
   static bool isContinuousType(tinygpu::GestureType type) {

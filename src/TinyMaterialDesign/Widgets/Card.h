@@ -34,28 +34,28 @@ class Card : public Widget<RGB_T> {
     hasBody_ = true;
   }
 
-  void draw(tinygpu::ISurface<RGB_T>& target, const MaterialTheme<RGB_T>& theme) override {
-    const size_t radius = toPx(theme.shape.medium);
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    const size_t radius = toPx(this->theme().shape.medium);
 
     if (elevated) {
-      const RGB_T shadow = blend(theme.colors.surface, theme.colors.onBackground, 0.30f);
+      const RGB_T shadow = blend(this->theme().colors.surface, this->theme().colors.onBackground, 0.30f);
       target.fillRoundRect(toPx(this->bounds.x + 1), toPx(this->bounds.y + 2),
                            toPx(this->bounds.w), toPx(this->bounds.h), radius, shadow);
     }
 
     target.fillRoundRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
-                         toPx(this->bounds.h), radius, theme.colors.surface);
+                         toPx(this->bounds.h), radius, this->theme().colors.surface);
     target.drawRoundRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
-                         toPx(this->bounds.h), radius, theme.colors.outline);
+                         toPx(this->bounds.h), radius, this->theme().colors.outline);
 
-    const int32_t pad = theme.spacing;
+    const int32_t pad = this->theme().spacing;
     int32_t cursorY = this->bounds.y + pad;
 
     if (hasTitle_) {
-      tinygpu::IFont<RGB_T>& titleFont = *theme.typography.title;
+      tinygpu::IFont<RGB_T>& titleFont = *this->theme().typography.title;
       titleFont.drawText(target, static_cast<int16_t>(this->bounds.x + pad),
-                         static_cast<int16_t>(cursorY), title_.c_str(), theme.colors.onSurface,
-                         theme.colors.surface, false);
+                         static_cast<int16_t>(cursorY), title_.c_str(), this->theme().colors.onSurface,
+                         this->theme().colors.surface, false);
       cursorY += static_cast<int32_t>(titleFont.getHeight(1)) + pad / 2;
     }
 
@@ -71,9 +71,9 @@ class Card : public Widget<RGB_T> {
               : 0;
 
       tinygpu::LinePrinter<RGB_T> printer;
-      printer.setFont(*theme.typography.body);
+      printer.setFont(*this->theme().typography.body);
       printer.setTarget(target);
-      printer.setColor(theme.colors.onSurfaceVariant);
+      printer.setColor(this->theme().colors.onSurfaceVariant);
       printer.setTopBorder(toPx(cursorY));
       printer.setLeftBorder(toPx(this->bounds.x + pad));
       printer.setRightBorder(rightBorder);
