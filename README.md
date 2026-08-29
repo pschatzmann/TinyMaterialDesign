@@ -111,6 +111,3 @@ ctest --test-dir build --output-on-failure
 ```
 
 Pass `-DTMD_BUILD_TESTS=OFF` to skip building the tests.
-
-Pass `-DFETCHCONTENT_SOURCE_DIR_TINYGPU=/path/to/local/TinyGPU` to build
-against a local TinyGPU checkout instead of fetching it from GitHub.

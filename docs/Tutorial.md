@@ -28,7 +28,7 @@
   - [`MediaCard`](#mediacard)
   - [`Carousel`](#carousel)
   - [`Container`](#container)
-    - [Virtualized content: `setChildProvider()`](#virtualized-content-setchildprovider)
+  - [Container - Virtualized content](#container---virtualized-content)
   - [`ListItem`](#listitem)
   - [`Divider`](#divider)
   - [`Label`](#label)
@@ -93,7 +93,7 @@ panel and every widget, theme, and helper follows.
   own name for `Container::addChild()` - plus the extra things only the one
   root needs: the fixed layer, modal dialogs, and writing to a real display.
   For a list too large to keep every widget resident at once, see
-  [Container's "Virtualized content"](#virtualized-content-setchildprovider)
+  [Container - Virtualized content](#container---virtualized-content)
   section - `Screen`'s own `setContentProvider()` is the same idea.
 
 ### The shared sketch skeleton
@@ -496,7 +496,7 @@ A persistent, non-modal inline message with text actions - Material's "banner", 
 
 - Use for information that stays relevant until explicitly addressed ("You're offline") - unlike `Snackbar`, a `Banner` doesn't auto-dismiss.
 - Toggle `visible` yourself (`Banner` isn't presented modally) - typically in response to whatever condition it's reporting on.
-- `setActionProvider()` is available as a callback-driven alternative to `addAction()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section (not usually needed for a banner's handful of actions, but available for consistency).
+- `setActionProvider()` is available as a callback-driven alternative to `addAction()` - see [Container - Virtualized content](#container---virtualized-content) section (not usually needed for a banner's handful of actions, but available for consistency).
 
 ```cpp
 // --- Banner (the control under test) -----------------------------------------
@@ -570,7 +570,7 @@ A horizontally paged, drag-to-swipe row of items (typically `MediaCard`), with a
 - Reports `isDraggable() == true` like `Slider` - make sure `Screen::isDraggableAt()` is wired to `GestureDetector::isDraggable` (as every example here does) or swiping won't be recognized.
 - Each item's `bounds` is authored in the carousel's own content space (see `Carousel::itemRect()`) and overwritten by `addItem()` - don't rely on whatever `Bounds` you originally constructed the item with.
 - `setCurrentIndex()` pages programmatically (e.g. from external next/previous buttons); a plain tap on an item still forwards through to it (its own `onClick`, if any) when not mid-drag.
-- For a station/genre list too large to keep every `MediaCard` resident at once, `setItemProvider()` replaces `addItem()` with a callback-driven pool - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section. It re-applies `itemRect(index)` to whatever the callback returns on every fetch, since a pooled item may have just served a different index.
+- For a station/genre list too large to keep every `MediaCard` resident at once, `setItemProvider()` replaces `addItem()` with a callback-driven pool - see [Container - Virtualized content](#container---virtualized-content) section. It re-applies `itemRect(index)` to whatever the callback returns on every fetch, since a pooled item may have just served a different index.
 
 ```cpp
 // --- Carousel (the control under test) ---------------------------------------
@@ -601,8 +601,9 @@ A widget that holds child widgets and scrolls its own content vertically once it
 
 - Children are registered with `addChild()`, not owned (same non-owning-reference convention as `Dialog`'s actions or `Drawer`'s items) - author each child's `Bounds` starting at/near the container's own `bounds.y`, exactly as you would for `Screen::addWidget()`.
 - Give the `Container` its own `Bounds` shorter than its children's combined height to make it scroll; if everything fits, scrolling never engages, same as `Screen`.
-- Shares `Screen`'s documented limitations: no sub-widget clip rect (a child partially past the container's edge is drawn in full or skipped, not cropped), vertical-only scrolling, and a `Slider` nested inside one won't be recognized as draggable by `Screen::isDraggableAt()` (which only checks the top-level hit widget) - the same gap `Dialog`/`Drawer`/`Menu`/`BottomSheet` already have for their own children.
+- A child scrolled partially past the container's own edge is cropped to it, not drawn in full or skipped, and a `Slider` nested inside one (at any nesting depth) is still correctly recognized as draggable by `Screen::isDraggableAt()`. Scrolling itself is still vertical-only, one axis, same as `Screen`.
 - Add it to `Screen` the same way as any other widget (`addWidget()`/`addFixedWidget()`); it forwards gestures and scroll internally to whichever child (or nested `Container`) they land on.
+- For a list too large to keep every child `Widget` resident in memory, see the [Container - Virtualized content](#container---virtualized-content) chapter.
 
 ```cpp
 // --- Container (the control under test) ---------------------------------------
@@ -624,33 +625,58 @@ screen.addWidget(demoContainer);
 
 *Full sketch: [`examples/controls/container/container.ino`](../examples/controls/container/container.ino)*
 
-#### Virtualized content: `setChildProvider()`
+### Container - Virtualized content
 
-`addChild()` needs every item's `Widget` to exist and stay resident for as long as it's registered - fine for a screenful of content, but not for a list of thousands of rows on a board with a few hundred KB of RAM. `setChildProvider()` is the alternative: instead of a stored list, you give the container two callbacks -
+`addChild()` needs every item's `Widget` to exist and stay resident for as long as it's registered - fine for a screenful of content, but not for a list of thousands of rows on a board with a few hundred KB of RAM. `setChildProvider()` is the alternative: instead of a stored list, you give a `Container` two callbacks -
 
 - a **count** function returning how many logical items there are (it can be huge - the callback is the only thing that scales, not memory), and
 - an **at(index)** function returning a **reference** to the `Widget` representing that index.
 
-The point is that `at()` doesn't have to construct a new object per index - the usual approach is a small fixed pool of real widgets (4-10, say) that `at()` repositions and relabels for whichever index is asked for, the same "recycler" pattern list views use everywhere. Setting a provider takes over completely: any children already added via `addChild()` are ignored while it's active.
+The point is that `at()` doesn't have to construct a new object per index - the usual approach is a small fixed pool of real widgets (4-15, say) that `at()` repositions and relabels for whichever index is asked for, the same "recycler" pattern list views use everywhere. Setting a provider takes over completely: any children already added via `addChild()` are ignored while it's active.
+
+The example below is a real, runnable sketch: a `Container` that reports **10,000** rows and scrolls through all of them, backed by a pool of only **12** real `ListItem` widgets - roughly a thousand-to-one reduction versus what `addChild()`-ing 10,000 `ListItem`s (each owning a `std::string` title and a `std::function` callback) would cost.
 
 ```cpp
-constexpr int kStationCount = 20000;      // however many logical rows there are
-std::array<ListItem<RGB565>, 6> pool{...}; // only 6 real widgets ever exist
+// --- Virtualized list (the control under test) ------------------------------
+constexpr int32_t kAppBarHeight = 56;
+constexpr int32_t kRowHeight = 40;
+constexpr int kLogicalCount = 10000;  // how many rows the list *reports*
+constexpr size_t kPoolSize = 12;      // how many ListItem widgets actually exist
 
-stationList.setChildProvider(
-    []() { return kStationCount; },
-    [&](int index) -> Widget<RGB565>& {
-      ListItem<RGB565>& item = pool[index % pool.size()];
-      item.bounds = stationList.itemRect(index);   // wherever your own layout puts row `index`
-      item.setTitle(stationNameAt(index));         // however you actually look up row `index`
+AppBar<RGB565> appBar(Bounds(0, 0, kWidth, kAppBarHeight), "10,000 Rows");
+Container<RGB565> bigList(Bounds(0, kAppBarHeight, kWidth, kHeight - kAppBarHeight));
+ListItem<RGB565> pool[kPoolSize];  // whichever ~8 rows are visible reuse these 12
+
+// setup():
+// O(1) content-height/scroll-range math instead of visiting all 10,000
+// logical rows on every frame - see Container::setUniformItemHeight().
+bigList.setUniformItemHeight(kRowHeight);
+
+bigList.setChildProvider(
+    []() { return kLogicalCount; },
+    [](int index) -> Widget<RGB565>& {
+      ListItem<RGB565>& item = pool[static_cast<size_t>(index) % kPoolSize];
+      item.bounds = Bounds(bigList.bounds.x, bigList.bounds.y + index * kRowHeight,
+                           bigList.bounds.w, kRowHeight);
+      char label[24];
+      snprintf(label, sizeof(label), "Row %d", index);
+      item.setTitle(label);
+      item.onClick = [index]() { printf("Row %d tapped\n", index); };
       return item;
     });
+
+screen.addFixedWidget(appBar);
+screen.addWidget(bigList);
 ```
+
+![Virtualized list](images/virtualized-list.png)
+
+*Full sketch: [`examples/controls/virtualized-list/virtualized-list.ino`](../examples/controls/virtualized-list/virtualized-list.ino)*
 
 **Guidelines**
 
 - Every provider-returned widget is themed automatically the moment it's fetched (there's no fixed set to cascade `setTheme()` to ahead of time), so you don't need to call `setTheme()` on pool widgets yourself.
-- `at()` is called once per index per pass (draw, hit-test, gesture dispatch, and `contentHeight()`'s scroll-range calculation all call it independently) - keep it cheap, especially with a large count, since `contentHeight()` visits every logical index to find the tallest one and runs on every frame via `clampScroll()`.
+- `at()` is called once per index per pass (draw, hit-test, gesture dispatch, and `contentHeight()`'s scroll-range calculation all call it independently) - keep it cheap, especially with a large count. Call `setUniformItemHeight()` (as the example does) if every row is the same height, so `contentHeight()`/`clampScroll()` become an O(1) calculation instead of fetching and measuring all 10,000 rows on every single frame.
 - **Caution with continuous gestures**: a drag/scroll latches the `Widget*` `at()` returned at the gesture's start and keeps calling methods on it through the rest of the gesture (`kChanged`/`kEnded`). Don't let your pool reassign that same slot to a different index while a gesture is still in progress, or the drag will end up operating on the wrong logical item.
 - Available the same way on `Screen` (`setContentProvider()`, for the root scrollable area), `Dialog`/`Banner` (`setActionProvider()`), `Carousel` (`setItemProvider()`, which also re-applies `itemRect(index)` to whatever `at()` returns on every fetch), and `Drawer`/`BottomSheet`/`Menu` (`setItemProvider()`, which just forwards to their own internal `Container`).
 
@@ -842,7 +868,7 @@ A modal side navigation panel holding a list of items (typically `ListItem`), sh
 
 - Use for an app's top-level navigation destinations, opened from an app bar's leading menu icon (see `kitchen-sink.ino`).
 - Wire `onScrimTap` to `screen.dismissDialog()` for tap-outside-to-close, and dismiss from each item's own `onClick` too.
-- The item area scrolls automatically once items overflow the panel's height (it's a `Container` under the hood - see `Core/Container.h`), and `setItemProvider()` is available as a callback-driven alternative to `addItem()` for a long settings-style list - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section.
+- The item area scrolls automatically once items overflow the panel's height (it's a `Container` under the hood - see `Core/Container.h`), and `setItemProvider()` is available as a callback-driven alternative to `addItem()` for a long settings-style list - see [Container - Virtualized content](#container---virtualized-content) section.
 
 ```cpp
 // --- Drawer (the control under test) -----------------------------------------
@@ -875,7 +901,7 @@ A popover list of items (typically `ListItem`), anchored near whatever opened it
 
 - Use for a small, contextual set of choices (a dropdown from a Button, a long-press context menu) - for full-screen navigation use `Drawer` instead.
 - Wire `onOutsideTap` to `screen.dismissDialog()` for the expected tap-outside-to-close behavior.
-- Like `Drawer`, the item area is a `Container` under the hood - it scrolls automatically if items overflow, and `setItemProvider()` is available as a callback-driven alternative to `addItem()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section.
+- Like `Drawer`, the item area is a `Container` under the hood - it scrolls automatically if items overflow, and `setItemProvider()` is available as a callback-driven alternative to `addItem()` - see [Container - Virtualized content](#container---virtualized-content) section.
 
 ```cpp
 // --- Menu (the control under test) -------------------------------------------
@@ -907,7 +933,7 @@ A modal alert: full-screen scrim + centered card + title + wrapped message + act
 
 - Always give a Dialog at least one action wired to `screen.dismissDialog()` - without one there's no way for the user to close it (this example omits that follow-up wiring for brevity beyond the one OK action shown).
 - Reserve dialogs for choices that truly need to interrupt the user - for a transient, non-blocking status message use `Snackbar` instead.
-- `setActionProvider()` is available as a callback-driven alternative to `addAction()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section (not usually needed for a dialog's handful of actions, but available for consistency).
+- `setActionProvider()` is available as a callback-driven alternative to `addAction()` - see [Container - Virtualized content](#container---virtualized-content) section (not usually needed for a dialog's handful of actions, but available for consistency).
 
 ```cpp
 // --- Dialog (the control under test) -----------------------------------------
@@ -939,7 +965,7 @@ A modal panel sliding up from the bottom edge, full width, with rounded top corn
 
 - Use for a focused set of actions/options related to the current context (a share sheet, a "more options" panel) - prefer `Dialog` for a yes/no-style interruption instead.
 - `itemRect()` is theme-independent by design, so items can be constructed at global scope before the sheet has ever been given a theme - the same pattern `Drawer::itemRect()` uses.
-- Like `Drawer`, the item area is a `Container` under the hood - it scrolls automatically if items overflow, and `setItemProvider()` is available as a callback-driven alternative to `addItem()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section.
+- Like `Drawer`, the item area is a `Container` under the hood - it scrolls automatically if items overflow, and `setItemProvider()` is available as a callback-driven alternative to `addItem()` - see [Container - Virtualized content](#container---virtualized-content) section.
 
 ```cpp
 // --- BottomSheet (the control under test) ------------------------------------

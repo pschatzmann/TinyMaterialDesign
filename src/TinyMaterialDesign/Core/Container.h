@@ -129,7 +129,20 @@ class Container : public Widget<RGB_T> {
 
     if (isContinuousType(event.type)) {
       if (event.phase == GesturePhase::kBegan) {
-        if (event.type == GestureType::kPan || event.type == GestureType::kScroll) {
+        // Only claim a pan/scroll for this container's own scroll if it
+        // actually has somewhere to scroll to - otherwise it would swallow
+        // every such gesture starting anywhere inside it (clamped to a
+        // no-op) before a nested Container/Screen underneath ever saw it,
+        // even one that genuinely needs to scroll. When this container has
+        // nothing to scroll, fall through to the same "find the hit child"
+        // path as any other continuous gesture, so - directly or through a
+        // few levels of nesting - whichever Container actually has
+        // overflowing content gets the drag. If more than one level in the
+        // chain needs to scroll, the outermost one still wins once it
+        // needs to (unchanged from before) - only the "nothing to scroll,
+        // so don't claim it" case is new.
+        if ((event.type == GestureType::kPan || event.type == GestureType::kScroll) &&
+            contentHeight() > bounds.h) {
           scrollDragActive_ = true;
           activeChild_ = nullptr;
         } else {
