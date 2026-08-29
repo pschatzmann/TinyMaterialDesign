@@ -32,6 +32,18 @@
 #include "TinyMaterialDesign/Widgets/ListItem.h"
 #include "TinyMaterialDesign/Widgets/Drawer.h"
 #include "TinyMaterialDesign/Widgets/MediaCard.h"
+#include "TinyMaterialDesign/Widgets/Fab.h"
+#include "TinyMaterialDesign/Widgets/Badge.h"
+#include "TinyMaterialDesign/Widgets/TabBar.h"
+#include "TinyMaterialDesign/Widgets/SegmentedButton.h"
+#include "TinyMaterialDesign/Widgets/Snackbar.h"
+#include "TinyMaterialDesign/Widgets/Tooltip.h"
+#include "TinyMaterialDesign/Widgets/Menu.h"
+#include "TinyMaterialDesign/Widgets/BottomSheet.h"
+#include "TinyMaterialDesign/Widgets/NavigationBar.h"
+#include "TinyMaterialDesign/Widgets/NavigationRail.h"
+#include "TinyMaterialDesign/Widgets/SearchBar.h"
+#include "TinyMaterialDesign/Widgets/Banner.h"
 
 #if defined(ARDUINO) || defined(TINYMD_AUTO_NAMESPACE)
 using namespace tinymd;

@@ -26,23 +26,35 @@ for touch interaction.
 - Widgets:
   - `Button` (Filled / Tonal / Outlined / Text / Elevated, with a ripple)
   - `IconButton` (Standard / Filled / Tonal - Filled/Tonal are an elevated,
-    colored circular button, i.e. a Material "FAB"), `Checkbox`, `Switch`,
-    `RadioButton` + `RadioGroup`
-  - `Slider` (drag or tap-to-jump)
+    colored circular button), `FloatingActionButton`/`FAB` (circular or
+    extended pill with a label, in Surface/Primary/Secondary/Tertiary
+    colors), `Checkbox`, `Switch`, `RadioButton` + `RadioGroup`
+  - `Slider` (drag or tap-to-jump), `SegmentedButton` (single- or
+    multi-select connected segments)
   - `LinearProgressIndicator` / `CircularProgressIndicator` (determinate or
     indeterminate)
-  - `Card` (elevated, with word-wrapped body text), `Label`, `Divider`, `Chip`
-  - `AppBar` (title + leading/trailing icon), `Dialog` (modal alert)
+  - `Card` (elevated, with word-wrapped body text), `Label`, `Divider`,
+    `Chip`, `Badge` (dot or count marker)
+  - `AppBar` (title + leading/trailing icon), `TabBar` (exclusive tab row
+    with a sliding indicator)
+  - `Dialog` (modal alert), `Menu` (popover item list, modal but unscrimmed),
+    `BottomSheet` (modal bottom panel with a drag handle)
   - `Drawer` (modal side navigation panel, shown like a `Dialog`) + `ListItem`
     (tappable icon+title row with a selected state - the drawer's building
     block, also usable standalone for any settings-style list)
+  - `NavigationBar` / `NavigationRail` (bottom/side exclusive destination
+    navigation, icon + label with a selected pill)
+  - `Snackbar` (auto-dismissing bottom message + action), `Tooltip` (timed
+    popup label anchored to a widget), `Banner` (persistent inline message
+    with up to 2 actions)
   - `MediaCard` (tappable, image-backed card with a caption - pair with
     `GridLayout`, Core/GridLayout.h, to lay out several of these in a
     wrapping grid)
-  - `TextField` (single-line) and `TextArea` (multi-line, word-wrapped) text
-    input, plus `Keyboard` (on-screen QWERTY, with a symbols page and a
-    dedicated Enter/newline key) - one `Keyboard` can drive any number of
-    fields of either kind via `keyboard.manage(field)`
+  - `TextField` (single-line), `TextArea` (multi-line, word-wrapped) and
+    `SearchBar` (pill-shaped, with search/clear glyphs) text input, plus
+    `Keyboard` (on-screen QWERTY, with a symbols page and a dedicated
+    Enter/newline key) - one `Keyboard` can drive any number of fields via
+    `keyboard.manage(field)`
 - `Screen`: owns your widgets, draws them, and routes gesture events to the
   right one - including correctly latching a `Slider` drag even if the
   finger moves past the slider's own bounds. Content added via
@@ -50,6 +62,23 @@ for touch interaction.
   the drawn surface, with an auto-appearing scrollbar; `addFixedWidget()`
   pins a widget (an `AppBar`, a `Keyboard`) to its own screen position
   regardless of scroll
+
+## Documentation
+
+See [`docs/Tutorial.md`](docs/Tutorial.md) for an introduction to the
+library's core concepts (`Widget`, `MaterialTheme`, `Screen`) and a
+guided, per-control reference - what each widget is for, usage guidelines,
+example code, and a screenshot for every one of them.
+
+See `examples/kitchen-sink` for a fully worked, clickable demo (one of every
+widget, with scrolling and a color scheme picker) that runs unchanged on
+both a real ESP32 board (`LCDBoardGuitionESP32_LVGL_2_4Display` by default -
+swap in a different `LCDBoard` from `TinyGPU/Boards/LCDBoardsESP32.h` for
+other hardware) and, via `LCDBoardDesktopSDL`, in an identically-sized SDL2
+window on desktop for mouse-driven testing without touch hardware. See
+`examples/controls` for a short, single-widget sketch per control, and
+`examples/esp32-touch-buttons` for a smaller real-hardware-flavored sketch.
+
 
 ## Requirements
 
@@ -81,47 +110,6 @@ TinyGPU itself, this only compiles when `arduino-esp32` is also present as
 a component in the same build (uncomment the dependency in
 `idf_component.yml` if you need it) - TinyMaterialDesign pulls in TinyGPU's
 `TouchDriver.h`/`DeviceOutput.h`, which need Arduino APIs.
-
-## Usage
-
-```cpp
-#include <TinyMaterialDesign.h>
-
-Surface<RGB565> surface(240, 320, FontRGB565);
-auto theme = defaultTheme<RGB565>();
-Screen<RGB565> screen;
-
-Button<RGB565> okButton(Bounds(70, 260, 100, 40), "OK");
-
-TouchDriverXPT2046 touch(SPI, /*cs=*/5);
-GestureDetector gestures;
-
-void setup() {
-  surface.begin();
-  touch.begin();
-
-  okButton.onClick = []() { Serial.println("OK tapped"); };
-  screen.addWidget(okButton);
-
-  gestures.onGesture = [](GestureEvent& e) { screen.handleGesture(e); };
-  gestures.isDraggable = [](int16_t x, int16_t y) { return screen.isDraggableAt(x, y); };
-}
-
-void loop() {
-  gestures.update(touch);
-  screen.update(millis());
-  screen.draw(surface, theme);
-  // ... send `surface` to your display, e.g. via DeviceOutput ...
-}
-```
-
-See `examples/kitchen-sink` for a fully worked, clickable demo (one of every
-widget, with scrolling and a color scheme picker) that runs unchanged on
-both a real ESP32 board (`LCDBoardGuitionESP32_LVGL_2_4Display` by default -
-swap in a different `LCDBoard` from `TinyGPU/Boards/LCDBoardsESP32.h` for
-other hardware) and, via `LCDBoardDesktopSDL`, in an identically-sized SDL2
-window on desktop for mouse-driven testing without touch hardware. See
-`examples/esp32-touch-buttons` for a smaller real-hardware-flavored sketch.
 
 ## Building the examples
 

@@ -102,4 +102,17 @@ void drawMenu(tinygpu::ISurface<RGB_T>& target, const Bounds& r, RGB_T color,
   drawLineThick(target, in.x, in.bottom(), in.right(), in.bottom(), color, thickness);
 }
 
+/// Magnifying-glass search glyph, inset within `r` - used by SearchBar.
+template <typename RGB_T>
+void drawSearch(tinygpu::ISurface<RGB_T>& target, const Bounds& r, RGB_T color,
+                uint8_t thickness = 2) {
+  const int32_t lensDiameter = static_cast<int32_t>(r.w * 0.55f);
+  const int32_t lensCx = r.x + static_cast<int32_t>(r.w * 0.40f);
+  const int32_t lensCy = r.y + static_cast<int32_t>(r.h * 0.40f);
+  target.drawCircle(toPx(lensCx), toPx(lensCy), toPx(lensDiameter / 2), color);
+  const int32_t handleX0 = lensCx + static_cast<int32_t>(lensDiameter * 0.42f);
+  const int32_t handleY0 = lensCy + static_cast<int32_t>(lensDiameter * 0.42f);
+  drawLineThick(target, handleX0, handleY0, r.right(), r.bottom(), color, thickness);
+}
+
 }  // namespace tinymd

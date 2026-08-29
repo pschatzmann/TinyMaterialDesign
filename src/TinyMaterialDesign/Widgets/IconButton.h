@@ -20,9 +20,11 @@ using IconPainter = void (*)(tinygpu::ISurface<RGB_T>&, const Bounds&, RGB_T, ui
 
 /// kStandard is a plain flat tap target (the original IconButton look - app
 /// bar/toolbar icons). kFilled/kTonal add a colored, elevated circular
-/// background, i.e. a Material "Floating Action Button" - set a large
-/// enough bounds (e.g. 56x56) and pair it with setColorOverride() for a
-/// status-dependent FAB (a play/stop control that's green or red, say).
+/// background - for a dedicated Floating Action Button (elevation shadow,
+/// pill "extended" form with a label) see Fab.h's FloatingActionButton/FAB
+/// instead; this variant remains handy for a smaller status-dependent
+/// circular button paired with setColorOverride() (a play/stop control
+/// that's green or red, say).
 enum class IconButtonVariant { kStandard, kFilled, kTonal };
 
 /// Circular tap target hosting one vector glyph from Draw/Icons.h (or any
