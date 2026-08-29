@@ -26,7 +26,9 @@ MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
 Screen<RGB565> screen(theme);
 
 // --- Banner (the control under test) -----------------------------------------
-Banner<RGB565> demoBanner(Bounds(0, 48, kWidth, 80), "You're offline. Check your connection.");
+// Pinned to the bottom edge (see addFixedWidget() below) rather than just
+// under an app bar, so it reads as a persistent bottom-of-screen notice.
+Banner<RGB565> demoBanner(Bounds(0, kHeight - 80, kWidth, 80), "You're offline. Check your connection.");
 
 void setup() {
   board.begin();

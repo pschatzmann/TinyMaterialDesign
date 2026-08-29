@@ -1,5 +1,53 @@
 # TinyMaterialDesign Tutorial
 
+## Table of contents
+
+- [Introduction](#introduction)
+  - [Core concepts](#core-concepts)
+  - [The shared sketch skeleton](#the-shared-sketch-skeleton)
+- [Actions](#actions)
+  - [`Button`](#button)
+  - [`IconButton`](#iconbutton)
+  - [`FloatingActionButton` (alias `FAB`)](#floatingactionbutton-alias-fab)
+  - [`Chip`](#chip)
+- [Selection & input](#selection--input)
+  - [`Checkbox`](#checkbox)
+  - [`Switch`](#switch)
+  - [`RadioButton` + `RadioGroup`](#radiobutton--radiogroup)
+  - [`Slider`](#slider)
+  - [`SegmentedButton`](#segmentedbutton)
+  - [`Badge`](#badge)
+- [Progress & feedback](#progress--feedback)
+  - [`LinearProgressIndicator`](#linearprogressindicator)
+  - [`CircularProgressIndicator`](#circularprogressindicator)
+  - [`Snackbar`](#snackbar)
+  - [`Tooltip`](#tooltip)
+  - [`Banner`](#banner)
+- [Containment](#containment)
+  - [`Card`](#card)
+  - [`MediaCard`](#mediacard)
+  - [`Carousel`](#carousel)
+  - [`ListItem`](#listitem)
+  - [`Divider`](#divider)
+  - [`Label`](#label)
+- [Navigation](#navigation)
+  - [`AppBar`](#appbar)
+  - [`TabBar`](#tabbar)
+  - [`NavigationBar`](#navigationbar)
+  - [`NavigationRail`](#navigationrail)
+  - [`Drawer`](#drawer)
+  - [`Menu`](#menu)
+  - [`Dialog`](#dialog)
+  - [`BottomSheet`](#bottomsheet)
+- [Text input](#text-input)
+  - [`TextField`](#textfield)
+  - [`TextArea`](#textarea)
+  - [`SearchBar`](#searchbar)
+  - [`Keyboard`](#keyboard)
+- [Building and running the examples](#building-and-running-the-examples)
+
+---
+
 ## Introduction
 
 TinyMaterialDesign is a header-only Arduino/C++ library that implements the
@@ -434,7 +482,9 @@ A persistent, non-modal inline message with up to 2 text actions - Material's "b
 
 ```cpp
 // --- Banner (the control under test) -----------------------------------------
-Banner<RGB565> demoBanner(Bounds(0, 48, kWidth, 80), "You're offline. Check your connection.");
+// Pinned to the bottom edge (see addFixedWidget() below) rather than just
+// under an app bar, so it reads as a persistent bottom-of-screen notice.
+Banner<RGB565> demoBanner(Bounds(0, kHeight - 80, kWidth, 80), "You're offline. Check your connection.");
 
 // setup():
 screen.addFixedWidget(demoBanner);
@@ -603,9 +653,26 @@ A top app bar: a title plus optional leading/trailing icon widgets (typically `I
 
 ```cpp
 // --- AppBar (the control under test) -----------------------------------------
+// leading/trailing are plain pointer fields (see AppBar::leading/trailing) -
+// the IconButtons themselves are declared here and positioned/attached in
+// setup(), the same pattern kitchen-sink.ino uses.
 AppBar<RGB565> demoAppBar(Bounds(0, 0, kWidth, 48), "App Bar");
+IconButton<RGB565> appBarMenu;
+IconButton<RGB565> appBarAdd;
 
 // setup():
+appBarMenu = IconButton<RGB565>(demoAppBar.leadingRect(), drawMenu<RGB565>);
+demoAppBar.leading = &appBarMenu;
+appBarMenu.onClick = []() { printf("Menu tapped\n"); };
+
+appBarAdd = IconButton<RGB565>(demoAppBar.trailingRect(), drawPlus<RGB565>);
+demoAppBar.trailing = &appBarAdd;
+appBarAdd.onClick = []() { printf("Add tapped\n"); };
+
+// Demonstrates setColorOverride(): recolors just this bar to the theme's
+// primary color, independent of the rest of the screen.
+demoAppBar.setColorOverride(theme.colors.primary, theme.colors.onPrimary);
+
 screen.addFixedWidget(demoAppBar);
 ```
 

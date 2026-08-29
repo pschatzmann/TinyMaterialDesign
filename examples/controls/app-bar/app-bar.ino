@@ -26,12 +26,29 @@ MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
 Screen<RGB565> screen(theme);
 
 // --- AppBar (the control under test) -----------------------------------------
+// leading/trailing are plain pointer fields (see AppBar::leading/trailing) -
+// the IconButtons themselves are declared here and positioned/attached in
+// setup(), the same pattern kitchen-sink.ino uses.
 AppBar<RGB565> demoAppBar(Bounds(0, 0, kWidth, 48), "App Bar");
+IconButton<RGB565> appBarMenu;
+IconButton<RGB565> appBarAdd;
 
 void setup() {
   board.begin();
   display.begin();
   surface.begin();
+
+  appBarMenu = IconButton<RGB565>(demoAppBar.leadingRect(), drawMenu<RGB565>);
+  demoAppBar.leading = &appBarMenu;
+  appBarMenu.onClick = []() { printf("Menu tapped\n"); };
+
+  appBarAdd = IconButton<RGB565>(demoAppBar.trailingRect(), drawPlus<RGB565>);
+  demoAppBar.trailing = &appBarAdd;
+  appBarAdd.onClick = []() { printf("Add tapped\n"); };
+
+  // Demonstrates setColorOverride(): recolors just this bar to the theme's
+  // primary color, independent of the rest of the screen.
+  demoAppBar.setColorOverride(theme.colors.primary, theme.colors.onPrimary);
 
   screen.addFixedWidget(demoAppBar);
 
