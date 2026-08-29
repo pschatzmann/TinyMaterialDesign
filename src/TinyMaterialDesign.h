@@ -5,8 +5,16 @@
 
 #include "TinyMaterialDesign/Core/Bounds.h"
 #include "TinyMaterialDesign/Core/Widget.h"
+#include "TinyMaterialDesign/Core/Container.h"
 #include "TinyMaterialDesign/Core/Screen.h"
 #include "TinyMaterialDesign/Core/GridLayout.h"
+#include "TinyMaterialDesign/Core/LinearLayout.h"
+#include "TinyMaterialDesign/Core/FlowLayout.h"
+#include "TinyMaterialDesign/Core/SplitLayout.h"
+#include "TinyMaterialDesign/Core/AnchorLayout.h"
+#include "TinyMaterialDesign/Core/StackLayout.h"
+#include "TinyMaterialDesign/Core/RadialLayout.h"
+#include "TinyMaterialDesign/Core/TableLayout.h"
 
 #include "TinyMaterialDesign/Theme/MaterialColors.h"
 #include "TinyMaterialDesign/Theme/MaterialTheme.h"

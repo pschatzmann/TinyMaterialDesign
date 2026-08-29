@@ -23,6 +23,7 @@ else()
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
     option(TMD_BUILD_EXAMPLES "Build Examples" ON)
+    option(TMD_BUILD_TESTS "Build unit tests" ON)
 
     # TinyGPU builds its own examples (font-test, bouncing-ball, ...) when
     # TGPU_BUILD_EXAMPLES is ON, which is its default. We only want our own
@@ -47,10 +48,13 @@ else()
     target_link_libraries(TinyMaterialDesign INTERFACE TinyGPU)
     target_include_directories(TinyMaterialDesign INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-    if(TMD_BUILD_EXAMPLES)
-      # Our examples are Arduino sketches built via arduino_sketch(), which
-      # TinyGPU only pulls in (from Arduino-Emulator) when it builds its own
-      # examples - since we just disabled that, fetch it ourselves.
+    if(TMD_BUILD_EXAMPLES OR TMD_BUILD_TESTS)
+      # Both examples (Arduino sketches built via arduino_sketch()) and the
+      # plain logic tests under tests/ need Arduino-Emulator: TinyGPU.h
+      # unconditionally includes an ArduinoCore-API header (Print.h, via
+      # AVIWriter.h), so even a test that never touches a board/display
+      # still needs that include path - TinyGPU only pulls Arduino-Emulator
+      # in itself (from its own examples build), which we disabled above.
       #
       # USE_HTTPS pulls in wolfSSL (a real, if slow-to-build, TLS stack) so
       # WiFiClientSecure works on the desktop debug build too - needed by
@@ -65,8 +69,15 @@ else()
         GIT_TAG        main
       )
       FetchContent_MakeAvailable(arduino_emulator)
+    endif()
 
+    if(TMD_BUILD_EXAMPLES)
       add_subdirectory(examples)
+    endif()
+
+    if(TMD_BUILD_TESTS)
+      enable_testing()
+      add_subdirectory(tests)
     endif()
 
 endif()

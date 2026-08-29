@@ -1,18 +1,21 @@
 #pragma once
 #include <algorithm>
+#include <utility>
 #include <vector>
 
 #include "TinyGPU/Drivers/DisplayDriver.h"
 #include "TinyGPU/Input/GestureDetector.h"
 #include "TinyGPU/Surface/WindowedSurface.h"
 #include "TinyMaterialDesignConfig.h"
-#include "TinyMaterialDesign/Core/Widget.h"
+#include "TinyMaterialDesign/Core/Container.h"
 
 namespace tinymd {
 
 /**
  * @brief Owns a set of widgets, draws them, and routes gesture events to
- * whichever one should handle each event.
+ * whichever one should handle each event - the one root Container every
+ * sketch has, plus what only a root needs: a second non-scrolling widget
+ * layer, modal dialog presentation, and actually writing to a display.
  *
  * Screen does not own the widgets (the sketch does, typically as globals -
  * the same non-owning-reference composition TinyGPU itself uses everywhere,
@@ -37,39 +40,57 @@ namespace tinymd {
  *     }
  *   }
  *
- * Vertical scrolling: widgets added via addWidget() are laid out in one
- * "content" coordinate space that can be taller than the surface passed to
- * draw() - if it is, dragging up/down over any non-interactive spot (an
- * empty gap, a Label, a Card, ...) scrolls that content, the same gesture
- * TouchDriver/GestureDetector already classify as kScroll/kPan. Widgets
- * that should stay put while the content behind them scrolls - a top
- * AppBar, a bottom Keyboard - go through addFixedWidget() instead; they're
- * always drawn and hit-tested on top of the scrollable content, at their
- * own authored (screen-space) bounds. If everything already fits within
- * the drawn surface, scrolling never engages (offset stays 0), no
- * scrollbar is drawn, and existing sketches that only call addWidget()
- * are unaffected. A thin scrollbar on the right edge appears automatically
- * whenever there's something to scroll - see drawScrollbar().
+ * Vertical scrolling: widgets added via addWidget() are Container's own
+ * children (see Container.h) - laid out in one "content" coordinate space
+ * that can be taller than the surface passed to draw() - if it is, dragging
+ * up/down over any non-interactive spot (an empty gap, a Label, a Card, ...)
+ * scrolls that content, the same gesture TouchDriver/GestureDetector already
+ * classify as kScroll/kPan. Widgets that should stay put while the content
+ * behind them scrolls - a top AppBar, a bottom Keyboard - go through
+ * addFixedWidget() instead; they're always drawn and hit-tested on top of
+ * the scrollable content, at their own authored (screen-space) bounds. If
+ * everything already fits within the drawn surface, scrolling never
+ * engages (offset stays 0), no scrollbar is drawn, and existing sketches
+ * that only call addWidget() are unaffected. A thin scrollbar on the right
+ * edge appears automatically whenever there's something to scroll - see
+ * Container::draw().
  *
- * Known limitation: there is no sub-widget clip rect anywhere in this
- * library (see e.g. TextArea's own overflow caveat), so a widget that
- * straddles the top edge of the viewport while scrolled partway off it
- * renders pinned to y=0 at full size for that moment rather than being
- * cropped - cosmetic only, and gone once it's fully scrolled past.
+ * Since Screen *is* a Container (its scrollable content is just
+ * Container's own child list), an addWidget()'d widget can itself be a
+ * Container - nesting a smaller scrollable panel inside the one root
+ * scrollable area. See Container.h for that case's own scroll/gesture
+ * behavior and limitations (which Screen shares for its own content, listed
+ * below).
+ *
+ * A widget that straddles the viewport's top/bottom edge while scrolled
+ * partway off it is cropped to the viewport (see ISurface::pushClipRect(),
+ * used the same way Container.h uses it for its own children) rather than
+ * rendered pinned to y=0 at full size or skipped outright.
  */
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
-class Screen {
+class Screen : public Container<RGB_T> {
  public:
-  Screen() = default;
+  using Container<RGB_T>::bounds;
+
+  Screen() { this->setTheme(ownedTheme_); }
 
   /// Constructs a Screen that starts with `theme` already set - pushed into
   /// every widget registered afterward (see setTheme()).
-  explicit Screen(const MaterialTheme<RGB_T>& theme) : theme_(theme) {}
+  explicit Screen(const MaterialTheme<RGB_T>& theme) : ownedTheme_(theme) { this->setTheme(ownedTheme_); }
 
-  /// Registers `widget` as scrollable content (see the class comment).
+  /// Registers `widget` as scrollable content (see the class comment) -
+  /// Screen's own name for Container::addChild().
   void addWidget(Widget<RGB_T>& widget) {
-    scrollWidgets_.push_back(&widget);
-    widget.setTheme(theme_);
+    this->addChild(widget);
+    dirty_ = true;
+  }
+
+  /// Switches the scrollable content to callback-driven mode - Screen's own
+  /// name for Container::setChildProvider(), for lists too large to keep
+  /// every item's Widget resident at once. See Container.h's class comment.
+  void setContentProvider(typename Container<RGB_T>::ChildCountFn count,
+                          typename Container<RGB_T>::ChildAtFn at) {
+    this->setChildProvider(std::move(count), std::move(at));
     dirty_ = true;
   }
 
@@ -78,7 +99,7 @@ class Screen {
   /// hit-tested on top of every scrollable widget.
   void addFixedWidget(Widget<RGB_T>& widget) {
     fixedWidgets_.push_back(&widget);
-    widget.setTheme(theme_);
+    widget.setTheme(ownedTheme_);
     dirty_ = true;
   }
 
@@ -86,16 +107,15 @@ class Screen {
   /// registered (scrollable, fixed, and a presented dialog if any).
   /// Widgets registered later (addWidget()/addFixedWidget()/
   /// presentDialog()) pick up whatever theme is current at that time.
-  void setTheme(const MaterialTheme<RGB_T>& theme) {
-    theme_ = theme;
-    for (Widget<RGB_T>* w : scrollWidgets_) if (w != nullptr) w->setTheme(theme_);
-    for (Widget<RGB_T>* w : fixedWidgets_) if (w != nullptr) w->setTheme(theme_);
-    if (dialog_ != nullptr) dialog_->setTheme(theme_);
+  void setTheme(const MaterialTheme<RGB_T>& theme) override {
+    ownedTheme_ = theme;
+    Container<RGB_T>::setTheme(ownedTheme_);
+    for (Widget<RGB_T>* w : fixedWidgets_) {
+      if (w != nullptr) w->setTheme(ownedTheme_);
+    }
+    if (dialog_ != nullptr) dialog_->setTheme(ownedTheme_);
     dirty_ = true;
   }
-
-  /// Current vertical scroll offset (0 = content's natural top).
-  int32_t scrollOffset() const { return scrollOffset_; }
 
   /// Overrides the theme's background color for this screen. Not required -
   /// draw() falls back to theme_.colors.background.
@@ -135,18 +155,12 @@ class Screen {
   /// see isDirty().
   void invalidate() { dirty_ = true; }
 
-  void draw(tinygpu::ISurface<RGB_T>& target) {
-    viewportHeight_ = static_cast<int32_t>(target.height());
-    clampScroll();
+  void draw(tinygpu::ISurface<RGB_T>& target) override {
+    bounds.w = static_cast<int32_t>(target.width());
+    bounds.h = static_cast<int32_t>(target.height());
 
-    target.clear(hasBackgroundColor_ ? backgroundColor_ : theme_.colors.background);
-    for (Widget<RGB_T>* widget : scrollWidgets_) {
-      if (!widget->visible) continue;
-      widget->bounds.y -= scrollOffset_;
-      widget->draw(target);
-      widget->bounds.y += scrollOffset_;
-    }
-    drawScrollbar(target);
+    target.clear(hasBackgroundColor_ ? backgroundColor_ : ownedTheme_.colors.background);
+    Container<RGB_T>::draw(target);  // clamps scroll, draws scrollable content + scrollbar
     for (Widget<RGB_T>* widget : fixedWidgets_) {
       if (widget->visible) widget->draw(target);
     }
@@ -198,8 +212,9 @@ class Screen {
   /// this method's existence) - pick whichever fits your board.
   void drawDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
                   int32_t viewportWidth, int32_t viewportHeight) {
-    viewportHeight_ = viewportHeight;
-    clampScroll();
+    bounds.w = viewportWidth;
+    bounds.h = viewportHeight;
+    this->clampScroll();
 
     if (dialog_ != nullptr && dialog_->visible) {
       drawModalDirect(driver, scratch, viewportWidth, viewportHeight);
@@ -207,7 +222,7 @@ class Screen {
       return;
     }
 
-    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme_.colors.background;
+    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : ownedTheme_.colors.background;
 
     // Unlike draw() (which clears the whole target surface up front - see
     // its target.clear() call above), per-widget rendering only ever
@@ -220,14 +235,16 @@ class Screen {
     driver.writeColor(static_cast<size_t>(viewportWidth), static_cast<size_t>(viewportHeight),
                       background);
 
-    for (Widget<RGB_T>* widget : scrollWidgets_) {
+    const int scrollCount = this->effectiveCount();
+    for (int i = 0; i < scrollCount; ++i) {
+      Widget<RGB_T>* widget = this->effectiveChild(i);
       if (!widget->visible) continue;
       Bounds screenBounds = widget->bounds;
-      screenBounds.y -= scrollOffset_;
+      screenBounds.y -= this->scrollOffset_;
       if (!intersectsViewport(screenBounds, viewportWidth, viewportHeight)) continue;
-      widget->bounds.y -= scrollOffset_;
+      widget->bounds.y -= this->scrollOffset_;
       drawWidgetDirect(driver, scratch, *widget, background);
-      widget->bounds.y += scrollOffset_;
+      widget->bounds.y += this->scrollOffset_;
     }
     drawScrollbarDirect(driver, scratch, viewportWidth, viewportHeight);
     for (Widget<RGB_T>* widget : fixedWidgets_) {
@@ -240,25 +257,30 @@ class Screen {
 
   /// Advances any time-based widget animation. Call once per loop(), before
   /// checking isDirty().
-  void update(uint32_t nowMs) {
-    bool changed = false;
-    for (Widget<RGB_T>* widget : scrollWidgets_) changed |= widget->update(nowMs);
+  bool update(uint32_t nowMs) override {
+    bool changed = Container<RGB_T>::update(nowMs);
     for (Widget<RGB_T>* widget : fixedWidgets_) changed |= widget->update(nowMs);
     if (dialog_ != nullptr) changed |= dialog_->update(nowMs);
     if (changed) dirty_ = true;
+    return changed;
   }
 
   /// Wire this to GestureDetector::isDraggable so a drag starting on a
   /// draggable widget (currently only Slider) is classified as kDrag
-  /// instead of kPan/kScroll.
+  /// instead of kPan/kScroll - recurses into nested composites (Container,
+  /// Dialog, Drawer, Menu, BottomSheet) via their own isDraggableAt(), so a
+  /// Slider at any nesting depth is still recognized correctly.
   bool isDraggableAt(int32_t x, int32_t y) const {
     if (dialog_ != nullptr) return false;
-    const HitResult hit = hitTestDetailed(x, y);
-    return hit.widget != nullptr && hit.widget->isDraggable();
+    Widget<RGB_T>* fixed = hitTestFixed(x, y);
+    if (fixed != nullptr) return fixed->isDraggableAt(x, y);
+    return Container<RGB_T>::isDraggableAt(x, y);
   }
 
   /// Wire this to GestureDetector::onGesture.
-  void handleGesture(const tinygpu::GestureEvent& event) {
+  void handleGesture(const tinygpu::GestureEvent& event) { onGesture(event); }
+
+  bool onGesture(const tinygpu::GestureEvent& event) override {
     using tinygpu::GesturePhase;
     using tinygpu::GestureType;
 
@@ -271,55 +293,64 @@ class Screen {
     if (dialog_ != nullptr) {
       // Modal: every gesture goes to the presented dialog while it's shown.
       // Dialog bounds are always screen-space, so no offset applies.
-      if (dialog_->enabled) dialog_->onGesture(event);
-      if (isContinuousType(event.type) && event.phase == GesturePhase::kEnded) {
-        activeWidget_ = nullptr;
-        scrollDragActive_ = false;
+      const bool handled = dialog_->enabled ? dialog_->onGesture(event) : false;
+      if (Container<RGB_T>::isContinuousType(event.type) && event.phase == GesturePhase::kEnded) {
+        activeFixedWidget_ = nullptr;
+        usingFixedWidget_ = false;
+        this->activeChild_ = nullptr;
+        this->scrollDragActive_ = false;
       }
-      return;
+      return handled;
     }
 
-    if (isContinuousType(event.type)) {
+    if (Container<RGB_T>::isContinuousType(event.type)) {
       // Drag-like gestures: latch what kBegan hit and keep routing to it
       // for kChanged/kEnded even if the pointer leaves its bounds -
       // otherwise dragging a Slider thumb past its own bounds would stop
       // updating it. kPan/kScroll only ever fire over a non-draggable
       // start point (see GestureDetector::classifyDragType), so they
-      // always mean "scroll the content" here rather than routing to
-      // whatever passive widget (if any) happens to sit under them.
+      // always mean "scroll the content" and are always left to
+      // Container::onGesture() below rather than the fixed layer. Fixed
+      // widgets - always screen-space, never scrollable - take priority
+      // over Container's own (scrollable) children, same order as
+      // hitTestFixed()-then-Container in the discrete branch below.
       if (event.phase == GesturePhase::kBegan) {
-        if (event.type == GestureType::kPan || event.type == GestureType::kScroll) {
-          scrollDragActive_ = true;
-          activeWidget_ = nullptr;
-        } else {
-          scrollDragActive_ = false;
-          const HitResult hit = hitTestDetailed(event.startPoint.x, event.startPoint.y);
-          activeWidget_ = hit.widget;
-          activeWidgetScrollable_ = hit.scrollable;
+        usingFixedWidget_ = false;
+        activeFixedWidget_ = nullptr;
+        if (event.type != GestureType::kPan && event.type != GestureType::kScroll) {
+          Widget<RGB_T>* hit = hitTestFixed(event.startPoint.x, event.startPoint.y);
+          if (hit != nullptr) {
+            usingFixedWidget_ = true;
+            activeFixedWidget_ = hit;
+          }
         }
       }
 
-      if (scrollDragActive_) {
-        scrollOffset_ -= event.stepDeltaY;
-        clampScroll();
-      } else if (activeWidget_ != nullptr && activeWidget_->enabled) {
-        dispatch(*activeWidget_, event, activeWidgetScrollable_);
+      bool handled = false;
+      if (usingFixedWidget_) {
+        if (activeFixedWidget_ != nullptr && activeFixedWidget_->enabled) {
+          handled = activeFixedWidget_->onGesture(event);
+        }
+      } else {
+        handled = Container<RGB_T>::onGesture(event);
       }
 
       if (event.phase == GesturePhase::kEnded) {
-        activeWidget_ = nullptr;
-        scrollDragActive_ = false;
+        activeFixedWidget_ = nullptr;
+        usingFixedWidget_ = false;
       }
-      return;
+      return handled;
     }
 
     // Discrete gestures (tap/double-tap/long-press/swipe-*) always report
     // phase kEnded with no preceding kBegan, so they're hit-tested fresh
-    // at the event's own point rather than routed through activeWidget_.
-    const HitResult hit = hitTestDetailed(event.point.x, event.point.y);
-    if (hit.widget != nullptr && hit.widget->enabled) {
-      dispatch(*hit.widget, event, hit.scrollable);
-    }
+    // at the event's own point. Fixed widgets are checked first since
+    // they're always drawn over scrollable ones (matches draw()); falling
+    // through to Container::onGesture() covers this screen's own scrollable
+    // content, including translating the point into content space.
+    Widget<RGB_T>* hit = hitTestFixed(event.point.x, event.point.y);
+    if (hit != nullptr && hit->enabled) return hit->onGesture(event);
+    return Container<RGB_T>::onGesture(event);
   }
 
   /// Shows `dialog` modally: it receives every gesture and is drawn on top
@@ -327,7 +358,7 @@ class Screen {
   /// own action-button callbacks).
   void presentDialog(Widget<RGB_T>& dialog) {
     dialog_ = &dialog;
-    dialog.setTheme(theme_);
+    dialog.setTheme(ownedTheme_);
     dirty_ = true;
   }
   void dismissDialog() {
@@ -342,6 +373,17 @@ class Screen {
   static bool intersectsViewport(const Bounds& bounds, int32_t viewportWidth, int32_t viewportHeight) {
     return bounds.bottom() > 0 && bounds.y < viewportHeight && bounds.right() > 0 &&
            bounds.x < viewportWidth;
+  }
+
+  /// Last-added widget wins ties, i.e. later addFixedWidget() calls are
+  /// treated as drawn on top (matches draw()). (x, y) is screen-space,
+  /// same as every fixed widget's own bounds.
+  Widget<RGB_T>* hitTestFixed(int32_t x, int32_t y) const {
+    for (auto it = fixedWidgets_.rbegin(); it != fixedWidgets_.rend(); ++it) {
+      Widget<RGB_T>* widget = *it;
+      if (widget->visible && widget->enabled && widget->bounds.contains(x, y)) return widget;
+    }
+    return nullptr;
   }
 
   /// Draws one widget into `scratch` (resized to exactly its own bounds)
@@ -365,13 +407,13 @@ class Screen {
   }
 
   /// Draws the right-edge scroll position indicator directly - mirrors
-  /// drawScrollbar() (the draw()-path version) exactly, just resized/
-  /// blitted instead of drawn into the shared full-size target. Only
-  /// kBarWidth px wide regardless of viewport height, so - unlike a modal -
-  /// this always fits in one shot.
+  /// Container::drawScrollbar(), just resized/blitted instead of drawn
+  /// into the shared full-size target. Only kBarWidth px wide regardless
+  /// of viewport height, so - unlike a modal - this always fits in one
+  /// shot.
   void drawScrollbarDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
                            int32_t viewportWidth, int32_t viewportHeight) {
-    const int32_t content = contentHeight();
+    const int32_t content = this->contentHeight();
     if (content <= viewportHeight) return;
 
     constexpr int32_t kBarWidth = 4;
@@ -381,15 +423,15 @@ class Screen {
     tinygpu::WindowedSurface<RGB_T> window(scratch, trackX, 0, static_cast<size_t>(kBarWidth),
                                            static_cast<size_t>(viewportHeight), scratch.font());
     window.fillRect(trackX, 0, kBarWidth, viewportHeight,
-                    blend(theme_.colors.surface, theme_.colors.outline, 0.25f));
+                    blend(ownedTheme_.colors.surface, ownedTheme_.colors.outline, 0.25f));
 
     const int32_t maxScroll = content - viewportHeight;
     const int32_t thumbHeight =
         std::max(int32_t(24), viewportHeight * viewportHeight / content);
     const int32_t thumbY = maxScroll > 0
-                               ? (scrollOffset_ * (viewportHeight - thumbHeight)) / maxScroll
+                               ? (this->scrollOffset_ * (viewportHeight - thumbHeight)) / maxScroll
                                : 0;
-    window.fillRoundRect(trackX, thumbY, kBarWidth, thumbHeight, kBarWidth / 2, theme_.colors.primary);
+    window.fillRoundRect(trackX, thumbY, kBarWidth, thumbHeight, kBarWidth / 2, ownedTheme_.colors.primary);
     driver.writeData(scratch, trackX, 0);
   }
 
@@ -399,7 +441,7 @@ class Screen {
   /// resized to `viewportWidth x kModalBandHeight`.
   void drawModalDirect(tinygpu::DisplayDriver<RGB_T>& driver, tinygpu::ISurface<RGB_T>& scratch,
                        int32_t viewportWidth, int32_t viewportHeight) {
-    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : theme_.colors.background;
+    const RGB_T background = hasBackgroundColor_ ? backgroundColor_ : ownedTheme_.colors.background;
 
     constexpr int32_t kModalBandHeight = 40;
     if (scratch.resize(static_cast<size_t>(viewportWidth), static_cast<size_t>(kModalBandHeight))) {
@@ -431,112 +473,14 @@ class Screen {
     }
   }
 
-  std::vector<Widget<RGB_T>*> scrollWidgets_;
   std::vector<Widget<RGB_T>*> fixedWidgets_;
-  Widget<RGB_T>* activeWidget_ = nullptr;
-  bool activeWidgetScrollable_ = false;
-  bool scrollDragActive_ = false;
-  int32_t scrollOffset_ = 0;
-  int32_t viewportHeight_ = 0;
+  Widget<RGB_T>* activeFixedWidget_ = nullptr;
+  bool usingFixedWidget_ = false;
   bool dirty_ = true;
   Widget<RGB_T>* dialog_ = nullptr;
   RGB_T backgroundColor_{};
   bool hasBackgroundColor_ = false;
-  MaterialTheme<RGB_T> theme_{};
-
-  struct HitResult {
-    Widget<RGB_T>* widget;
-    bool scrollable;
-  };
-
-  /// Last-added widget wins ties within each group, i.e. later addWidget()/
-  /// addFixedWidget() calls are treated as drawn on top (matches draw()).
-  /// Fixed widgets are checked first since they're always drawn over
-  /// scrollable ones; (x, y) is screen-space either way - scrollable
-  /// bounds are authored in content space, so the point is translated by
-  /// the current scroll offset only for that half of the search.
-  HitResult hitTestDetailed(int32_t x, int32_t y) const {
-    for (auto it = fixedWidgets_.rbegin(); it != fixedWidgets_.rend(); ++it) {
-      Widget<RGB_T>* widget = *it;
-      if (widget->visible && widget->enabled && widget->bounds.contains(x, y)) {
-        return {widget, false};
-      }
-    }
-    const int32_t contentY = y + scrollOffset_;
-    for (auto it = scrollWidgets_.rbegin(); it != scrollWidgets_.rend(); ++it) {
-      Widget<RGB_T>* widget = *it;
-      if (widget->visible && widget->enabled && widget->bounds.contains(x, contentY)) {
-        return {widget, true};
-      }
-    }
-    return {nullptr, false};
-  }
-
-  /// Forwards `event` to `widget`, translating its point/startPoint back
-  /// into content space first if `widget` is one of the scrollable ones -
-  /// their bounds (and so their own hit-testing, e.g. Keyboard's per-key
-  /// rects) are authored in content space, not screen space.
-  void dispatch(Widget<RGB_T>& widget, const tinygpu::GestureEvent& event, bool scrollable) {
-    if (!scrollable || scrollOffset_ == 0) {
-      widget.onGesture(event);
-      return;
-    }
-    tinygpu::GestureEvent shifted = event;
-    shifted.point.y = static_cast<int16_t>(shifted.point.y + scrollOffset_);
-    shifted.startPoint.y = static_cast<int16_t>(shifted.startPoint.y + scrollOffset_);
-    widget.onGesture(shifted);
-  }
-
-  int32_t contentHeight() const {
-    int32_t bottom = 0;
-    for (Widget<RGB_T>* widget : scrollWidgets_) bottom = std::max(bottom, widget->bounds.bottom());
-    return bottom;
-  }
-
-  void clampScroll() {
-    const int32_t maxScroll = std::max(int32_t{0}, contentHeight() - viewportHeight_);
-    scrollOffset_ = std::min(std::max(scrollOffset_, int32_t{0}), maxScroll);
-  }
-
-  /// A thin right-edge indicator of scroll position/range - the only visual
-  /// cue that there's more content than fits, since nothing else about a
-  /// scrollable Screen looks different from one that isn't. Drawn between
-  /// the scrollable content and the fixed widgets, so a pinned AppBar/
-  /// Keyboard naturally occludes it where they overlap (top/bottom), and
-  /// only omitted entirely when content already fits (nothing to scroll).
-  void drawScrollbar(tinygpu::ISurface<RGB_T>& target) {
-    const int32_t content = contentHeight();
-    if (content <= viewportHeight_) return;
-
-    constexpr int32_t kBarWidth = 4;
-    const int32_t trackX = static_cast<int32_t>(target.width()) - kBarWidth;
-    target.fillRect(toPx(trackX), 0, toPx(kBarWidth), toPx(viewportHeight_),
-                    blend(theme_.colors.surface, theme_.colors.outline, 0.25f));
-
-    const int32_t maxScroll = content - viewportHeight_;
-    const int32_t thumbHeight =
-        std::max(int32_t(24), viewportHeight_ * viewportHeight_ / content);
-    const int32_t thumbY = maxScroll > 0
-                               ? (scrollOffset_ * (viewportHeight_ - thumbHeight)) / maxScroll
-                               : 0;
-    target.fillRoundRect(toPx(trackX), toPx(thumbY), toPx(kBarWidth), toPx(thumbHeight),
-                         toPx(kBarWidth / 2), theme_.colors.primary);
-  }
-
-  static bool isContinuousType(tinygpu::GestureType type) {
-    using tinygpu::GestureType;
-    switch (type) {
-      case GestureType::kDrag:
-      case GestureType::kPan:
-      case GestureType::kScroll:
-      case GestureType::kPinchIn:
-      case GestureType::kPinchOut:
-      case GestureType::kRotate:
-        return true;
-      default:
-        return false;
-    }
-  }
+  MaterialTheme<RGB_T> ownedTheme_{};
 };
 
 }  // namespace tinymd

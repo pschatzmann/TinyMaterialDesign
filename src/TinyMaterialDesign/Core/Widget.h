@@ -93,8 +93,22 @@ class Widget {
 
   /// Whether a continuous drag starting inside this widget's bounds should
   /// be classified as GestureType::kDrag (see GestureDetector::isDraggable
-  /// and Screen::isDraggableAt). Only Slider needs true.
+  /// and Screen::isDraggableAt). Only Slider (and Carousel, for its own
+  /// horizontal swipe) needs true.
   virtual bool isDraggable() const { return false; }
+
+  /// Whether a drag starting at (x, y) - this widget's own coordinate
+  /// space - should be classified as GestureType::kDrag. Default: just
+  /// isDraggable(), ignoring the point - correct for any leaf widget. A
+  /// composite (Container, Dialog, Drawer, Menu, BottomSheet) overrides
+  /// this to recurse into whichever child sits at that point instead, so
+  /// e.g. a Slider nested inside one of them is still recognized
+  /// correctly by Screen::isDraggableAt().
+  virtual bool isDraggableAt(int32_t x, int32_t y) const {
+    (void)x;
+    (void)y;
+    return isDraggable();
+  }
 
   /// Number of child widgets this one draws as part of itself, if any (0
   /// by default) - a composite widget like Drawer overrides this + child()
@@ -139,6 +153,9 @@ class Widget {
     (void)background;
     (void)foreground;
   }
+
+  /// Provides true if the widget is a container
+  virtual bool isContainer() const { return false; }
 
  protected:
   /// The theme this widget draws itself with - set via setTheme(), pushed

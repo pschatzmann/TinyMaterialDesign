@@ -5,6 +5,8 @@
 [![ESP-IDF Component](https://img.shields.io/badge/ESP--IDF-Component-blue.svg?logo=espressif)](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/build-system.html#components)
 [![License: Apache](https://img.shields.io/badge/License-Apache-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
 
+Material Design is an open-source design system created by Google in 2014 to help developers and designers build consistent, high-quality digital interfaces across Android, iOS, the web, and other platforms.
+
 TinyMaterialDesign is a header-only Arduino library that implements the most
 important [Material Design 3](https://m3.material.io/) GUI components and
 draws them with [TinyGPU](https://github.com/pschatzmann/TinyGPU) - using
@@ -15,54 +17,19 @@ for touch interaction.
 
 ## Features
 
-- Material 3 theming: `ColorScheme` (the baseline purple palette, plus
-  seed-hue-generated Blue/Green/Red/Orange presets, each with a light and
-  dark variant - see `MaterialTheme.h`'s `defaultTheme()`/`blueTheme()`/
-  `greenTheme()`/`redTheme()`/`orangeTheme()` and their `*DarkTheme()`
-  counterparts), shape (corner radius) tokens, an 8px spacing unit, and 4
-  typography roles backed by TinyGPU's bitmap fonts
-- Works with RGB565, RGB666 and RGB888 surfaces (every class is a template
-  over `RGB_T`, same convention TinyGPU itself uses)
-- Widgets:
-  - `Button` (Filled / Tonal / Outlined / Text / Elevated, with a ripple)
-  - `IconButton` (Standard / Filled / Tonal - Filled/Tonal are an elevated,
-    colored circular button), `FloatingActionButton`/`FAB` (circular or
-    extended pill with a label, in Surface/Primary/Secondary/Tertiary
-    colors), `Checkbox`, `Switch`, `RadioButton` + `RadioGroup`
-  - `Slider` (drag or tap-to-jump), `SegmentedButton` (single- or
-    multi-select connected segments)
-  - `LinearProgressIndicator` / `CircularProgressIndicator` (determinate or
-    indeterminate)
-  - `Card` (elevated, with word-wrapped body text), `Label`, `Divider`,
-    `Chip`, `Badge` (dot or count marker)
-  - `AppBar` (title + leading/trailing icon), `TabBar` (exclusive tab row
-    with a sliding indicator)
-  - `Dialog` (modal alert), `Menu` (popover item list, modal but unscrimmed),
-    `BottomSheet` (modal bottom panel with a drag handle)
-  - `Drawer` (modal side navigation panel, shown like a `Dialog`) + `ListItem`
-    (tappable icon+title row with a selected state - the drawer's building
-    block, also usable standalone for any settings-style list)
-  - `NavigationBar` / `NavigationRail` (bottom/side exclusive destination
-    navigation, icon + label with a selected pill)
-  - `Snackbar` (auto-dismissing bottom message + action), `Tooltip` (timed
-    popup label anchored to a widget), `Banner` (persistent inline message
-    with up to 2 actions)
-  - `MediaCard` (tappable, image-backed card with a caption - pair with
-    `GridLayout`, Core/GridLayout.h, to lay out several of these in a
-    wrapping grid), `Carousel` (horizontally paged, drag-to-swipe row of
-    items with a snap animation and page-dot indicator)
-  - `TextField` (single-line), `TextArea` (multi-line, word-wrapped) and
-    `SearchBar` (pill-shaped, with search/clear glyphs) text input, plus
-    `Keyboard` (on-screen QWERTY, with a symbols page and a dedicated
-    Enter/newline key) - one `Keyboard` can drive any number of fields via
-    `keyboard.manage(field)`
-- `Screen`: owns your widgets, draws them, and routes gesture events to the
-  right one - including correctly latching a `Slider` drag even if the
-  finger moves past the slider's own bounds. Content added via
-  `addWidget()` scrolls automatically (drag up/down) when it's taller than
-  the drawn surface, with an auto-appearing scrollbar; `addFixedWidget()`
-  pins a widget (an `AppBar`, a `Keyboard`) to its own screen position
-  regardless of scroll
+- Material 3 theming - color schemes (including light/dark variants and
+  seed-hue presets), shape/spacing tokens, and typography, all backed by
+  TinyGPU's bitmap fonts
+- Works with RGB565, RGB666, and RGB888 surfaces
+- Over 30 Material 3 widgets covering actions, selection, input, progress,
+  containment, navigation, and text entry - including a nestable, scrolling
+  `Container` and `Screen` (which is itself one)
+- A small set of layout calculators (`Core/*Layout.h`) for positioning
+  widgets - grid, linear, flow, split, anchor, stack, radial, and table
+- Automatic scrolling with clipping, correct gesture routing (drag latching,
+  nested-widget dispatch) at any nesting depth, and an optional
+  callback-driven "virtualized content" mode for lists too large to keep
+  every item resident in memory
 
 ## Documentation
 
@@ -77,14 +44,17 @@ both a real ESP32 board (`LCDBoardGuitionESP32_LVGL_2_4Display` by default -
 swap in a different `LCDBoard` from `TinyGPU/Boards/LCDBoardsESP32.h` for
 other hardware) and, via `LCDBoardDesktopSDL`, in an identically-sized SDL2
 window on desktop for mouse-driven testing without touch hardware. See
-`examples/controls` for a short, single-widget sketch per control, and
-`examples/esp32-touch-buttons` for a smaller real-hardware-flavored sketch.
+`examples/controls` for a short, single-widget sketch per control,
+`examples/layouts` for a short, single-layout sketch per layout calculator,
+and `examples/esp32-touch-buttons` for a smaller real-hardware-flavored
+sketch.
 
 
 ## Requirements
 
 - [TinyGPU](https://github.com/pschatzmann/TinyGPU) 0.4.0 or newer (this
-  library uses TinyGPU's `fillRoundRect`/`drawRoundRect`/`drawArc`)
+  library uses TinyGPU's `fillRoundRect`/`drawRoundRect`/`drawArc`/
+  `pushClipRect`/`popClipRect`)
 
 ## Installation
 
@@ -121,6 +91,26 @@ cmake -B build -S .
 cmake --build build
 ./build/examples/kitchen-sink/kitchen-sink
 ```
+
+Pass `-DFETCHCONTENT_SOURCE_DIR_TINYGPU=/path/to/local/TinyGPU` to build
+against a local TinyGPU checkout instead of fetching it from GitHub.
+
+## Testing
+
+`tests/` has a small CTest suite covering `Container`/`Screen` scrolling,
+gesture dispatch and clipping, the callback-driven "virtualized content"
+mode, and the widgets that used to have a fixed item-count cap. It needs no
+board, display, or SDL - only `TinyMaterialDesign` + TinyGPU (pulled in the
+same way the examples are) - so it also builds with
+`-DTMD_BUILD_EXAMPLES=OFF`:
+
+```sh
+cmake -B build -S .
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+Pass `-DTMD_BUILD_TESTS=OFF` to skip building the tests.
 
 Pass `-DFETCHCONTENT_SOURCE_DIR_TINYGPU=/path/to/local/TinyGPU` to build
 against a local TinyGPU checkout instead of fetching it from GitHub.

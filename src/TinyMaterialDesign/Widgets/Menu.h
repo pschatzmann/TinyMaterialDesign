@@ -1,9 +1,11 @@
 #pragma once
 #include <functional>
+#include <utility>
 
 #include "TinyGPU/Color/RGB565.h"
 #include "TinyGPU/Color/RGB666.h"
 #include "TinyGPU/Color/RGB888.h"
+#include "TinyMaterialDesign/Core/Container.h"
 #include "TinyMaterialDesign/Core/Widget.h"
 
 namespace tinymd {
@@ -11,7 +13,8 @@ namespace tinymd {
 /**
  * @brief Popover list of items (typically ListItem), anchored near whatever
  * opened it - e.g. a dropdown from a Button, or a context menu from a
- * long-press.
+ * long-press. Scrolls automatically once the items overflow the panel's
+ * height - the item area is a Container (Core/Container.h) under the hood.
  *
  * Same modal-presentation shape as Dialog/Drawer: show with
  * Screen::presentDialog(menu) and dismiss from an item's onClick or
@@ -28,29 +31,36 @@ namespace tinymd {
  *
  * Items are not owned by Menu - same non-owning addItem() convention as
  * Drawer::addItem()/Dialog::addAction().
+ *
+ * Known limitation: same as Drawer's - Screen::drawDirect()'s per-widget-
+ * buffer rendering path draws items at their unscrolled position; only the
+ * regular draw() path scrolls correctly. See Drawer.h's class comment.
  */
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Menu : public Widget<RGB_T> {
  public:
   Menu() = default;
-  explicit Menu(Bounds bounds) { this->bounds = bounds; }
+  explicit Menu(Bounds bounds) {
+    this->bounds = bounds;
+    items_.bounds = bounds;
+  }
 
   /// Fired when a tap lands outside the panel - wire to
   /// Screen::dismissDialog() for tap-outside-to-close.
   std::function<void()> onOutsideTap;
 
-  void addItem(Widget<RGB_T>& item) {
-    if (itemCount_ < kMaxItems) {
-      items_[itemCount_++] = &item;
-      if (this->theme_ != nullptr) item.setTheme(*this->theme_);
-    }
+  void addItem(Widget<RGB_T>& item) { items_.addChild(item); }
+
+  /// Switches to callback-driven items - see Container.h's class comment
+  /// and Drawer.h's own setItemProvider() for the same pattern.
+  void setItemProvider(typename Container<RGB_T>::ChildCountFn count,
+                       typename Container<RGB_T>::ChildAtFn at) {
+    items_.setChildProvider(std::move(count), std::move(at));
   }
 
   void setTheme(const MaterialTheme<RGB_T>& theme) override {
     Widget<RGB_T>::setTheme(theme);
-    for (int i = 0; i < itemCount_; ++i) {
-      if (items_[i] != nullptr) items_[i]->setTheme(theme);
-    }
+    items_.setTheme(theme);
   }
 
   /// Suggested rect for the `index`-th item, stacked from the panel's top.
@@ -60,9 +70,8 @@ class Menu : public Widget<RGB_T> {
 
   void draw(tinygpu::ISurface<RGB_T>& target) override {
     drawBackground(target);
-    for (int i = 0; i < itemCount_; ++i) {
-      if (items_[i]->visible) items_[i]->draw(target);
-    }
+    items_.bounds = this->bounds;
+    items_.draw(target);
   }
 
   /// Panel fill only, no items - see Widget::drawBackground() and
@@ -75,14 +84,21 @@ class Menu : public Widget<RGB_T> {
                          toPx(this->bounds.h), radius, this->theme().colors.outline);
   }
 
-  int childCount() const override { return itemCount_; }
-  Widget<RGB_T>* child(int index) override { return items_[index]; }
+  int childCount() const override { return items_.childCount(); }
+  Widget<RGB_T>* child(int index) override { return items_.child(index); }
 
   bool onGesture(const tinygpu::GestureEvent& event) override {
-    for (int i = 0; i < itemCount_; ++i) {
-      if (items_[i]->enabled && items_[i]->bounds.contains(event.point.x, event.point.y)) {
-        return items_[i]->onGesture(event);
+    items_.bounds = this->bounds;
+
+    if (Container<RGB_T>::isContinuousType(event.type)) {
+      if (event.phase == tinygpu::GesturePhase::kBegan) {
+        routingToItems_ = items_.bounds.contains(event.startPoint.x, event.startPoint.y);
       }
+      return routingToItems_ ? items_.onGesture(event) : true;
+    }
+
+    if (items_.bounds.contains(event.point.x, event.point.y) && items_.onGesture(event)) {
+      return true;
     }
     if (isTapGesture(event.type) && !this->bounds.contains(event.point.x, event.point.y)) {
       if (onOutsideTap) onOutsideTap();
@@ -90,17 +106,17 @@ class Menu : public Widget<RGB_T> {
     return true;
   }
 
-  bool update(uint32_t nowMs) override {
-    bool changed = false;
-    for (int i = 0; i < itemCount_; ++i) changed |= items_[i]->update(nowMs);
-    return changed;
+  bool update(uint32_t nowMs) override { return items_.update(nowMs); }
+
+  /// True if there's an item at (x, y) that's draggable, recursing through
+  /// the item Container - see Widget::isDraggableAt().
+  bool isDraggableAt(int32_t x, int32_t y) const override {
+    return items_.bounds.contains(x, y) && items_.isDraggableAt(x, y);
   }
 
  private:
-  static constexpr int kMaxItems = 8;
-
-  Widget<RGB_T>* items_[kMaxItems] = {};
-  int itemCount_ = 0;
+  Container<RGB_T> items_;
+  bool routingToItems_ = false;
 };
 
 using MenuRGB565 = Menu<tinygpu::RGB565>;

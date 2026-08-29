@@ -1,9 +1,11 @@
 #pragma once
 #include <functional>
+#include <vector>
 
 #include "TinyGPU/Color/RGB565.h"
 #include "TinyGPU/Color/RGB666.h"
 #include "TinyGPU/Color/RGB888.h"
+#include "TinyMaterialDesign/Core/LinearLayout.h"
 #include "TinyMaterialDesign/Core/Widget.h"
 
 namespace tinymd {
@@ -14,24 +16,21 @@ namespace tinymd {
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class SegmentedButton : public Widget<RGB_T> {
  public:
-  static constexpr int kMaxSegments = 5;
-
   SegmentedButton() = default;
   explicit SegmentedButton(Bounds bounds) { this->bounds = bounds; }
 
   /// Fired whenever selection changes, with a bitmask of selected segments
   /// (bit i set == segment i selected) - a single-select bar always has
-  /// exactly one bit set.
+  /// exactly one bit set. Limits a bar to at most 32 segments (the bitmask's
+  /// width), well beyond what's usable as an actual row of segments.
   std::function<void(uint32_t)> onChange;
 
-  void addSegment(const char* label) {
-    if (segmentCount_ < kMaxSegments) segments_[segmentCount_++] = label;
-  }
+  void addSegment(const char* label) { segments_.push_back(label); }
   void setMultiSelect(bool multiSelect) { multiSelect_ = multiSelect; }
 
   bool isSelected(int index) const { return (selectedMask_ & (1u << index)) != 0; }
   void setSelected(int index, bool selected) {
-    if (index < 0 || index >= segmentCount_) return;
+    if (index < 0 || index >= static_cast<int>(segments_.size())) return;
     if (!multiSelect_) {
       selectedMask_ = selected ? (1u << index) : 0u;
       return;
@@ -44,8 +43,9 @@ class SegmentedButton : public Widget<RGB_T> {
   }
 
   void draw(tinygpu::ISurface<RGB_T>& target) override {
-    if (segmentCount_ == 0) return;
-    const int32_t segmentWidth = this->bounds.w / segmentCount_;
+    const int count = static_cast<int>(segments_.size());
+    if (count == 0) return;
+    const LinearLayout slots(this->bounds, LayoutAxis::Horizontal, /*spacing=*/0);
     const size_t radius = toPx(this->theme().shape.full);
     RGB_T outline = this->theme().colors.outline;
     if (!this->enabled) outline = blend(outline, this->theme().colors.surface, 0.5f);
@@ -54,8 +54,10 @@ class SegmentedButton : public Widget<RGB_T> {
                          toPx(this->bounds.h), radius, outline);
 
     tinygpu::IFont<RGB_T>& font = *this->theme().typography.label;
-    for (int i = 0; i < segmentCount_; ++i) {
-      const int32_t x = this->bounds.x + i * segmentWidth;
+    for (int i = 0; i < count; ++i) {
+      const Bounds slot = slots.itemRect(i, count);
+      const int32_t x = slot.x;
+      const int32_t segmentWidth = slot.w;
       const bool selected = isSelected(i);
       RGB_T background = selected ? this->theme().colors.secondaryContainer : this->theme().colors.surface;
       RGB_T foreground =
@@ -84,10 +86,11 @@ class SegmentedButton : public Widget<RGB_T> {
   }
 
   bool onGesture(const tinygpu::GestureEvent& event) override {
-    if (!isTapGesture(event.type) || segmentCount_ == 0) return false;
-    const int32_t segmentWidth = this->bounds.w / segmentCount_;
+    const int count = static_cast<int>(segments_.size());
+    if (!isTapGesture(event.type) || count == 0) return false;
+    const int32_t segmentWidth = this->bounds.w / count;
     int index = (event.point.x - this->bounds.x) / segmentWidth;
-    if (index < 0 || index >= segmentCount_) return true;
+    if (index < 0 || index >= count) return true;
 
     if (multiSelect_) {
       setSelected(index, !isSelected(index));
@@ -99,8 +102,7 @@ class SegmentedButton : public Widget<RGB_T> {
   }
 
  private:
-  const char* segments_[kMaxSegments] = {};
-  int segmentCount_ = 0;
+  std::vector<const char*> segments_;
   uint32_t selectedMask_ = 1u;  // segment 0 selected by default
   bool multiSelect_ = false;
 };

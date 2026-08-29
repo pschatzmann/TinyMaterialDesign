@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <cmath>
 #include <functional>
+#include <utility>
+#include <vector>
 
 #include "TinyGPU/Color/RGB565.h"
 #include "TinyGPU/Color/RGB666.h"
@@ -31,15 +33,21 @@ namespace tinymd {
  * isDraggableAt()`. Releasing mid-drag snaps to the nearest item,
  * animated over a few frames via `update()`.
  *
- * Known limitation: like `Screen`'s own scrolling (see its class comment),
- * there's no sub-widget clip rect - an item scrolled partway past the
- * carousel's left/right edge still renders at full size for that moment
- * rather than being cropped. Cosmetic only.
+ * An item scrolled partway past the carousel's left/right edge is cropped
+ * to it (see ISurface::pushClipRect()), not drawn in full or skipped.
+ *
+ * Alternative to addItem(): setItemProvider(count, at) switches to
+ * callback-driven items, for a station/genre list too large to keep every
+ * MediaCard resident at once - see Container.h's class comment for the same
+ * pattern. `at(index)`'s returned Widget has its bounds overwritten with
+ * itemRect(index) on every fetch (addItem() only does this once, since a
+ * vector-mode item's position never needs to change again).
  */
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Carousel : public Widget<RGB_T> {
  public:
-  static constexpr int kMaxItems = 8;
+  using ItemCountFn = std::function<int()>;
+  using ItemAtFn = std::function<Widget<RGB_T>&(int index)>;
 
   Carousel() = default;
   explicit Carousel(Bounds bounds, int32_t itemWidth = 140, int32_t gap = 12)
@@ -52,17 +60,23 @@ class Carousel : public Widget<RGB_T> {
   std::function<void(int)> onPageChange;
 
   /// Positions `item`'s own bounds (see class comment) and appends it.
+  /// Ignored while an item provider is active - see setItemProvider().
   void addItem(Widget<RGB_T>& item) {
-    if (itemCount_ >= kMaxItems) return;
-    item.bounds = itemRect(itemCount_);
-    items_[itemCount_++] = &item;
+    item.bounds = itemRect(static_cast<int>(items_.size()));
+    items_.push_back(&item);
     if (this->theme_ != nullptr) item.setTheme(*this->theme_);
+  }
+
+  /// Switches to callback-driven items - see the class comment.
+  void setItemProvider(ItemCountFn count, ItemAtFn at) {
+    itemCountFn_ = std::move(count);
+    itemAtFn_ = std::move(at);
   }
 
   void setTheme(const MaterialTheme<RGB_T>& theme) override {
     Widget<RGB_T>::setTheme(theme);
-    for (int i = 0; i < itemCount_; ++i) {
-      if (items_[i] != nullptr) items_[i]->setTheme(theme);
+    for (Widget<RGB_T>* item : items_) {
+      if (item != nullptr) item->setTheme(theme);
     }
   }
 
@@ -73,14 +87,15 @@ class Carousel : public Widget<RGB_T> {
   }
 
   int currentIndex() const { return currentIndex_; }
-  int pageCount() const { return itemCount_; }
+  int pageCount() const { return itemCount(); }
 
   /// Pages to `index`, clamped to a valid item - animated (the same
   /// snap-glide update() uses after a drag release) unless `animate` is
   /// false.
   void setCurrentIndex(int index, bool animate = true) {
-    if (itemCount_ == 0) return;
-    index = std::min(std::max(index, 0), itemCount_ - 1);
+    const int count = itemCount();
+    if (count == 0) return;
+    index = std::min(std::max(index, 0), count - 1);
     const bool changed = index != currentIndex_;
     currentIndex_ = index;
     targetOffsetX_ = static_cast<float>(index * (itemWidth_ + gap_));
@@ -92,8 +107,11 @@ class Carousel : public Widget<RGB_T> {
   bool isDraggable() const override { return true; }
 
   void draw(tinygpu::ISurface<RGB_T>& target) override {
-    for (int i = 0; i < itemCount_; ++i) {
-      Widget<RGB_T>* item = items_[i];
+    target.pushClipRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
+                        toPx(this->bounds.h));
+    const int count = itemCount();
+    for (int i = 0; i < count; ++i) {
+      Widget<RGB_T>* item = itemAt(i);
       if (!item->visible) continue;
       const int32_t contentX = item->bounds.x;
       item->bounds.x = this->bounds.x + contentX - static_cast<int32_t>(offsetX_);
@@ -102,6 +120,7 @@ class Carousel : public Widget<RGB_T> {
       }
       item->bounds.x = contentX;
     }
+    target.popClipRect();
     drawIndicator(target);
   }
 
@@ -116,11 +135,13 @@ class Carousel : public Widget<RGB_T> {
     if (!isTapGesture(event.type)) return false;
 
     const int32_t contentX = event.point.x - this->bounds.x + static_cast<int32_t>(offsetX_);
-    for (int i = 0; i < itemCount_; ++i) {
-      if (items_[i]->enabled && items_[i]->bounds.contains(contentX, event.point.y)) {
+    const int count = itemCount();
+    for (int i = 0; i < count; ++i) {
+      Widget<RGB_T>* item = itemAt(i);
+      if (item->enabled && item->bounds.contains(contentX, event.point.y)) {
         tinygpu::GestureEvent shifted = event;
         shifted.point.x = static_cast<int16_t>(contentX);
-        return items_[i]->onGesture(shifted);
+        return item->onGesture(shifted);
       }
     }
     return true;
@@ -138,7 +159,8 @@ class Carousel : public Widget<RGB_T> {
       }
       changed = true;
     }
-    for (int i = 0; i < itemCount_; ++i) changed |= items_[i]->update(nowMs);
+    const int count = itemCount();
+    for (int i = 0; i < count; ++i) changed |= itemAt(i)->update(nowMs);
     return changed;
   }
 
@@ -147,16 +169,35 @@ class Carousel : public Widget<RGB_T> {
 
   int32_t itemWidth_ = 140;
   int32_t gap_ = 12;
-  Widget<RGB_T>* items_[kMaxItems] = {};
-  int itemCount_ = 0;
+  std::vector<Widget<RGB_T>*> items_;
+  ItemCountFn itemCountFn_;
+  ItemAtFn itemAtFn_;
 
   float offsetX_ = 0.0f;
   float targetOffsetX_ = 0.0f;
   bool animating_ = false;
   int currentIndex_ = 0;
 
+  int itemCount() const { return itemCountFn_ ? itemCountFn_() : static_cast<int>(items_.size()); }
+
+  /// The item at `index` right now - from the provider if active (bounds
+  /// reset to itemRect(index) and themed on every fetch, since a pooled
+  /// provider Widget may have just served a different index - see the class
+  /// comment), else from the addItem()'d vector (bounds set once, at add
+  /// time).
+  Widget<RGB_T>* itemAt(int index) const {
+    if (itemAtFn_) {
+      Widget<RGB_T>& item = itemAtFn_(index);
+      item.bounds = itemRect(index);
+      if (this->theme_ != nullptr) item.setTheme(*this->theme_);
+      return &item;
+    }
+    return items_[static_cast<size_t>(index)];
+  }
+
   int32_t maxOffsetX() const {
-    return itemCount_ > 0 ? std::max(int32_t{0}, (itemCount_ - 1) * (itemWidth_ + gap_)) : 0;
+    const int count = itemCount();
+    return count > 0 ? std::max(int32_t{0}, (count - 1) * (itemWidth_ + gap_)) : 0;
   }
 
   void clampOffset() {
@@ -166,21 +207,22 @@ class Carousel : public Widget<RGB_T> {
   /// Rounds the current (mid-drag) offset to the nearest item and starts
   /// the snap-glide animation toward it - see update().
   void snapToNearest() {
-    if (itemCount_ == 0) return;
+    if (itemCount() == 0) return;
     const int32_t step = itemWidth_ + gap_;
     const int index = step > 0 ? static_cast<int>(std::round(offsetX_ / step)) : 0;
     setCurrentIndex(index, /*animate=*/true);
   }
 
   void drawIndicator(tinygpu::ISurface<RGB_T>& target) {
-    if (itemCount_ <= 1) return;
+    const int count = itemCount();
+    if (count <= 1) return;
     constexpr int32_t kDotDiameter = 6;
     constexpr int32_t kDotGap = 8;
-    const int32_t totalWidth = itemCount_ * kDotDiameter + (itemCount_ - 1) * kDotGap;
+    const int32_t totalWidth = count * kDotDiameter + (count - 1) * kDotGap;
     int32_t x = this->bounds.centerX() - totalWidth / 2;
     const int32_t y = this->bounds.bottom() - kIndicatorHeight / 2;
 
-    for (int i = 0; i < itemCount_; ++i) {
+    for (int i = 0; i < count; ++i) {
       const RGB_T color =
           i == currentIndex_ ? this->theme().colors.primary : this->theme().colors.surfaceVariant;
       target.fillCircle(toPx(x + kDotDiameter / 2), toPx(y), toPx(kDotDiameter / 2), color);

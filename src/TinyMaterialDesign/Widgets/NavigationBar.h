@@ -1,9 +1,11 @@
 #pragma once
 #include <functional>
+#include <vector>
 
 #include "TinyGPU/Color/RGB565.h"
 #include "TinyGPU/Color/RGB666.h"
 #include "TinyGPU/Color/RGB888.h"
+#include "TinyMaterialDesign/Core/LinearLayout.h"
 #include "TinyMaterialDesign/Core/Widget.h"
 #include "TinyMaterialDesign/Widgets/IconButton.h"  // IconPainter
 
@@ -26,8 +28,6 @@ struct NavDestination {
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class NavigationBar : public Widget<RGB_T> {
  public:
-  static constexpr int kMaxDestinations = 5;
-
   NavigationBar() = default;
   explicit NavigationBar(Bounds bounds) { this->bounds = bounds; }
 
@@ -36,25 +36,28 @@ class NavigationBar : public Widget<RGB_T> {
   std::function<void(int)> onChange;
 
   void addDestination(IconPainter<RGB_T> icon, const char* label) {
-    if (destCount_ < kMaxDestinations) destinations_[destCount_++] = NavDestination<RGB_T>{icon, label};
+    destinations_.push_back(NavDestination<RGB_T>{icon, label});
   }
 
   int selectedIndex() const { return selectedIndex_; }
   void setSelectedIndex(int index) {
-    if (index >= 0 && index < destCount_) selectedIndex_ = index;
+    if (index >= 0 && index < static_cast<int>(destinations_.size())) selectedIndex_ = index;
   }
 
   void draw(tinygpu::ISurface<RGB_T>& target) override {
-    if (destCount_ == 0) return;
+    const int count = static_cast<int>(destinations_.size());
+    if (count == 0) return;
     target.fillRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
                     toPx(this->bounds.h), this->theme().colors.surface);
 
-    const int32_t slotWidth = this->bounds.w / destCount_;
+    const LinearLayout slots(this->bounds, LayoutAxis::Horizontal, /*spacing=*/0);
     tinygpu::IFont<RGB_T>& font = *this->theme().typography.label;
 
-    for (int i = 0; i < destCount_; ++i) {
+    for (int i = 0; i < count; ++i) {
       const NavDestination<RGB_T>& dest = destinations_[i];
-      const int32_t slotX = this->bounds.x + i * slotWidth;
+      const Bounds slot = slots.itemRect(i, count);
+      const int32_t slotX = slot.x;
+      const int32_t slotWidth = slot.w;
       const bool selected = i == selectedIndex_;
       RGB_T contentColor = selected ? this->theme().colors.onSecondaryContainer
                                     : this->theme().colors.onSurfaceVariant;
@@ -85,11 +88,12 @@ class NavigationBar : public Widget<RGB_T> {
   }
 
   bool onGesture(const tinygpu::GestureEvent& event) override {
-    if (!isTapGesture(event.type) || destCount_ == 0) return false;
-    const int32_t slotWidth = this->bounds.w / destCount_;
+    const int count = static_cast<int>(destinations_.size());
+    if (!isTapGesture(event.type) || count == 0) return false;
+    const int32_t slotWidth = this->bounds.w / count;
     int index = (event.point.x - this->bounds.x) / slotWidth;
     if (index < 0) index = 0;
-    if (index >= destCount_) index = destCount_ - 1;
+    if (index >= count) index = count - 1;
     if (index != selectedIndex_) {
       selectedIndex_ = index;
       if (onChange) onChange(selectedIndex_);
@@ -98,8 +102,7 @@ class NavigationBar : public Widget<RGB_T> {
   }
 
  private:
-  NavDestination<RGB_T> destinations_[kMaxDestinations] = {};
-  int destCount_ = 0;
+  std::vector<NavDestination<RGB_T>> destinations_;
   int selectedIndex_ = 0;
 };
 

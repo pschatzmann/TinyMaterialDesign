@@ -1,6 +1,8 @@
 #pragma once
 #include <functional>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "TinyGPU/Color/RGB565.h"
 #include "TinyGPU/Color/RGB666.h"
@@ -11,18 +13,24 @@
 namespace tinymd {
 
 /**
- * @brief Persistent, non-modal inline message with up to 2 text actions -
- * Material's "banner", e.g. "You're offline. [Retry] [Dismiss]" pinned
- * below an app bar.
+ * @brief Persistent, non-modal inline message with text actions - Material's
+ * "banner", e.g. "You're offline. [Retry] [Dismiss]" pinned below an app
+ * bar.
  *
  * Unlike Dialog/Snackbar this isn't presented modally - add it with
  * Screen::addWidget()/addFixedWidget() like any other widget and toggle
  * `visible` yourself. Actions are not owned by Banner - same non-owning
  * addAction() convention as Dialog::addAction().
+ *
+ * Alternative to addAction(): setActionProvider(count, at) switches to
+ * callback-driven actions - see Container.h's class comment for the pattern.
  */
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Banner : public Widget<RGB_T> {
  public:
+  using ActionCountFn = std::function<int()>;
+  using ActionAtFn = std::function<Widget<RGB_T>&(int index)>;
+
   Banner() = default;
   Banner(Bounds bounds, const char* message) : message_(message != nullptr ? message : "") {
     this->bounds = bounds;
@@ -30,17 +38,23 @@ class Banner : public Widget<RGB_T> {
 
   void setMessage(const char* message) { message_ = message != nullptr ? message : ""; }
 
+  /// Registers `action` as content of this banner. Ignored while an action
+  /// provider is active - see setActionProvider().
   void addAction(Widget<RGB_T>& action) {
-    if (actionCount_ < kMaxActions) {
-      actions_[actionCount_++] = &action;
-      if (this->theme_ != nullptr) action.setTheme(*this->theme_);
-    }
+    actions_.push_back(&action);
+    if (this->theme_ != nullptr) action.setTheme(*this->theme_);
+  }
+
+  /// Switches to callback-driven actions - see the class comment.
+  void setActionProvider(ActionCountFn count, ActionAtFn at) {
+    actionCountFn_ = std::move(count);
+    actionAtFn_ = std::move(at);
   }
 
   void setTheme(const MaterialTheme<RGB_T>& theme) override {
     Widget<RGB_T>::setTheme(theme);
-    for (int i = 0; i < actionCount_; ++i) {
-      if (actions_[i] != nullptr) actions_[i]->setTheme(theme);
+    for (Widget<RGB_T>* action : actions_) {
+      if (action != nullptr) action->setTheme(theme);
     }
   }
 
@@ -66,6 +80,10 @@ class Banner : public Widget<RGB_T> {
     const size_t rightBorder = rightEdge < static_cast<int32_t>(target.width())
                                   ? target.width() - static_cast<size_t>(rightEdge)
                                   : 0;
+    // Crops a message too long for the banner to its own bounds instead of
+    // letting it spill past the bottom edge (see ISurface::pushClipRect()).
+    target.pushClipRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
+                        toPx(this->bounds.h));
     tinygpu::LinePrinter<RGB_T> printer;
     printer.setFont(*this->theme().typography.body);
     printer.setTarget(target);
@@ -74,16 +92,21 @@ class Banner : public Widget<RGB_T> {
     printer.setLeftBorder(toPx(this->bounds.x + pad));
     printer.setRightBorder(rightBorder);
     printer.print(message_.c_str());
+    target.popClipRect();
 
-    for (int i = 0; i < actionCount_; ++i) {
-      if (actions_[i]->visible) actions_[i]->draw(target);
+    const int count = actionCount();
+    for (int i = 0; i < count; ++i) {
+      Widget<RGB_T>* action = actionAt(i);
+      if (action->visible) action->draw(target);
     }
   }
 
   bool onGesture(const tinygpu::GestureEvent& event) override {
-    for (int i = 0; i < actionCount_; ++i) {
-      if (actions_[i]->enabled && actions_[i]->bounds.contains(event.point.x, event.point.y)) {
-        return actions_[i]->onGesture(event);
+    const int count = actionCount();
+    for (int i = 0; i < count; ++i) {
+      Widget<RGB_T>* action = actionAt(i);
+      if (action->enabled && action->bounds.contains(event.point.x, event.point.y)) {
+        return action->onGesture(event);
       }
     }
     return false;
@@ -91,16 +114,40 @@ class Banner : public Widget<RGB_T> {
 
   bool update(uint32_t nowMs) override {
     bool changed = false;
-    for (int i = 0; i < actionCount_; ++i) changed |= actions_[i]->update(nowMs);
+    const int count = actionCount();
+    for (int i = 0; i < count; ++i) changed |= actionAt(i)->update(nowMs);
     return changed;
   }
 
+  /// True if there's an action at (x, y) that's draggable, recursing into
+  /// it if it's itself a composite - see Widget::isDraggableAt().
+  bool isDraggableAt(int32_t x, int32_t y) const override {
+    const int count = actionCount();
+    for (int i = 0; i < count; ++i) {
+      Widget<RGB_T>* action = actionAt(i);
+      if (action->enabled && action->bounds.contains(x, y)) return action->isDraggableAt(x, y);
+    }
+    return false;
+  }
+
  private:
-  static constexpr int kMaxActions = 2;
+  int actionCount() const {
+    return actionCountFn_ ? actionCountFn_() : static_cast<int>(actions_.size());
+  }
+
+  Widget<RGB_T>* actionAt(int index) const {
+    if (actionAtFn_) {
+      Widget<RGB_T>& action = actionAtFn_(index);
+      if (this->theme_ != nullptr) action.setTheme(*this->theme_);
+      return &action;
+    }
+    return actions_[static_cast<size_t>(index)];
+  }
 
   std::string message_;
-  Widget<RGB_T>* actions_[kMaxActions] = {nullptr, nullptr};
-  int actionCount_ = 0;
+  std::vector<Widget<RGB_T>*> actions_;
+  ActionCountFn actionCountFn_;
+  ActionAtFn actionAtFn_;
 };
 
 using BannerRGB565 = Banner<tinygpu::RGB565>;

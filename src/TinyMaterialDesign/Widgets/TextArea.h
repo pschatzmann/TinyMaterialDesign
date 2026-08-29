@@ -27,11 +27,10 @@ namespace tinymd {
  * report where the next character would land after a print() call.
  *
  * Known limitation: no scrolling - text past the box's bottom edge is
- * simply not drawn (LinePrinter still tries to print it, but drawText clips
- * to the surface, not this widget's box, so it would draw below the box
- * rather than wrapping back into view; the cursor is skipped once it would
- * fall past the box for the same reason). Fine for a few lines of notes;
- * not a substitute for a real multi-page, scrollable text editor.
+ * cropped to the box (see ISurface::pushClipRect()) rather than scrolling
+ * into view, and the cursor is skipped once it would fall past the box for
+ * the same reason. Fine for a few lines of notes; not a substitute for a
+ * real multi-page, scrollable text editor.
  */
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class TextArea : public Widget<RGB_T>, public TextInputTarget {
@@ -129,6 +128,11 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
                                     ? target.width() - static_cast<size_t>(rightEdge)
                                     : 0;
 
+      // Crops text past the box's bottom edge to the box (see the class
+      // comment) instead of letting it draw past it - LinePrinter/drawText
+      // have no notion of "this widget's own box", only the whole surface,
+      // so without this a long enough value would spill below the box.
+      target.pushClipRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h));
       tinygpu::LinePrinter<RGB_T> printer;
       printer.setFont(*this->theme().typography.body);
       printer.setTarget(target);
@@ -139,6 +143,7 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
       printer.print(shown.c_str());
       cursorX = printer.cursorX();
       cursorY = printer.cursorY();
+      target.popClipRect();
     }
 
     if (focused_ && cursorVisible_ && !showPlaceholder) {

@@ -27,6 +27,8 @@
   - [`Card`](#card)
   - [`MediaCard`](#mediacard)
   - [`Carousel`](#carousel)
+  - [`Container`](#container)
+    - [Virtualized content: `setChildProvider()`](#virtualized-content-setchildprovider)
   - [`ListItem`](#listitem)
   - [`Divider`](#divider)
   - [`Label`](#label)
@@ -44,6 +46,15 @@
   - [`TextArea`](#textarea)
   - [`SearchBar`](#searchbar)
   - [`Keyboard`](#keyboard)
+- [Layouts](#layouts)
+  - [`GridLayout`](#gridlayout)
+  - [`LinearLayout`](#linearlayout)
+  - [`FlowLayout`](#flowlayout)
+  - [`SplitLayout`](#splitlayout)
+  - [`AnchorLayout`](#anchorlayout)
+  - [`StackLayout`](#stacklayout)
+  - [`RadialLayout`](#radiallayout)
+  - [`TableLayout`](#tablelayout)
 - [Building and running the examples](#building-and-running-the-examples)
 
 ---
@@ -77,7 +88,13 @@ panel and every widget, theme, and helper follows.
   a group when content is taller than the surface; `addFixedWidget()` pins a
   widget (an `AppBar`, a bottom `Keyboard`/`NavigationBar`) to its own
   screen position regardless of scroll. `presentDialog()` shows any widget
-  modally (`Dialog`, `Drawer`, `Menu`, `BottomSheet` all use this).
+  modally (`Dialog`, `Drawer`, `Menu`, `BottomSheet` all use this). `Screen`
+  is itself a [`Container`](#container) - `addWidget()` is just `Screen`'s
+  own name for `Container::addChild()` - plus the extra things only the one
+  root needs: the fixed layer, modal dialogs, and writing to a real display.
+  For a list too large to keep every widget resident at once, see
+  [Container's "Virtualized content"](#virtualized-content-setchildprovider)
+  section - `Screen`'s own `setContentProvider()` is the same idea.
 
 ### The shared sketch skeleton
 
@@ -473,12 +490,13 @@ demoTooltip.showFor(Bounds(kWidth / 2 - 10, kHeight / 2 - 10, 20, 20), "Hint tex
 
 ### `Banner`
 
-A persistent, non-modal inline message with up to 2 text actions - Material's "banner", e.g. pinned below an app bar for a system-level notice.
+A persistent, non-modal inline message with text actions - Material's "banner", e.g. pinned below an app bar for a system-level notice.
 
 **Guidelines**
 
 - Use for information that stays relevant until explicitly addressed ("You're offline") - unlike `Snackbar`, a `Banner` doesn't auto-dismiss.
 - Toggle `visible` yourself (`Banner` isn't presented modally) - typically in response to whatever condition it's reporting on.
+- `setActionProvider()` is available as a callback-driven alternative to `addAction()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section (not usually needed for a banner's handful of actions, but available for consistency).
 
 ```cpp
 // --- Banner (the control under test) -----------------------------------------
@@ -552,6 +570,7 @@ A horizontally paged, drag-to-swipe row of items (typically `MediaCard`), with a
 - Reports `isDraggable() == true` like `Slider` - make sure `Screen::isDraggableAt()` is wired to `GestureDetector::isDraggable` (as every example here does) or swiping won't be recognized.
 - Each item's `bounds` is authored in the carousel's own content space (see `Carousel::itemRect()`) and overwritten by `addItem()` - don't rely on whatever `Bounds` you originally constructed the item with.
 - `setCurrentIndex()` pages programmatically (e.g. from external next/previous buttons); a plain tap on an item still forwards through to it (its own `onClick`, if any) when not mid-drag.
+- For a station/genre list too large to keep every `MediaCard` resident at once, `setItemProvider()` replaces `addItem()` with a callback-driven pool - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section. It re-applies `itemRect(index)` to whatever the callback returns on every fetch, since a pooled item may have just served a different index.
 
 ```cpp
 // --- Carousel (the control under test) ---------------------------------------
@@ -573,6 +592,67 @@ screen.addWidget(demoCarousel);
 ![Carousel](images/carousel.png)
 
 *Full sketch: [`examples/controls/carousel/carousel.ino`](../examples/controls/carousel/carousel.ino)*
+
+### `Container`
+
+A widget that holds child widgets and scrolls its own content vertically once it overflows its own bounds - the nestable counterpart to `Screen`'s own scrolling. Unlike the [layout calculators](#layouts) above (which only compute rects and are consumed before construction), `Container` is a real `Widget`: it owns a child list, and since it's a `Widget` itself, one `Container` can hold another, nesting arbitrarily deep.
+
+**Guidelines**
+
+- Children are registered with `addChild()`, not owned (same non-owning-reference convention as `Dialog`'s actions or `Drawer`'s items) - author each child's `Bounds` starting at/near the container's own `bounds.y`, exactly as you would for `Screen::addWidget()`.
+- Give the `Container` its own `Bounds` shorter than its children's combined height to make it scroll; if everything fits, scrolling never engages, same as `Screen`.
+- Shares `Screen`'s documented limitations: no sub-widget clip rect (a child partially past the container's edge is drawn in full or skipped, not cropped), vertical-only scrolling, and a `Slider` nested inside one won't be recognized as draggable by `Screen::isDraggableAt()` (which only checks the top-level hit widget) - the same gap `Dialog`/`Drawer`/`Menu`/`BottomSheet` already have for their own children.
+- Add it to `Screen` the same way as any other widget (`addWidget()`/`addFixedWidget()`); it forwards gestures and scroll internally to whichever child (or nested `Container`) they land on.
+
+```cpp
+// --- Container (the control under test) ---------------------------------------
+// Shorter than its children's combined height, so it scrolls; nestedPanel is
+// itself a Container, showing that they nest.
+Container<RGB565> demoContainer(Bounds(0, 0, kWidth, 260));
+Button<RGB565> buttonA(Bounds(20, 16, kWidth - 40, 48), "Button A");
+Container<RGB565> nestedPanel(Bounds(20, 136, kWidth - 40, 120));
+Card<RGB565> nestedCard(Bounds(0, 0, kWidth - 40, 100), "Nested", "Lives inside nestedPanel.");
+
+// setup():
+nestedPanel.addChild(nestedCard);
+demoContainer.addChild(buttonA);
+demoContainer.addChild(nestedPanel);
+screen.addWidget(demoContainer);
+```
+
+![Container](images/container.png)
+
+*Full sketch: [`examples/controls/container/container.ino`](../examples/controls/container/container.ino)*
+
+#### Virtualized content: `setChildProvider()`
+
+`addChild()` needs every item's `Widget` to exist and stay resident for as long as it's registered - fine for a screenful of content, but not for a list of thousands of rows on a board with a few hundred KB of RAM. `setChildProvider()` is the alternative: instead of a stored list, you give the container two callbacks -
+
+- a **count** function returning how many logical items there are (it can be huge - the callback is the only thing that scales, not memory), and
+- an **at(index)** function returning a **reference** to the `Widget` representing that index.
+
+The point is that `at()` doesn't have to construct a new object per index - the usual approach is a small fixed pool of real widgets (4-10, say) that `at()` repositions and relabels for whichever index is asked for, the same "recycler" pattern list views use everywhere. Setting a provider takes over completely: any children already added via `addChild()` are ignored while it's active.
+
+```cpp
+constexpr int kStationCount = 20000;      // however many logical rows there are
+std::array<ListItem<RGB565>, 6> pool{...}; // only 6 real widgets ever exist
+
+stationList.setChildProvider(
+    []() { return kStationCount; },
+    [&](int index) -> Widget<RGB565>& {
+      ListItem<RGB565>& item = pool[index % pool.size()];
+      item.bounds = stationList.itemRect(index);   // wherever your own layout puts row `index`
+      item.setTitle(stationNameAt(index));         // however you actually look up row `index`
+      return item;
+    });
+```
+
+**Guidelines**
+
+- Every provider-returned widget is themed automatically the moment it's fetched (there's no fixed set to cascade `setTheme()` to ahead of time), so you don't need to call `setTheme()` on pool widgets yourself.
+- `at()` is called once per index per pass (draw, hit-test, gesture dispatch, and `contentHeight()`'s scroll-range calculation all call it independently) - keep it cheap, especially with a large count, since `contentHeight()` visits every logical index to find the tallest one and runs on every frame via `clampScroll()`.
+- **Caution with continuous gestures**: a drag/scroll latches the `Widget*` `at()` returned at the gesture's start and keeps calling methods on it through the rest of the gesture (`kChanged`/`kEnded`). Don't let your pool reassign that same slot to a different index while a gesture is still in progress, or the drag will end up operating on the wrong logical item.
+- Available the same way on `Screen` (`setContentProvider()`, for the root scrollable area), `Dialog`/`Banner` (`setActionProvider()`), `Carousel` (`setItemProvider()`, which also re-applies `itemRect(index)` to whatever `at()` returns on every fetch), and `Drawer`/`BottomSheet`/`Menu` (`setItemProvider()`, which just forwards to their own internal `Container`).
 
 ### `ListItem`
 
@@ -687,7 +767,7 @@ A row of evenly-spaced exclusive-selection labels (primary tabs), with a sliding
 **Guidelines**
 
 - Use for 2-5 top-level views of equally-important content within one screen; prefer `NavigationBar` for app-wide destinations instead of in-screen view switching.
-- Tabs are plain strings added via `addTab()`, not separate child widgets - up to `TabBar::kMaxTabs`.
+- Tabs are plain strings added via `addTab()`, not separate child widgets.
 
 ```cpp
 // --- TabBar (the control under test) -----------------------------------------
@@ -762,6 +842,7 @@ A modal side navigation panel holding a list of items (typically `ListItem`), sh
 
 - Use for an app's top-level navigation destinations, opened from an app bar's leading menu icon (see `kitchen-sink.ino`).
 - Wire `onScrimTap` to `screen.dismissDialog()` for tap-outside-to-close, and dismiss from each item's own `onClick` too.
+- The item area scrolls automatically once items overflow the panel's height (it's a `Container` under the hood - see `Core/Container.h`), and `setItemProvider()` is available as a callback-driven alternative to `addItem()` for a long settings-style list - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section.
 
 ```cpp
 // --- Drawer (the control under test) -----------------------------------------
@@ -794,6 +875,7 @@ A popover list of items (typically `ListItem`), anchored near whatever opened it
 
 - Use for a small, contextual set of choices (a dropdown from a Button, a long-press context menu) - for full-screen navigation use `Drawer` instead.
 - Wire `onOutsideTap` to `screen.dismissDialog()` for the expected tap-outside-to-close behavior.
+- Like `Drawer`, the item area is a `Container` under the hood - it scrolls automatically if items overflow, and `setItemProvider()` is available as a callback-driven alternative to `addItem()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section.
 
 ```cpp
 // --- Menu (the control under test) -------------------------------------------
@@ -819,12 +901,13 @@ screen.presentDialog(demoMenu);
 
 ### `Dialog`
 
-A modal alert: full-screen scrim + centered card + title + wrapped message + up to 2 action widgets (typically `Button`). Shown with `Screen::presentDialog()`.
+A modal alert: full-screen scrim + centered card + title + wrapped message + action widgets (typically `Button`). Shown with `Screen::presentDialog()`.
 
 **Guidelines**
 
 - Always give a Dialog at least one action wired to `screen.dismissDialog()` - without one there's no way for the user to close it (this example omits that follow-up wiring for brevity beyond the one OK action shown).
 - Reserve dialogs for choices that truly need to interrupt the user - for a transient, non-blocking status message use `Snackbar` instead.
+- `setActionProvider()` is available as a callback-driven alternative to `addAction()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section (not usually needed for a dialog's handful of actions, but available for consistency).
 
 ```cpp
 // --- Dialog (the control under test) -----------------------------------------
@@ -856,6 +939,7 @@ A modal panel sliding up from the bottom edge, full width, with rounded top corn
 
 - Use for a focused set of actions/options related to the current context (a share sheet, a "more options" panel) - prefer `Dialog` for a yes/no-style interruption instead.
 - `itemRect()` is theme-independent by design, so items can be constructed at global scope before the sheet has ever been given a theme - the same pattern `Drawer::itemRect()` uses.
+- Like `Drawer`, the item area is a `Container` under the hood - it scrolls automatically if items overflow, and `setItemProvider()` is available as a callback-driven alternative to `addItem()` - see [`Container`'s "Virtualized content"](#virtualized-content-setchildprovider) section.
 
 ```cpp
 // --- BottomSheet (the control under test) ------------------------------------
@@ -981,6 +1065,326 @@ screen.addFixedWidget(demoKeyboard);
 ![Keyboard](images/keyboard.png)
 
 *Full sketch: [`examples/controls/keyboard/keyboard.ino`](../examples/controls/keyboard/keyboard.ino)*
+
+---
+
+## Layouts
+
+None of these are widgets. TinyMaterialDesign deliberately has no auto-layout
+container - every widget always gets an explicit `Bounds`, set once, that it
+never recomputes itself. A layout class is a small calculator you use
+*before* constructing/positioning widgets: it turns a container `Bounds`
+plus a few numbers into the `Bounds` for each item, and you assign those
+yourself.
+
+```cpp
+GridLayout grid(Bounds(16, 56, 308, 400), 90, 110);
+for (size_t i = 0; i < cards.size(); ++i) cards[i].bounds = grid.cellRect(i);
+```
+
+They own nothing, allocate nothing, and hold no widget pointers - just plain
+arithmetic on `Bounds`, which keeps them free on memory-constrained boards
+and safe to recompute every frame if a container resizes. Pick the one that
+matches the arrangement you need; several can be combined (e.g. `SplitLayout`
+to carve out a pane, then `GridLayout` inside it).
+
+If you actually need a widget that *owns* a scrollable/nestable set of
+children rather than just computing where to put them, see
+[`Container`](#container) in the Containment chapter - it's a real `Widget`,
+not a calculator, and is the one exception to "no widget owns its children"
+in this list.
+
+### `GridLayout`
+
+Wraps a row of equal-size cells to fit a container's width - the classic "N cards per row" grid (station/genre tiles, a dashboard of `MediaCard`s).
+
+**Guidelines**
+
+- As many columns as fit the container's width are used automatically; you don't specify a column count.
+- Rows are *not* clipped to the container's height - use `totalHeight(count)` to size a scroll area.
+
+```cpp
+// --- GridLayout (the control under test) ------------------------------------
+GridLayout demoGrid(Bounds(10, 20, kWidth - 20, kHeight - 40), /*cellWidth=*/100, /*cellHeight=*/70);
+Button<RGB565> cellA(Bounds(), "1");
+Button<RGB565> cellB(Bounds(), "2");
+Button<RGB565> cellC(Bounds(), "3");
+Button<RGB565> cellD(Bounds(), "4");
+Button<RGB565>* cells[] = {&cellA, &cellB, &cellC, &cellD};
+
+// setup():
+for (size_t i = 0; i < 4; ++i) {
+  cells[i]->bounds = demoGrid.cellRect(static_cast<int>(i));
+  screen.addWidget(*cells[i]);
+}
+```
+
+*Header: [`Core/GridLayout.h`](../src/TinyMaterialDesign/Core/GridLayout.h)*
+
+![GridLayout](images/grid-layout.png)
+
+*Full sketch: [`examples/layouts/grid-layout/grid-layout.ino`](../examples/layouts/grid-layout/grid-layout.ino)*
+
+### `LinearLayout`
+
+Splits a container into equal or weighted slices along one axis - a row of buttons, a column of stacked panels.
+
+**Guidelines**
+
+- Default is an equal split of `count` items minus spacing gutters.
+- Pass a `weights` array to give some items more of the remaining space than others (weights are relative, not required to sum to 1).
+
+```cpp
+// --- LinearLayout (the control under test) ----------------------------------
+LinearLayout demoRow(Bounds(10, (kHeight - 48) / 2, kWidth - 20, 48), LayoutAxis::Horizontal);
+Button<RGB565> buttonA(Bounds(), "A");
+Button<RGB565> buttonB(Bounds(), "B (2x)");
+Button<RGB565> buttonC(Bounds(), "C");
+
+// setup():
+float weights[] = {1.0f, 2.0f, 1.0f};
+buttonA.bounds = demoRow.itemRect(0, weights, 3);
+buttonB.bounds = demoRow.itemRect(1, weights, 3);
+buttonC.bounds = demoRow.itemRect(2, weights, 3);
+screen.addWidget(buttonA);
+screen.addWidget(buttonB);
+screen.addWidget(buttonC);
+```
+
+*Header: [`Core/LinearLayout.h`](../src/TinyMaterialDesign/Core/LinearLayout.h)*
+
+![LinearLayout](images/linear-layout.png)
+
+*Full sketch: [`examples/layouts/linear-layout/linear-layout.ino`](../examples/layouts/linear-layout/linear-layout.ino)*
+
+### `FlowLayout`
+
+Packs items of varying width left-to-right, wrapping to a new row when one would overflow - a chip/tag group whose item count and widths aren't known up front.
+
+**Guidelines**
+
+- Each item reports its own width/height to `next()`; calls must be made in order since each one advances an internal cursor.
+- Call `reset()` to run the same set of items again, and `totalHeight()` after a full pass to size a scroll area.
+
+```cpp
+// --- FlowLayout (the control under test) ------------------------------------
+FlowLayout demoFlow(Bounds(10, 20, kWidth - 20, kHeight - 40));
+Chip<RGB565> chipJazz(Bounds(), "Jazz");
+Chip<RGB565> chipRock(Bounds(), "Rock");
+Chip<RGB565> chipClassical(Bounds(), "Classical");
+Chip<RGB565> chipPop(Bounds(), "Pop");
+Chip<RGB565> chipHipHop(Bounds(), "Hip-Hop");
+Chip<RGB565> chipElectronic(Bounds(), "Electronic");
+Chip<RGB565>* chips[] = {&chipJazz, &chipRock, &chipClassical, &chipPop, &chipHipHop, &chipElectronic};
+constexpr int32_t kChipWidths[] = {60, 60, 90, 60, 80, 100};
+
+// setup():
+for (size_t i = 0; i < 6; ++i) {
+  chips[i]->bounds = demoFlow.next(kChipWidths[i], /*height=*/36);
+  screen.addWidget(*chips[i]);
+}
+```
+
+*Header: [`Core/FlowLayout.h`](../src/TinyMaterialDesign/Core/FlowLayout.h)*
+
+![FlowLayout](images/flow-layout.png)
+
+*Full sketch: [`examples/layouts/flow-layout/flow-layout.ino`](../examples/layouts/flow-layout/flow-layout.ino)*
+
+### `SplitLayout`
+
+Divides a container into two panes along one axis - a nav/content or master/detail split on a larger display.
+
+**Guidelines**
+
+- Construct with a fixed pixel size for the first pane, or use `SplitLayout::ratio(...)` for a proportional split (e.g. 0.3f for 30/70).
+- The second pane fills the remainder minus the gutter.
+
+```cpp
+// --- SplitLayout (the control under test) -----------------------------------
+Card<RGB565> navCard(Bounds(), "Nav", "35%");
+Card<RGB565> contentCard(Bounds(), "Content", "The remaining 65%, minus the gutter.");
+
+// setup():
+SplitLayout demoSplit =
+    SplitLayout::ratio(Bounds(0, 20, kWidth, kHeight - 40), LayoutAxis::Horizontal, 0.35f);
+navCard.bounds = demoSplit.firstRect();
+contentCard.bounds = demoSplit.secondRect();
+screen.addWidget(navCard);
+screen.addWidget(contentCard);
+```
+
+*Header: [`Core/SplitLayout.h`](../src/TinyMaterialDesign/Core/SplitLayout.h)*
+
+![SplitLayout](images/split-layout.png)
+
+*Full sketch: [`examples/layouts/split-layout/split-layout.ino`](../examples/layouts/split-layout/split-layout.ino)*
+
+### `AnchorLayout`
+
+Positions a single rect relative to a corner or edge of a container - a FAB pinned to the bottom-right, a badge pinned to the top-right corner of an avatar.
+
+**Guidelines**
+
+- `margin` insets the anchored rect from the container edge; pass `0` to flush it against the edge.
+- Combine with `Screen`'s own `Bounds` to anchor relative to the whole screen rather than a widget.
+
+```cpp
+// --- AnchorLayout (the control under test) ----------------------------------
+Card<RGB565> backgroundCard(Bounds(10, 10, kWidth - 20, kHeight - 20), "AnchorLayout",
+                            "Badge anchored to my corner; FAB anchored to the screen's.");
+Badge<RGB565> cornerBadge(Bounds(), "3");
+FAB demoFab(Bounds(), drawPlus<RGB565>);
+
+// setup():
+AnchorLayout cardAnchor(backgroundCard.bounds);
+cornerBadge.bounds = cardAnchor.rect(Anchor::TopRight, 24, 24);
+
+AnchorLayout screenAnchor(Bounds(0, 0, kWidth, kHeight), /*margin=*/16);
+demoFab.bounds = screenAnchor.rect(Anchor::BottomRight, 56, 56);
+
+screen.addWidget(backgroundCard);
+screen.addWidget(cornerBadge);
+screen.addWidget(demoFab);
+```
+
+*Header: [`Core/AnchorLayout.h`](../src/TinyMaterialDesign/Core/AnchorLayout.h)*
+
+![AnchorLayout](images/anchor-layout.png)
+
+*Full sketch: [`examples/layouts/anchor-layout/anchor-layout.ino`](../examples/layouts/anchor-layout/anchor-layout.ino)*
+
+### `StackLayout`
+
+`StackLayout` actually bundles two unrelated, single-purpose helpers under one name - it's not "arrange these into a row/column" (that's `LinearLayout`), it's "place one rect relative to another rect it sits on top of or overlaps":
+
+- **`centered(width, height)`** - centers one rect in the middle of a container. Use this for an icon centered inside a bigger button/panel.
+- **`offset(index, width, height)`** - places the `index`-th of a series of same-size rects, each shifted `overlapStep` pixels from the previous one, starting at the container's `(x, y)` origin. This is the classic "overlapping avatar stack" you see in group chats or "shared with" lists: a handful of profile pictures fanned out so each shows a sliver of itself peeking out from behind the next.
+
+A single `StackLayout` instance is normally used for just one of these, not both - the example below constructs two separate instances only because it's demonstrating both methods in one sketch.
+
+**Guidelines**
+
+- `centered()` ignores `overlapStep` entirely - that constructor argument only matters to `offset()`.
+- `offset()` never reads the container's `width`/`height`, only its `x`/`y` origin - so when you're only using `offset()`, it's fine (and clearer) to construct the `StackLayout` with a `0x0` container size, as in the second snippet below; there's no "real" container to speak of, just a starting point.
+- `offset()`'s "overlap" is a fixed pixel step along x, not a percentage - pick a step smaller than `width` to actually get visual overlap (e.g. `width=48, overlapStep=28` leaves each chip showing ~28px of itself before the next one covers the rest).
+
+```cpp
+// --- StackLayout: centered() --------------------------------------------------
+// One icon, centered inside a larger card.
+Card<RGB565> panel(Bounds(10, 30, kWidth - 20, 90), nullptr, nullptr);
+IconButton<RGB565> centeredIcon(Bounds(), drawPlus<RGB565>, IconButtonVariant::kFilled);
+
+// setup():
+StackLayout iconStack(panel.bounds);
+centeredIcon.bounds = iconStack.centered(48, 48);
+```
+
+```cpp
+// --- StackLayout: offset() -----------------------------------------------------
+// Three plain colored circles (standing in for profile pictures), each
+// shifted 28px from the last, fanning out from (30, 160) into an
+// overlapping row - a circular IconButton is what sells the "avatar
+// stack" look here; the same offsets applied to a rectangular Button
+// would just look like clipped corners instead.
+IconButton<RGB565> avatarA(Bounds(), nullptr, IconButtonVariant::kFilled);
+IconButton<RGB565> avatarB(Bounds(), nullptr, IconButtonVariant::kFilled);
+IconButton<RGB565> avatarC(Bounds(), nullptr, IconButtonVariant::kFilled);
+IconButton<RGB565>* avatars[] = {&avatarA, &avatarB, &avatarC};
+
+// setup():
+// Only the (30, 160) origin matters here - width/height are ignored by
+// offset(), so they're left at 0 rather than a real container size.
+StackLayout avatarStack(Bounds(30, 160, 0, 0), /*overlapStep=*/28);
+RGB565 avatarColors[] = {theme.colors.primary, theme.colors.secondary, theme.colors.error};
+for (size_t i = 0; i < 3; ++i) {
+  avatars[i]->bounds = avatarStack.offset(static_cast<int>(i), 48, 48);
+  avatars[i]->setColorOverride(avatarColors[i], theme.colors.onPrimary);
+}
+```
+
+*Header: [`Core/StackLayout.h`](../src/TinyMaterialDesign/Core/StackLayout.h)*
+
+![StackLayout](images/stack-layout.png)
+
+*Full sketch: [`examples/layouts/stack-layout/stack-layout.ino`](../examples/layouts/stack-layout/stack-layout.ino)*
+
+### `RadialLayout`
+
+Places item rects evenly spaced around a circle - dial/menu items on a round display, where rectilinear packing doesn't match the screen shape.
+
+**Guidelines**
+
+- Angle 0 points up (12 o'clock) and items are placed clockwise, like a clock face; rotate the whole ring with `startDegrees`.
+- `radius` is measured from the container's center to each item's center point.
+
+```cpp
+// --- RadialLayout (the control under test) ----------------------------------
+RadialLayout demoDial(Bounds(0, 40, kWidth, kWidth), /*radius=*/90);
+Button<RGB565> item0(Bounds(), "12");
+Button<RGB565> item1(Bounds(), "2");
+Button<RGB565> item2(Bounds(), "4");
+Button<RGB565> item3(Bounds(), "6");
+Button<RGB565> item4(Bounds(), "8");
+Button<RGB565> item5(Bounds(), "10");
+Button<RGB565>* items[] = {&item0, &item1, &item2, &item3, &item4, &item5};
+
+// setup():
+for (size_t i = 0; i < 6; ++i) {
+  items[i]->bounds = demoDial.itemRect(static_cast<int>(i), 6, /*width=*/40, /*height=*/40);
+  screen.addWidget(*items[i]);
+}
+```
+
+*Header: [`Core/RadialLayout.h`](../src/TinyMaterialDesign/Core/RadialLayout.h)*
+
+![RadialLayout](images/radial-layout.png)
+
+*Full sketch: [`examples/layouts/radial-layout/radial-layout.ino`](../examples/layouts/radial-layout/radial-layout.ino)*
+
+### `TableLayout`
+
+A grid with independently-sized columns and rows, for dashboards mixing wide/narrow columns or short/tall rows - `GridLayout` assumes uniform cells, `TableLayout` doesn't.
+
+**Guidelines**
+
+- Column widths and row heights are supplied as plain arrays, sized to `columnCount`/`rowCount`.
+- Use `totalWidth()`/`totalHeight()` to size the container that holds the table.
+
+```cpp
+// --- TableLayout (the control under test) -----------------------------------
+constexpr int32_t kColumnWidths[] = {150, 60};
+constexpr int32_t kRowHeights[] = {70, 70, 70};
+TableLayout demoTable(Bounds(10, 20, kWidth - 20, kHeight - 40), kColumnWidths, 2, kRowHeights, 3);
+
+Card<RGB565> wide0(Bounds(), "Wide", "Row 0");
+Card<RGB565> narrow0(Bounds(), "N", nullptr);
+Card<RGB565> wide1(Bounds(), "Wide", "Row 1");
+Card<RGB565> narrow1(Bounds(), "N", nullptr);
+Card<RGB565> wide2(Bounds(), "Wide", "Row 2");
+Card<RGB565> narrow2(Bounds(), "N", nullptr);
+
+// setup():
+wide0.bounds = demoTable.cellRect(0, 0);
+narrow0.bounds = demoTable.cellRect(0, 1);
+wide1.bounds = demoTable.cellRect(1, 0);
+narrow1.bounds = demoTable.cellRect(1, 1);
+wide2.bounds = demoTable.cellRect(2, 0);
+narrow2.bounds = demoTable.cellRect(2, 1);
+
+screen.addWidget(wide0);
+screen.addWidget(narrow0);
+screen.addWidget(wide1);
+screen.addWidget(narrow1);
+screen.addWidget(wide2);
+screen.addWidget(narrow2);
+```
+
+*Header: [`Core/TableLayout.h`](../src/TinyMaterialDesign/Core/TableLayout.h)*
+
+![TableLayout](images/table-layout.png)
+
+*Full sketch: [`examples/layouts/table-layout/table-layout.ino`](../examples/layouts/table-layout/table-layout.ino)*
 
 ---
 
