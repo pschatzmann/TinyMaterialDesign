@@ -49,7 +49,8 @@ for touch interaction.
     with up to 2 actions)
   - `MediaCard` (tappable, image-backed card with a caption - pair with
     `GridLayout`, Core/GridLayout.h, to lay out several of these in a
-    wrapping grid)
+    wrapping grid), `Carousel` (horizontally paged, drag-to-swipe row of
+    items with a snap animation and page-dot indicator)
   - `TextField` (single-line), `TextArea` (multi-line, word-wrapped) and
     `SearchBar` (pill-shaped, with search/clear glyphs) text input, plus
     `Keyboard` (on-screen QWERTY, with a symbols page and a dedicated

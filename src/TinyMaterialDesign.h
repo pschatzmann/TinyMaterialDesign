@@ -44,6 +44,7 @@
 #include "TinyMaterialDesign/Widgets/NavigationRail.h"
 #include "TinyMaterialDesign/Widgets/SearchBar.h"
 #include "TinyMaterialDesign/Widgets/Banner.h"
+#include "TinyMaterialDesign/Widgets/Carousel.h"
 
 #if defined(ARDUINO) || defined(TINYMD_AUTO_NAMESPACE)
 using namespace tinymd;

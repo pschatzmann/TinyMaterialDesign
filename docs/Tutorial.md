@@ -492,6 +492,38 @@ screen.addWidget(demoMediaCard);
 
 *Full sketch: [`examples/controls/media-card/media-card.ino`](../examples/controls/media-card/media-card.ino)*
 
+### `Carousel`
+
+A horizontally paged, drag-to-swipe row of items (typically `MediaCard`), with a snap-to-item animation and a page-dot indicator - Material's "carousel", e.g. a row of featured stations.
+
+**Guidelines**
+
+- Use for a small set of visually rich, browsable items where swiping feels natural (featured content, a short gallery) - for a large scrolling list, prefer `Screen`'s own vertical scrolling over paging horizontally.
+- Reports `isDraggable() == true` like `Slider` - make sure `Screen::isDraggableAt()` is wired to `GestureDetector::isDraggable` (as every example here does) or swiping won't be recognized.
+- Each item's `bounds` is authored in the carousel's own content space (see `Carousel::itemRect()`) and overwritten by `addItem()` - don't rely on whatever `Bounds` you originally constructed the item with.
+- `setCurrentIndex()` pages programmatically (e.g. from external next/previous buttons); a plain tap on an item still forwards through to it (its own `onClick`, if any) when not mid-drag.
+
+```cpp
+// --- Carousel (the control under test) ---------------------------------------
+// Items' own bounds are overwritten by addItem() (see Carousel::itemRect())
+// - the Bounds() passed to each MediaCard here is just a placeholder.
+Carousel<RGB565> demoCarousel(Bounds(0, (kHeight - 150) / 2, kWidth, 150), 120, 12);
+MediaCard<RGB565> carouselItemA(Bounds(), "Jazz");
+MediaCard<RGB565> carouselItemB(Bounds(), "Rock");
+MediaCard<RGB565> carouselItemC(Bounds(), "Pop");
+
+// setup():
+demoCarousel.addItem(carouselItemA);
+demoCarousel.addItem(carouselItemB);
+demoCarousel.addItem(carouselItemC);
+demoCarousel.onPageChange = [](int page) { printf("Carousel page: %d\n", page); };
+screen.addWidget(demoCarousel);
+```
+
+![Carousel](images/carousel.png)
+
+*Full sketch: [`examples/controls/carousel/carousel.ino`](../examples/controls/carousel/carousel.ino)*
+
 ### `ListItem`
 
 A tappable row: optional leading icon + title, with a selected state. The building block for `Drawer`, but usable standalone for any settings-style list.
