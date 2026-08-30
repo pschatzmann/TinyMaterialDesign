@@ -32,22 +32,8 @@ for touch interaction.
   every item resident in memory
 
 ## Documentation
-
-See [`docs/Tutorial.md`](docs/Tutorial.md) for an introduction to the
-library's core concepts (`Widget`, `MaterialTheme`, `Screen`) and a
-guided, per-control reference - what each widget is for, usage guidelines,
-example code, and a screenshot for every one of them.
-
-See `examples/kitchen-sink` for a fully worked, clickable demo (one of every
-widget, with scrolling and a color scheme picker) that runs unchanged on
-both a real ESP32 board (`LCDBoardGuitionESP32_LVGL_2_4Display` by default -
-swap in a different `LCDBoard` from `TinyGPU/Boards/LCDBoardsESP32.h` for
-other hardware) and, via `LCDBoardDesktopSDL`, in an identically-sized SDL2
-window on desktop for mouse-driven testing without touch hardware. See
-`examples/controls` for a short, single-widget sketch per control,
-`examples/layouts` for a short, single-layout sketch per layout calculator,
-and `examples/esp32-touch-buttons` for a smaller real-hardware-flavored
-sketch.
+- [Tutorial](https://github.com/pschatzmann/TinyMaterialDesign/wiki/TinyMaterialDesign-Tutorial)
+- [Examples](https://github.com/pschatzmann/TinyMaterialDesign/tree/main/examples)
 
 
 ## Requirements
@@ -95,19 +81,3 @@ cmake --build build
 Pass `-DFETCHCONTENT_SOURCE_DIR_TINYGPU=/path/to/local/TinyGPU` to build
 against a local TinyGPU checkout instead of fetching it from GitHub.
 
-## Testing
-
-`tests/` has a small CTest suite covering `Container`/`Screen` scrolling,
-gesture dispatch and clipping, the callback-driven "virtualized content"
-mode, and the widgets that used to have a fixed item-count cap. It needs no
-board, display, or SDL - only `TinyMaterialDesign` + TinyGPU (pulled in the
-same way the examples are) - so it also builds with
-`-DTMD_BUILD_EXAMPLES=OFF`:
-
-```sh
-cmake -B build -S .
-cmake --build build
-ctest --test-dir build --output-on-failure
-```
-
-Pass `-DTMD_BUILD_TESTS=OFF` to skip building the tests.
