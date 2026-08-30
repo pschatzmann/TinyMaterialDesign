@@ -35,6 +35,7 @@ for touch interaction.
 - [Tutorial](https://github.com/pschatzmann/TinyMaterialDesign/wiki/TinyMaterialDesign-Tutorial)
 - [Examples](https://github.com/pschatzmann/TinyMaterialDesign/tree/main/examples)
 - [Wiki](https://github.com/pschatzmann/TinyMaterialDesign/wiki)
+- [Class Documentaion](https://pschatzmann.github.io/TinyMaterialDesign/annotated.html)
 
 
 ## Requirements
