@@ -5,9 +5,7 @@
 #include "TinyGPU/Color/RGB565.h"
 #include "TinyGPU/Color/RGB666.h"
 #include "TinyGPU/Color/RGB888.h"
-#include "TinyGPU/Font/AsciiFonts.h"
-#include "TinyGPU/Font/Font5x7.h"
-#include "TinyGPU/Font/IFont.h"
+#include "TinyGPU/Fonts.h"
 #include "TinyMaterialDesign/Theme/MaterialColors.h"
 
 namespace tinymd {
