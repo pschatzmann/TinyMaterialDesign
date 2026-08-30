@@ -9,7 +9,7 @@
 
 namespace tinymd {
 
-/// Small rounded-rect label, optionally a toggle (filter chip) rather than
+/// @brief Small rounded-rect label, optionally a toggle (filter chip) rather than
 /// a one-shot action (assist chip).
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Chip : public Widget<RGB_T> {

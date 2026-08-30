@@ -11,7 +11,7 @@
 
 namespace tinymd {
 
-/// Row of evenly-spaced exclusive-selection labels (primary tabs), with a
+/// @brief Row of evenly-spaced exclusive-selection labels (primary tabs), with a
 /// sliding indicator under the selected one. Tabs are fixed text strings
 /// added via addTab() rather than separate child widgets, so the whole row
 /// is one hit-testable/drawable Widget.

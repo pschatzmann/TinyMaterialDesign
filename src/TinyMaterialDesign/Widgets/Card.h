@@ -9,7 +9,7 @@
 
 namespace tinymd {
 
-/// Elevated rounded-rect container with an optional title and
+/// @brief Elevated rounded-rect container with an optional title and
 /// word-wrapped body text.
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Card : public Widget<RGB_T> {

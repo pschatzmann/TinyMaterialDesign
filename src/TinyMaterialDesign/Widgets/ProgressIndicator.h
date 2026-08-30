@@ -8,7 +8,7 @@
 
 namespace tinymd {
 
-/// Horizontal progress bar. Determinate (value in [0,1]) or indeterminate
+/// @brief Horizontal progress bar. Determinate (value in [0,1]) or indeterminate
 /// (a segment sweeps back and forth, driven by update()).
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class LinearProgressIndicator : public Widget<RGB_T> {
@@ -74,7 +74,7 @@ class LinearProgressIndicator : public Widget<RGB_T> {
   static float clamp01(float value) { return std::min(1.0f, std::max(0.0f, value)); }
 };
 
-/// Circular "spinner" ring. Determinate (value in [0,1], drawn as a sweep
+/// @brief Circular "spinner" ring. Determinate (value in [0,1], drawn as a sweep
 /// starting at 12 o'clock) or indeterminate (a fixed-length arc rotates
 /// continuously, driven by update()). Both use TinyGPU's ISurface::drawArc.
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>

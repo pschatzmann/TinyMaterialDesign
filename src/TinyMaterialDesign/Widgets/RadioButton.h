@@ -10,7 +10,7 @@
 
 namespace tinymd {
 
-/// One radio button. Tapping it selects it (radio semantics: a tap never
+/// @brief One radio button. Tapping it selects it (radio semantics: a tap never
 /// deselects); mutual exclusion across a group is RadioGroup's job.
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class RadioButton : public Widget<RGB_T> {
@@ -55,7 +55,7 @@ class RadioButton : public Widget<RGB_T> {
   bool selected_ = false;
 };
 
-/// Coordinates a set of RadioButtons so selecting one deselects the rest.
+/// @brief Coordinates a set of RadioButtons so selecting one deselects the rest.
 /// Not itself a Widget - each RadioButton must still be added to the
 /// Screen individually, e.g.:
 ///

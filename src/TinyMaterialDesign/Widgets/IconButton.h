@@ -27,7 +27,7 @@ using IconPainter = void (*)(tinygpu::ISurface<RGB_T>&, const Bounds&, RGB_T, ui
 /// that's green or red, say).
 enum class IconButtonVariant { kStandard, kFilled, kTonal };
 
-/// Circular tap target hosting one vector glyph from Draw/Icons.h (or any
+/// @brief Circular tap target hosting one vector glyph from Draw/Icons.h (or any
 /// function matching IconPainter). Tap feedback is a ripple, same rationale
 /// as Button (see Button.h's class comment).
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>

@@ -10,7 +10,7 @@
 
 namespace tinymd {
 
-/// Connected row of segments sharing one pill-shaped outline (M3 "segmented
+/// @brief Connected row of segments sharing one pill-shaped outline (M3 "segmented
 /// button"). Single-select (radio-like, the default) or multi-select
 /// (checkbox-like, toggling independently) - see setMultiSelect().
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>

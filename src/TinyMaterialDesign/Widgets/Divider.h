@@ -6,7 +6,7 @@
 
 namespace tinymd {
 
-/// A themed hairline. Orientation follows the bounds' aspect ratio: wider
+/// @brief A themed hairline. Orientation follows the bounds' aspect ratio: wider
 /// than tall draws horizontal (centered vertically), taller draws vertical
 /// (centered horizontally).
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>

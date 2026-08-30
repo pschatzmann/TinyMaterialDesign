@@ -44,6 +44,8 @@ struct Typography {
   tinygpu::IFont<RGB_T>* headline;  // Font16x24 - large standalone headings
 };
 
+/// @brief Bundles a color scheme, shape tokens, typography, and spacing into
+/// one theme, passed to widgets so they all draw with consistent styling.
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 struct MaterialTheme {
   ColorScheme<RGB_T> colors;

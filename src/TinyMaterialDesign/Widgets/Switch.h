@@ -8,7 +8,7 @@
 
 namespace tinymd {
 
-/// Track-and-thumb toggle switch. Toggled by tap (drag-to-slide is a
+/// @brief Track-and-thumb toggle switch. Toggled by tap (drag-to-slide is a
 /// possible follow-up, not implemented here).
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class Switch : public Widget<RGB_T> {
