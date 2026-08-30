@@ -6,7 +6,7 @@
 #include "TinyGPU/Color/RGB666.h"
 #include "TinyGPU/Color/RGB888.h"
 #include "TinyGPU/Font/AsciiFonts.h"
-#include "TinyGPU/Font/BitmapFont.h"
+#include "TinyGPU/Font/Font5x7.h"
 #include "TinyGPU/Font/IFont.h"
 #include "TinyMaterialDesign/Theme/MaterialColors.h"
 
@@ -40,7 +40,7 @@ struct ShapeTokens {
 /// Typography roles, each backed by one of TinyGPU's bitmap fonts.
 template <typename RGB_T>
 struct Typography {
-  tinygpu::IFont<RGB_T>* label;     // BitmapFont, 5x7 - buttons, chips, captions
+  tinygpu::IFont<RGB_T>* label;     // Font5x7 - buttons, chips, captions
   tinygpu::IFont<RGB_T>* body;      // Font8x8 - card/dialog body text
   tinygpu::IFont<RGB_T>* title;     // Font12x12 - card/dialog/app bar titles
   tinygpu::IFont<RGB_T>* headline;  // Font16x24 - large standalone headings
@@ -63,7 +63,7 @@ struct MaterialTheme {
 /// just centralized here instead of left to each sketch.
 template <typename RGB_T>
 Typography<RGB_T> defaultTypography() {
-  static tinygpu::BitmapFont<RGB_T> label;
+  static tinygpu::Font5x7<RGB_T> label;
   static tinygpu::Font8x8<RGB_T> body;
   static tinygpu::Font12x12<RGB_T> title;
   static tinygpu::Font16x24<RGB_T> headline;
