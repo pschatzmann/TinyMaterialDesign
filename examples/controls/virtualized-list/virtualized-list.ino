@@ -35,6 +35,7 @@ Container<RGB565> bigList(Bounds(0, kAppBarHeight, app.width(), app.height() - k
 ListItem<RGB565> pool[kPoolSize];
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   // O(1) content-height/scroll-range math instead of visiting all 10,000
@@ -50,7 +51,7 @@ void setup() {
         char label[24];
         snprintf(label, sizeof(label), "Row %d", index);
         item.setTitle(label);
-        item.onClick = [index]() { printf("Row %d tapped\n", index); };
+        item.onClick = [index]() { Serial.print("Row "); Serial.print(index); Serial.println(" tapped"); };
         return item;
       });
 

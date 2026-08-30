@@ -14,9 +14,10 @@ App<RGB565> app(DefaultBoard);
 Button<RGB565> demoButton(Bounds((app.width() - 120) / 2, (app.height() - 40) / 2, 120, 40), "Tap me");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoButton.onClick = []() { printf("Button tapped\n"); };
+  demoButton.onClick = []() { Serial.println("Button tapped"); };
   app.screen().addWidget(demoButton);
 }
 

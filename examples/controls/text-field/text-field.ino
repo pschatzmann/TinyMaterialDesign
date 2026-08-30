@@ -16,9 +16,10 @@ App<RGB565> app(DefaultBoard);
 TextField<RGB565> demoField(Bounds(20, (app.height() - 48) / 2, app.width() - 40, 48), "Name", "Your name");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoField.onSubmit = []() { printf("Submitted: %s\n", demoField.text().c_str()); };
+  demoField.onSubmit = []() { Serial.print("Submitted: "); Serial.println(demoField.text().c_str()); };
   app.screen().addWidget(demoField);
 }
 

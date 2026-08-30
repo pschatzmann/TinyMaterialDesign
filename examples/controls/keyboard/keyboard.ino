@@ -18,6 +18,7 @@ App<RGB565> app(DefaultBoard);
 Keyboard<RGB565> demoKeyboard(Bounds(0, app.height() - 190, app.width(), 190));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   demoKeyboard.visible = true;

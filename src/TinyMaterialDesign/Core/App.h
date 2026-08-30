@@ -33,6 +33,7 @@ namespace tinymd {
  *   Button<RGB565> myButton(Bounds(...), "Tap me");
  *
  *   void setup() {
+ *     Serial.begin(115200);
  *     app.begin();
  *     myButton.onClick = []() { ... };
  *     app.screen().addWidget(myButton);
@@ -61,6 +62,13 @@ namespace tinymd {
  * practice only `RGB565` compiles today, the same constraint every
  * hand-rolled example already has.
  *
+ * begin() falls back to Screen::drawDirect()'s small-per-widget-buffer
+ * rendering automatically if the full-screen framebuffer `surface()` needs
+ * can't be allocated (see that method's own doc comment for why this can
+ * happen even with plenty of free heap) - a board without enough RAM for a
+ * full framebuffer draws exactly the same widgets through the same
+ * `screen()` API, just via a smaller reused buffer. See usesDirectRender().
+ *
  * Only one `App` may be alive at a time (per `RGB_T` instantiation): the
  * gesture callbacks it wires up in begin() are plain C function pointers
  * (`GestureDetector::onGesture`/`isDraggable`, not `std::function`), so
@@ -78,18 +86,33 @@ class App {
   explicit App(tinygpu::LCDBoard& board, const MaterialTheme<RGB_T>& theme = defaultTheme<RGB_T>())
       : board_(board),
         surface_(board.width(), board.height(), tinygpu::FontRGB565),
+        scratch_(1, 1, tinygpu::FontRGB565),
         display_(board.display()),
         screen_(theme) {
     instance_ = this;
   }
 
   /// Starts the board, display, and surface, and wires gesture routing to
-  /// the Screen - call once from setup(), before or after registering
-  /// widgets via screen() (order between the two doesn't matter).
+  /// the Screen - call once from setup() (after Serial.begin(115200) -
+  /// see the class comment), before or after registering widgets via
+  /// screen() (order between the two doesn't matter).
+  ///
+  /// If the full-screen framebuffer `surface()` needs can't be allocated
+  /// (see Screen::drawDirect()'s doc comment - typically a classic ESP32
+  /// without PSRAM, where a contiguous block that size may not exist even
+  /// with plenty of free heap overall), `update()` transparently falls
+  /// back to drawDirect() instead: same widgets, same screen() API, just a
+  /// small reused per-widget buffer rather than one full-screen one.
   void begin() {
     board_.begin();
     display_.begin();
-    surface_.begin();
+    directRender_ = !surface_.begin();
+    if (directRender_) {
+      Serial.println(
+          "App: full-screen framebuffer allocation failed - falling back to "
+          "Screen::drawDirect()");
+      scratch_.begin();
+    }
     gestures_.onGesture = &App::onGestureTrampoline;
     gestures_.isDraggable = &App::isDraggableTrampoline;
   }
@@ -101,10 +124,21 @@ class App {
     gestures_.update(*board_.touch());
     screen_.update(millis());
     if (screen_.isDirty()) {
-      screen_.draw(surface_);
-      display_.writeData(surface_);
+      if (directRender_) {
+        screen_.drawDirect(board_.display(), scratch_, static_cast<int32_t>(width()),
+                           static_cast<int32_t>(height()));
+      } else {
+        screen_.draw(surface_);
+        display_.writeData(surface_);
+      }
     }
   }
+
+  /// True once begin() has fallen back to the low-RAM Screen::drawDirect()
+  /// path because surface()'s full-screen framebuffer couldn't be
+  /// allocated - see begin()'s doc comment. Mainly useful for logging/
+  /// diagnostics; sketches don't need to branch on it themselves.
+  bool usesDirectRender() const { return directRender_; }
 
   /// Register widgets here - addWidget()/addFixedWidget()/presentDialog(),
   /// same as any other sketch's `screen`.
@@ -117,7 +151,8 @@ class App {
 
   /// Rarely needed directly (App's own update() already draws to it) -
   /// exposed for the odd sketch that wants to draw something outside the
-  /// widget tree, or call drawDirect()-style board APIs itself.
+  /// widget tree. Empty/unused while usesDirectRender() is true - update()
+  /// draws to the display through `scratch` instead in that case.
   tinygpu::Surface<RGB_T>& surface() { return surface_; }
 
   /// The display's width/height in pixels - straight from the board (see
@@ -137,9 +172,11 @@ class App {
 
   tinygpu::LCDBoard& board_;
   tinygpu::Surface<RGB_T> surface_;
+  tinygpu::Surface<RGB_T> scratch_;
   tinygpu::DeviceOutput<RGB_T> display_;
   tinygpu::GestureDetector gestures_;
   Screen<RGB_T> screen_;
+  bool directRender_ = false;
 };
 
 template <typename RGB_T>

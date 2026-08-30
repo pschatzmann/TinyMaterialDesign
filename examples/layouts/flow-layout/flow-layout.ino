@@ -24,13 +24,14 @@ Chip<RGB565>* chips[] = {&chipJazz, &chipRock, &chipClassical, &chipPop, &chipHi
 constexpr int32_t kChipWidths[] = {60, 60, 90, 60, 80, 100};
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   for (size_t i = 0; i < 6; ++i) {
     chips[i]->bounds = demoFlow.next(kChipWidths[i], /*height=*/36);
     app.screen().addWidget(*chips[i]);
   }
-  printf("Flow content height: %d\n", demoFlow.totalHeight());
+  Serial.print("Flow content height: "); Serial.println(demoFlow.totalHeight());
 }
 
 void loop() {

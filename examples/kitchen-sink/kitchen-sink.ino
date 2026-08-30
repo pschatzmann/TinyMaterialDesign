@@ -176,6 +176,7 @@ Button<RGB565> dialogCancel(Bounds(0, 0, 80, 36), "Cancel", ButtonVariant::kText
 Button<RGB565> dialogOk(Bounds(0, 0, 80, 36), "OK", ButtonVariant::kFilled);
 
 void setup() {
+  Serial.begin(115200);
   board.begin();
   display.begin();
   surface.begin();
@@ -200,19 +201,19 @@ void setup() {
 
   radiosItem.setSelected(true);
   radiosItem.onClick = []() {
-    printf("Nav: Radios\n");
+    Serial.println("Nav: Radios");
     screen.dismissDialog();
   };
   countriesItem.onClick = []() {
-    printf("Nav: Countries\n");
+    Serial.println("Nav: Countries");
     screen.dismissDialog();
   };
   genresItem.onClick = []() {
-    printf("Nav: Genres\n");
+    Serial.println("Nav: Genres");
     screen.dismissDialog();
   };
   aboutItem.onClick = []() {
-    printf("Nav: About\n");
+    Serial.println("Nav: About");
     screen.dismissDialog();
   };
   navDrawer.onScrimTap = []() { screen.dismissDialog(); };
@@ -230,19 +231,22 @@ void setup() {
     playFab.setColorOverride(
         playing ? colorFromHex<RGB565>(0xC62828) : colorFromHex<RGB565>(0x2E7D32),
         colorFromHex<RGB565>(0xFFFFFF));
-    printf(playing ? "Playing\n" : "Stopped\n");
+    Serial.println(playing ? "Playing" : "Stopped");
   };
 
-  genreCards[0].onClick = []() { printf("Genre tapped: Jazz\n"); };
-  genreCards[1].onClick = []() { printf("Genre tapped: Rock\n"); };
-  genreCards[2].onClick = []() { printf("Genre tapped: Pop\n"); };
-  genreCards[3].onClick = []() { printf("Genre tapped: Blues\n"); };
+  genreCards[0].onClick = []() { Serial.println("Genre tapped: Jazz"); };
+  genreCards[1].onClick = []() { Serial.println("Genre tapped: Rock"); };
+  genreCards[2].onClick = []() { Serial.println("Genre tapped: Pop"); };
+  genreCards[3].onClick = []() { Serial.println("Genre tapped: Blues"); };
 
   // One Keyboard drives both fields - manage() blurs whichever one it was
   // previously targeting when you tap the other.
   keyboard.manage(nameField);
   keyboard.manage(notesArea);
-  nameField.onSubmit = []() { printf("Name submitted: %s\n", nameField.text().c_str()); };
+  nameField.onSubmit = []() {
+    Serial.print("Name submitted: ");
+    Serial.println(nameField.text().c_str());
+  };
 
   volumeSlider.onChange = [](float value) {
     char buffer[8];
@@ -250,17 +254,17 @@ void setup() {
     volumeValueLabel.setText(buffer);
   };
 
-  filledButton.onClick = []() { printf("Filled button tapped\n"); };
-  tonalButton.onClick = []() { printf("Tonal button tapped\n"); };
-  outlinedButton.onClick = []() { printf("Outlined button tapped\n"); };
-  textButton.onClick = []() { printf("Text button tapped\n"); };
-  elevatedButton.onClick = []() { printf("Elevated button tapped\n"); };
+  filledButton.onClick = []() { Serial.println("Filled button tapped"); };
+  tonalButton.onClick = []() { Serial.println("Tonal button tapped"); };
+  outlinedButton.onClick = []() { Serial.println("Outlined button tapped"); };
+  textButton.onClick = []() { Serial.println("Text button tapped"); };
+  elevatedButton.onClick = []() { Serial.println("Elevated button tapped"); };
 
   dialogCancel.bounds = infoDialog.actionRect(0, 2);
   dialogOk.bounds = infoDialog.actionRect(1, 2);
   dialogCancel.onClick = []() { screen.dismissDialog(); };
   dialogOk.onClick = []() {
-    printf("Dialog OK tapped\n");
+    Serial.println("Dialog OK tapped");
     screen.dismissDialog();
   };
   infoDialog.addAction(dialogCancel);

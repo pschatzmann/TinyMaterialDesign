@@ -14,6 +14,7 @@ App<RGB565> app(DefaultBoard);
 Tooltip<RGB565> demoTooltip;
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   // showFor() measures text using the theme, so the widget must already be

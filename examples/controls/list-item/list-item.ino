@@ -14,9 +14,10 @@ App<RGB565> app(DefaultBoard);
 ListItem<RGB565> demoListItem(Bounds(20, (app.height() - 48) / 2, app.width() - 40, 48), "Settings");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoListItem.onClick = []() { printf("List item tapped\n"); };
+  demoListItem.onClick = []() { Serial.println("List item tapped"); };
   app.screen().addWidget(demoListItem);
 }
 

@@ -16,6 +16,7 @@ App<RGB565> app(DefaultBoard);
 Banner<RGB565> demoBanner(Bounds(0, app.height() - 80, app.width(), 80), "You're offline. Check your connection.");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addFixedWidget(demoBanner);

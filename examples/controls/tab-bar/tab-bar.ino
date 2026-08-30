@@ -14,12 +14,13 @@ App<RGB565> app(DefaultBoard);
 TabBar<RGB565> demoTabs(Bounds(0, (app.height() - 40) / 2, app.width(), 40));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   demoTabs.addTab("One");
   demoTabs.addTab("Two");
   demoTabs.addTab("Three");
-  demoTabs.onChange = [](int index) { printf("Tab selected: %d\n", index); };
+  demoTabs.onChange = [](int index) { Serial.print("Tab selected: "); Serial.println(index); };
   app.screen().addWidget(demoTabs);
 }
 

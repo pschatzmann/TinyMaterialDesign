@@ -31,11 +31,12 @@ IconButton<RGB565> avatarC(Bounds(), nullptr, IconButtonVariant::kFilled);
 IconButton<RGB565>* avatars[] = {&avatarA, &avatarB, &avatarC};
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   StackLayout iconStack(panel.bounds);
   centeredIcon.bounds = iconStack.centered(48, 48);
-  centeredIcon.onClick = []() { printf("Centered icon tapped\n"); };
+  centeredIcon.onClick = []() { Serial.println("Centered icon tapped"); };
 
   // Only the (30, 160) origin matters to offset() - width/height are
   // ignored, so they're left at 0 here rather than a real container size.

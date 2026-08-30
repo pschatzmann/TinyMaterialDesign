@@ -15,6 +15,7 @@ LinearProgressIndicator<RGB565> demoProgress(Bounds(20, (app.height() - 8) / 2, 
                                              /*indeterminate=*/true);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addWidget(demoProgress);

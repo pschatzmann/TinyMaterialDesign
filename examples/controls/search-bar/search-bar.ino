@@ -16,9 +16,10 @@ App<RGB565> app(DefaultBoard);
 SearchBar<RGB565> demoSearch(Bounds(20, (app.height() - 48) / 2, app.width() - 40, 48), "Search");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoSearch.onSubmit = []() { printf("Search submitted: %s\n", demoSearch.text().c_str()); };
+  demoSearch.onSubmit = []() { Serial.print("Search submitted: "); Serial.println(demoSearch.text().c_str()); };
   app.screen().addWidget(demoSearch);
 }
 

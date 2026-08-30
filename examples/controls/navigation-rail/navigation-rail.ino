@@ -14,12 +14,13 @@ App<RGB565> app(DefaultBoard);
 NavigationRail<RGB565> demoNavRail(Bounds(0, 0, 72, app.height()));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   demoNavRail.addDestination(drawPlus<RGB565>, "Add");
   demoNavRail.addDestination(drawMinus<RGB565>, "Remove");
   demoNavRail.addDestination(drawMenu<RGB565>, "More");
-  demoNavRail.onChange = [](int index) { printf("Nav destination: %d\n", index); };
+  demoNavRail.onChange = [](int index) { Serial.print("Nav destination: "); Serial.println(index); };
   app.screen().addFixedWidget(demoNavRail);
 }
 

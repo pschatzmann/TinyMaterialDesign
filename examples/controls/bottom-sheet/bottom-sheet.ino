@@ -15,11 +15,12 @@ BottomSheet<RGB565> demoSheet(Bounds(0, app.height() - 160, app.width(), 160), "
 ListItem<RGB565> sheetItem;
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   sheetItem = ListItem<RGB565>(demoSheet.itemRect(0), "Share");
   sheetItem.onClick = []() {
-    printf("Bottom sheet item tapped\n");
+    Serial.println("Bottom sheet item tapped");
     app.screen().dismissDialog();
   };
   demoSheet.addItem(sheetItem);

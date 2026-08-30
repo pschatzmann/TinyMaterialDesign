@@ -14,9 +14,10 @@ App<RGB565> app(DefaultBoard);
 FAB demoFab(Bounds((app.width() - 140) / 2, (app.height() - 56) / 2, 140, 56), drawPlus<RGB565>, "Add");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoFab.onClick = []() { printf("FAB tapped\n"); };
+  demoFab.onClick = []() { Serial.println("FAB tapped"); };
   app.screen().addWidget(demoFab);
 }
 

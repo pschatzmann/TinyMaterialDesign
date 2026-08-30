@@ -22,11 +22,12 @@ Button<RGB565> cellD(Bounds(), "4");
 Button<RGB565>* cells[] = {&cellA, &cellB, &cellC, &cellD};
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   for (size_t i = 0; i < 4; ++i) {
     cells[i]->bounds = demoGrid.cellRect(static_cast<int>(i));
-    cells[i]->onClick = [i]() { printf("Grid cell %d tapped\n", static_cast<int>(i)); };
+    cells[i]->onClick = [i]() { Serial.print("Grid cell "); Serial.print(static_cast<int>(i)); Serial.println(" tapped"); };
     app.screen().addWidget(*cells[i]);
   }
 }

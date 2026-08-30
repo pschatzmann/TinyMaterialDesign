@@ -14,12 +14,13 @@ App<RGB565> app(DefaultBoard);
 NavigationBar<RGB565> demoNavBar(Bounds(0, app.height() - 64, app.width(), 64));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   demoNavBar.addDestination(drawPlus<RGB565>, "Add");
   demoNavBar.addDestination(drawMinus<RGB565>, "Remove");
   demoNavBar.addDestination(drawMenu<RGB565>, "More");
-  demoNavBar.onChange = [](int index) { printf("Nav destination: %d\n", index); };
+  demoNavBar.onChange = [](int index) { Serial.print("Nav destination: "); Serial.println(index); };
   app.screen().addFixedWidget(demoNavBar);
 }
 

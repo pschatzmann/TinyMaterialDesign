@@ -19,15 +19,16 @@ IconButton<RGB565> appBarMenu;
 IconButton<RGB565> appBarAdd;
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   appBarMenu = IconButton<RGB565>(demoAppBar.leadingRect(), drawMenu<RGB565>);
   demoAppBar.leading = &appBarMenu;
-  appBarMenu.onClick = []() { printf("Menu tapped\n"); };
+  appBarMenu.onClick = []() { Serial.println("Menu tapped"); };
 
   appBarAdd = IconButton<RGB565>(demoAppBar.trailingRect(), drawPlus<RGB565>);
   demoAppBar.trailing = &appBarAdd;
-  appBarAdd.onClick = []() { printf("Add tapped\n"); };
+  appBarAdd.onClick = []() { Serial.println("Add tapped"); };
 
   // Demonstrates setColorOverride(): recolors just this bar to the theme's
   // primary color, independent of the rest of the app.screen().

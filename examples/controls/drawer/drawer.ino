@@ -15,12 +15,13 @@ Drawer<RGB565> demoDrawer(Bounds(0, 0, 220, app.height()));
 ListItem<RGB565> drawerItem;
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   drawerItem = ListItem<RGB565>(demoDrawer.itemRect(0), "Home");
   drawerItem.setSelected(true);
   drawerItem.onClick = []() {
-    printf("Drawer item tapped\n");
+    Serial.println("Drawer item tapped");
     app.screen().dismissDialog();
   };
   demoDrawer.addItem(drawerItem);

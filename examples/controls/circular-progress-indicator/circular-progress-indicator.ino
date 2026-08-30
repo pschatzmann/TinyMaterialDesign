@@ -15,6 +15,7 @@ CircularProgressIndicator<RGB565> demoProgress(Bounds((app.width() - 48) / 2, (a
                                                0.0f, /*indeterminate=*/true);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addWidget(demoProgress);

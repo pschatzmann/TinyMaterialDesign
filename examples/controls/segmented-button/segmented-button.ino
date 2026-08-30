@@ -14,12 +14,13 @@ App<RGB565> app(DefaultBoard);
 SegmentedButton<RGB565> demoSegmented(Bounds(20, (app.height() - 36) / 2, app.width() - 40, 36));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   demoSegmented.addSegment("Day");
   demoSegmented.addSegment("Week");
   demoSegmented.addSegment("Month");
-  demoSegmented.onChange = [](uint32_t mask) { printf("Segmented selection mask: %u\n", mask); };
+  demoSegmented.onChange = [](uint32_t mask) { Serial.print("Segmented selection mask: "); Serial.println(mask); };
   app.screen().addWidget(demoSegmented);
 }
 

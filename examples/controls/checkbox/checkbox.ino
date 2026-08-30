@@ -14,9 +14,10 @@ App<RGB565> app(DefaultBoard);
 Checkbox<RGB565> demoCheckbox(Bounds((app.width() - 24) / 2, (app.height() - 24) / 2, 24, 24), true);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoCheckbox.onChange = [](bool checked) { printf("Checkbox: %s\n", checked ? "checked" : "unchecked"); };
+  demoCheckbox.onChange = [](bool checked) { Serial.print("Checkbox: "); Serial.println(checked ? "checked" : "unchecked"); };
   app.screen().addWidget(demoCheckbox);
 }
 

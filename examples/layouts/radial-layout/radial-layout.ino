@@ -23,6 +23,7 @@ Button<RGB565> item5(Bounds(), "10");
 Button<RGB565>* items[] = {&item0, &item1, &item2, &item3, &item4, &item5};
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   for (size_t i = 0; i < 6; ++i) {

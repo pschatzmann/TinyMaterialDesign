@@ -16,9 +16,10 @@ App<RGB565> app(DefaultBoard);
 RadioButton<RGB565> demoRadio(Bounds((app.width() - 24) / 2, (app.height() - 24) / 2, 24, 24));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoRadio.onSelected = []() { printf("Radio selected\n"); };
+  demoRadio.onSelected = []() { Serial.println("Radio selected"); };
   app.screen().addWidget(demoRadio);
 }
 

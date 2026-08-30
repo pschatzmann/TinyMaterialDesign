@@ -17,6 +17,7 @@ TextArea<RGB565> demoArea(Bounds(20, (app.height() - 140) / 2, app.width() - 40,
                           "Write something...");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addWidget(demoArea);

@@ -26,6 +26,7 @@ Card<RGB565> wide2(Bounds(), "Wide", "Row 2");
 Card<RGB565> narrow2(Bounds(), "N", nullptr);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   wide0.bounds = demoTable.cellRect(0, 0);

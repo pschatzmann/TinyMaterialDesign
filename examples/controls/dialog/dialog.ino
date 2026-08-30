@@ -16,11 +16,12 @@ Dialog<RGB565> demoDialog(Bounds(20, (app.height() - 160) / 2, app.width() - 40,
 Button<RGB565> dialogOk(Bounds(0, 0, 80, 36), "OK");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   dialogOk.bounds = demoDialog.actionRect(0, 1);
   dialogOk.onClick = []() {
-    printf("Dialog OK tapped\n");
+    Serial.println("Dialog OK tapped");
     app.screen().dismissDialog();
   };
   demoDialog.addAction(dialogOk);

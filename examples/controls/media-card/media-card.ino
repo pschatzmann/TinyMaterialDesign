@@ -14,9 +14,10 @@ App<RGB565> app(DefaultBoard);
 MediaCard<RGB565> demoMediaCard(Bounds((app.width() - 140) / 2, (app.height() - 140) / 2, 140, 140), "Jazz");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoMediaCard.onClick = []() { printf("Media card tapped\n"); };
+  demoMediaCard.onClick = []() { Serial.println("Media card tapped"); };
   app.screen().addWidget(demoMediaCard);
 }
 

@@ -20,6 +20,7 @@ Badge<RGB565> cornerBadge(Bounds(), "3");
 FAB demoFab(Bounds(), drawPlus<RGB565>);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   AnchorLayout cardAnchor(backgroundCard.bounds);
@@ -27,7 +28,7 @@ void setup() {
 
   AnchorLayout screenAnchor(Bounds(0, 0, app.width(), app.height()), /*margin=*/16);
   demoFab.bounds = screenAnchor.rect(Anchor::BottomRight, 56, 56);
-  demoFab.onClick = []() { printf("FAB tapped\n"); };
+  demoFab.onClick = []() { Serial.println("FAB tapped"); };
 
   app.screen().addWidget(backgroundCard);
   app.screen().addWidget(cornerBadge);

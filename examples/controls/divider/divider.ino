@@ -14,6 +14,7 @@ App<RGB565> app(DefaultBoard);
 Divider<RGB565> demoDivider(Bounds(20, (app.height() - 2) / 2, app.width() - 40, 2));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addWidget(demoDivider);

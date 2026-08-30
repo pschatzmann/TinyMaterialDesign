@@ -131,6 +131,12 @@ void loop() {
 - `app.width()`/`app.height()` return the display's size in pixels, read
   from the board - use these instead of declaring your own `kWidth`/
   `kHeight` for widget `Bounds` math.
+- `begin()` falls back to `Screen::drawDirect()`'s small-per-widget-buffer
+  rendering automatically if the full-screen framebuffer can't be
+  allocated (a classic ESP32 without PSRAM can fail this even with plenty
+  of free heap - see `Screen::drawDirect()`'s doc comment for why). Same
+  widgets, same `screen()` API either way; `app.usesDirectRender()` reports
+  which path is active, mainly for logging.
 - Only one `App` may exist at a time (per `RGB_T`): its gesture callbacks
   are plain C function pointers under the hood, so `App` routes them
   through a static self-pointer rather than a capturing lambda. Every

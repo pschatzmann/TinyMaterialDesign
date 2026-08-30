@@ -26,11 +26,12 @@ Card<RGB565> nestedCard(Bounds(0, 0, app.width() - 40, 100), "Nested",
 Button<RGB565> buttonC(Bounds(20, 268, app.width() - 40, 48), "Button C (scroll to reach)");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  buttonA.onClick = []() { printf("Button A tapped\n"); };
-  buttonB.onClick = []() { printf("Button B tapped\n"); };
-  buttonC.onClick = []() { printf("Button C tapped\n"); };
+  buttonA.onClick = []() { Serial.println("Button A tapped"); };
+  buttonB.onClick = []() { Serial.println("Button B tapped"); };
+  buttonC.onClick = []() { Serial.println("Button C tapped"); };
 
   nestedPanel.addChild(nestedCard);
 

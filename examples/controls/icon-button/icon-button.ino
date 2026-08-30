@@ -15,9 +15,10 @@ IconButton<RGB565> demoIconButton(Bounds((app.width() - 56) / 2, (app.height() -
                                   drawPlus<RGB565>, IconButtonVariant::kFilled);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoIconButton.onClick = []() { printf("Icon button tapped\n"); };
+  demoIconButton.onClick = []() { Serial.println("Icon button tapped"); };
   app.screen().addWidget(demoIconButton);
 }
 

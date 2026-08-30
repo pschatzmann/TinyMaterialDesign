@@ -15,11 +15,12 @@ Menu<RGB565> demoMenu(Bounds((app.width() - 160) / 2, (app.height() - 40) / 2, 1
 ListItem<RGB565> menuItem;
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   menuItem = ListItem<RGB565>(demoMenu.itemRect(0), "Option 1");
   menuItem.onClick = []() {
-    printf("Menu item tapped\n");
+    Serial.println("Menu item tapped");
     app.screen().dismissDialog();
   };
   demoMenu.addItem(menuItem);

@@ -14,9 +14,10 @@ App<RGB565> app(DefaultBoard);
 Snackbar<RGB565> demoSnackbar(Bounds(16, app.height() - 64, app.width() - 32, 48));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoSnackbar.onAction = []() { printf("Snackbar action tapped\n"); };
+  demoSnackbar.onAction = []() { Serial.println("Snackbar action tapped"); };
   app.screen().addFixedWidget(demoSnackbar);
   demoSnackbar.show("Saved", "Undo");
 }

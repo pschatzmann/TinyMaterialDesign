@@ -15,6 +15,7 @@ Label<RGB565> demoLabel(Bounds(20, (app.height() - 24) / 2, app.width() - 40, 24
                         TypographyRole::kTitle, TextAlign::kCenter);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addWidget(demoLabel);

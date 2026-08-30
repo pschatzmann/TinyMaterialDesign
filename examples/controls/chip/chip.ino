@@ -15,9 +15,10 @@ Chip<RGB565> demoChip(Bounds((app.width() - 100) / 2, (app.height() - 32) / 2, 1
                       /*selectable=*/true);
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoChip.onChange = [](bool selected) { printf("Chip: %s\n", selected ? "selected" : "unselected"); };
+  demoChip.onChange = [](bool selected) { Serial.print("Chip: "); Serial.println(selected ? "selected" : "unselected"); };
   app.screen().addWidget(demoChip);
 }
 

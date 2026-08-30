@@ -19,12 +19,13 @@ MediaCard<RGB565> carouselItemB(Bounds(), "Rock");
 MediaCard<RGB565> carouselItemC(Bounds(), "Pop");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   demoCarousel.addItem(carouselItemA);
   demoCarousel.addItem(carouselItemB);
   demoCarousel.addItem(carouselItemC);
-  demoCarousel.onPageChange = [](int page) { printf("Carousel page: %d\n", page); };
+  demoCarousel.onPageChange = [](int page) { Serial.print("Carousel page: "); Serial.println(page); };
   app.screen().addWidget(demoCarousel);
 }
 

@@ -17,6 +17,7 @@ Card<RGB565> navCard(Bounds(), "Nav", "35%");
 Card<RGB565> contentCard(Bounds(), "Content", "The remaining 65%, minus the gutter.");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   SplitLayout demoSplit =

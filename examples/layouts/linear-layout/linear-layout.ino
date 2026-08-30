@@ -19,6 +19,7 @@ Button<RGB565> buttonB(Bounds(), "B (2x)");
 Button<RGB565> buttonC(Bounds(), "C");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   float weights[] = {1.0f, 2.0f, 1.0f};
@@ -26,9 +27,9 @@ void setup() {
   buttonB.bounds = demoRow.itemRect(1, weights, 3);
   buttonC.bounds = demoRow.itemRect(2, weights, 3);
 
-  buttonA.onClick = []() { printf("Button A tapped\n"); };
-  buttonB.onClick = []() { printf("Button B tapped\n"); };
-  buttonC.onClick = []() { printf("Button C tapped\n"); };
+  buttonA.onClick = []() { Serial.println("Button A tapped"); };
+  buttonB.onClick = []() { Serial.println("Button B tapped"); };
+  buttonC.onClick = []() { Serial.println("Button C tapped"); };
   app.screen().addWidget(buttonA);
   app.screen().addWidget(buttonB);
   app.screen().addWidget(buttonC);

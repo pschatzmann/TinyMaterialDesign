@@ -16,6 +16,7 @@ App<RGB565> app(DefaultBoard);
 Badge<RGB565> demoBadge(Bounds((app.width() - 24) / 2, (app.height() - 24) / 2, 24, 24), "5");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addWidget(demoBadge);

@@ -15,6 +15,7 @@ Card<RGB565> demoCard(Bounds(20, (app.height() - 140) / 2, app.width() - 40, 140
                       "A simple elevated card with a title and word-wrapped body text.");
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
   app.screen().addWidget(demoCard);

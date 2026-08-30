@@ -14,9 +14,10 @@ App<RGB565> app(DefaultBoard);
 Switch<RGB565> demoSwitch(Bounds((app.width() - 48) / 2, (app.height() - 28) / 2, 48, 28));
 
 void setup() {
+  Serial.begin(115200);
   app.begin();
 
-  demoSwitch.onChange = [](bool value) { printf("Switch: %s\n", value ? "on" : "off"); };
+  demoSwitch.onChange = [](bool value) { Serial.print("Switch: "); Serial.println(value ? "on" : "off"); };
   app.screen().addWidget(demoSwitch);
 }
 
