@@ -117,6 +117,13 @@ class Screen : public Container<RGB_T> {
     dirty_ = true;
   }
 
+  /// The theme currently in effect - see setTheme(). Public (unlike
+  /// Widget's own protected theme()) since a sketch often wants to read a
+  /// color role directly (e.g. to pass to a widget's own
+  /// setColorOverride()) without keeping a second copy of the theme
+  /// alongside the Screen.
+  const MaterialTheme<RGB_T>& theme() const { return ownedTheme_; }
+
   /// Overrides the theme's background color for this screen. Not required -
   /// draw() falls back to theme_.colors.background.
   void setBackgroundColor(RGB_T color) {

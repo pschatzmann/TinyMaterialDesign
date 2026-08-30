@@ -7,47 +7,22 @@
  * SDL2 window for mouse-driven testing without touch hardware.
  */
 #include <TinyMaterialDesign.h>
-#include <TinyGPU/Boards/LCDBoards.h>
-#include <cstdio>
 
-constexpr size_t kWidth = 240;
-constexpr size_t kHeight = 320;
-
-#ifdef ESP32
-LCDBoardGuitionESP32_LVGL_2_4Display board;
-#else
-LCDBoardDesktopSDL board(kWidth, kHeight);
-#endif
-Surface<RGB565> surface(kWidth, kHeight, FontRGB565);
-DeviceOutput<RGB565> display(board.display());
-
-GestureDetector gestures;
-MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
-Screen<RGB565> screen(theme);
+App<RGB565> app(DefaultBoard);
 
 // --- Checkbox (the control under test) --------------------------------------
-Checkbox<RGB565> demoCheckbox(Bounds((kWidth - 24) / 2, (kHeight - 24) / 2, 24, 24), true);
+Checkbox<RGB565> demoCheckbox(Bounds((app.width() - 24) / 2, (app.height() - 24) / 2, 24, 24), true);
 
 void setup() {
-  board.begin();
-  display.begin();
-  surface.begin();
+  app.begin();
 
   demoCheckbox.onChange = [](bool checked) { printf("Checkbox: %s\n", checked ? "checked" : "unchecked"); };
-  screen.addWidget(demoCheckbox);
-
-  gestures.onGesture = [](GestureEvent& event) { screen.handleGesture(event); };
-  gestures.isDraggable = [](int16_t x, int16_t y) { return screen.isDraggableAt(x, y); };
+  app.screen().addWidget(demoCheckbox);
 }
 
 void loop() {
-  gestures.update(*board.touch());
-  screen.update(millis());
-  // Screen tracks whether anything actually changed - see Screen::isDirty()
+  // App tracks whether anything actually changed - see Screen::isDirty()
   // - so an idle frame skips both the full-screen redraw and the full-
   // framebuffer display write.
-  if (screen.isDirty()) {
-    screen.draw(surface);
-    display.writeData(surface);
-  }
+  app.update();
 }

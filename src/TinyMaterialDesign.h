@@ -7,6 +7,7 @@
 #include "TinyMaterialDesign/Core/Widget.h"
 #include "TinyMaterialDesign/Core/Container.h"
 #include "TinyMaterialDesign/Core/Screen.h"
+#include "TinyMaterialDesign/Core/App.h"
 #include "TinyMaterialDesign/Core/GridLayout.h"
 #include "TinyMaterialDesign/Core/LinearLayout.h"
 #include "TinyMaterialDesign/Core/FlowLayout.h"

@@ -7,47 +7,19 @@
  * SDL2 window for mouse-driven testing without touch hardware.
  */
 #include <TinyMaterialDesign.h>
-#include <TinyGPU/Boards/LCDBoards.h>
-#include <cstdio>
 
-constexpr size_t kWidth = 240;
-constexpr size_t kHeight = 320;
-
-#ifdef ESP32
-LCDBoardGuitionESP32_LVGL_2_4Display board;
-#else
-LCDBoardDesktopSDL board(kWidth, kHeight);
-#endif
-Surface<RGB565> surface(kWidth, kHeight, FontRGB565);
-DeviceOutput<RGB565> display(board.display());
-
-GestureDetector gestures;
-MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
-Screen<RGB565> screen(theme);
+App<RGB565> app(DefaultBoard);
 
 // --- Button (the control under test) --------------------------------------
-Button<RGB565> demoButton(Bounds((kWidth - 120) / 2, (kHeight - 40) / 2, 120, 40), "Tap me");
+Button<RGB565> demoButton(Bounds((app.width() - 120) / 2, (app.height() - 40) / 2, 120, 40), "Tap me");
 
 void setup() {
-  board.begin();
-  display.begin();
-  surface.begin();
+  app.begin();
 
   demoButton.onClick = []() { printf("Button tapped\n"); };
-  screen.addWidget(demoButton);
-
-  gestures.onGesture = [](GestureEvent& event) { screen.handleGesture(event); };
-  gestures.isDraggable = [](int16_t x, int16_t y) { return screen.isDraggableAt(x, y); };
+  app.screen().addWidget(demoButton);
 }
 
 void loop() {
-  gestures.update(*board.touch());
-  screen.update(millis());
-  // Screen tracks whether anything actually changed - see Screen::isDirty()
-  // - so an idle frame skips both the full-screen redraw and the full-
-  // framebuffer display write.
-  if (screen.isDirty()) {
-    screen.draw(surface);
-    display.writeData(surface);
-  }
+  app.update();
 }

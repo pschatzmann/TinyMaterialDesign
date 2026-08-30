@@ -9,37 +9,22 @@
  * SDL2 window for mouse-driven testing without touch hardware.
  */
 #include <TinyMaterialDesign.h>
-#include <TinyGPU/Boards/LCDBoards.h>
-#include <cstdio>
 
-constexpr size_t kWidth = 240;
-constexpr size_t kHeight = 320;
-
-#ifdef ESP32
-LCDBoardGuitionESP32_LVGL_2_4Display board;
-#else
-LCDBoardDesktopSDL board(kWidth, kHeight);
-#endif
-Surface<RGB565> surface(kWidth, kHeight, FontRGB565);
-DeviceOutput<RGB565> display(board.display());
-
-GestureDetector gestures;
-MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
-Screen<RGB565> screen(theme);
+App<RGB565> app(DefaultBoard);
 
 constexpr int32_t kAppBarHeight = 56;
 constexpr int32_t kRowHeight = 40;
 constexpr int kLogicalCount = 10000;   // how many rows the list *reports*
 constexpr size_t kPoolSize = 12;       // how many ListItem widgets actually exist
 
-AppBar<RGB565> appBar(Bounds(0, 0, kWidth, kAppBarHeight), "10,000 Rows");
+AppBar<RGB565> appBar(Bounds(0, 0, app.width(), kAppBarHeight), "10,000 Rows");
 
 // --- Container + setChildProvider() (the control under test) ----------------
 // A viewport the height of the remaining screen; content is 10,000 rows *
 // 40px = 400,000px tall, scrolled the same way any other Container's
 // content would be - setChildProvider() just means those rows aren't
 // 10,000 real ListItem objects sitting in memory the whole time.
-Container<RGB565> bigList(Bounds(0, kAppBarHeight, kWidth, kHeight - kAppBarHeight));
+Container<RGB565> bigList(Bounds(0, kAppBarHeight, app.width(), app.height() - kAppBarHeight));
 
 // The entire pool: whichever ~8 rows are on screen at once (plus a little
 // slack) are drawn using these 12 objects, repositioned and relabeled for
@@ -50,9 +35,7 @@ Container<RGB565> bigList(Bounds(0, kAppBarHeight, kWidth, kHeight - kAppBarHeig
 ListItem<RGB565> pool[kPoolSize];
 
 void setup() {
-  board.begin();
-  display.begin();
-  surface.begin();
+  app.begin();
 
   // O(1) content-height/scroll-range math instead of visiting all 10,000
   // logical rows on every frame - see Container::setUniformItemHeight().
@@ -71,21 +54,13 @@ void setup() {
         return item;
       });
 
-  screen.addFixedWidget(appBar);
-  screen.addWidget(bigList);
-
-  gestures.onGesture = [](GestureEvent& event) { screen.handleGesture(event); };
-  gestures.isDraggable = [](int16_t x, int16_t y) { return screen.isDraggableAt(x, y); };
+  app.screen().addFixedWidget(appBar);
+  app.screen().addWidget(bigList);
 }
 
 void loop() {
-  gestures.update(*board.touch());
-  screen.update(millis());
-  // Screen tracks whether anything actually changed - see Screen::isDirty()
+  // App tracks whether anything actually changed - see Screen::isDirty()
   // - so an idle frame skips both the full-screen redraw and the full-
   // framebuffer display write.
-  if (screen.isDirty()) {
-    screen.draw(surface);
-    display.writeData(surface);
-  }
+  app.update();
 }

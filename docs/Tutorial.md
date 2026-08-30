@@ -4,6 +4,7 @@
 
 - [Introduction](#introduction)
   - [Core concepts](#core-concepts)
+  - [`App`](#app)
   - [The shared sketch skeleton](#the-shared-sketch-skeleton)
 - [Actions](#actions)
   - [`Button`](#button)
@@ -96,53 +97,83 @@ panel and every widget, theme, and helper follows.
   [Container - Virtualized content](#container---virtualized-content)
   section - `Screen`'s own `setContentProvider()` is the same idea.
 
-### The shared sketch skeleton
+### `App`
 
-Every example below (and every sketch under `examples/controls/`) follows
-the same shape - construct a `Surface`, a `Screen`, wire up
-`GestureDetector`, register widgets, then per-frame `update()`/`draw()`:
+`App<RGB_T>` bundles the board's display/touch driver, a `Surface` to draw
+into, a `GestureDetector` wired up to route every gesture to a `Screen`,
+and the `Screen` itself - everything a sketch needs besides its own widgets
+and a board, down to a constructor plus `begin()`/`update()`:
 
 ```cpp
-#include <TinyMaterialDesign.h>
-#include <TinyGPU/Boards/LCDBoards.h>
-
-constexpr size_t kWidth = 240;
-constexpr size_t kHeight = 320;
-
-#ifdef ESP32
 LCDBoardGuitionESP32_LVGL_2_4Display board;
-#else
-LCDBoardDesktopSDL board(kWidth, kHeight);  // desktop preview, no touch hardware needed
-#endif
-Surface<RGB565> surface(kWidth, kHeight, FontRGB565);
-DeviceOutput<RGB565> display(board.display());
-
-GestureDetector gestures;
-MaterialTheme<RGB565> theme = defaultTheme<RGB565>();
-Screen<RGB565> screen(theme);
-
-// ... one or more widgets declared here ...
+App<RGB565> app(board);
 
 void setup() {
-  board.begin();
-  display.begin();
-  surface.begin();
-
-  // ... wire callbacks, screen.addWidget()/addFixedWidget()/presentDialog() ...
-
-  gestures.onGesture = [](GestureEvent& event) { screen.handleGesture(event); };
-  gestures.isDraggable = [](int16_t x, int16_t y) { return screen.isDraggableAt(x, y); };
+  app.begin();                       // starts the board/display/surface
+  app.screen().addWidget(myButton);  // register widgets via app.screen()
 }
 
 void loop() {
-  gestures.update(*board.touch());
-  screen.update(millis());
-  if (screen.isDirty()) {   // skip redraw/display-write on an idle frame
-    screen.draw(surface);
-    display.writeData(surface);
-  }
+  app.update();  // touch input, animations, and a redraw - only if dirty
 }
 ```
+
+- `App`'s constructor takes any `tinygpu::LCDBoard&` - a non-owning
+  reference, same convention as everywhere else in this library - already
+  constructed and expected to outlive the `App`. Pass whichever concrete
+  `LCDBoard` matches your hardware, e.g. `LCDBoardGuitionESP32_LVGL_2_4Display`
+  for a real ESP32 panel or `LCDBoardDesktopSDL` for a desktop preview
+  window.
+- `app.screen()` returns the `Screen<RGB_T>&` to register widgets on.
+- `app.theme()` returns the active `MaterialTheme<RGB_T>` (pass a different
+  one as `App`'s second constructor argument) - handy for reading a color
+  role directly, e.g. for a widget's own `setColorOverride()`.
+- `app.width()`/`app.height()` return the display's size in pixels, read
+  from the board - use these instead of declaring your own `kWidth`/
+  `kHeight` for widget `Bounds` math.
+- Only one `App` may exist at a time (per `RGB_T`): its gesture callbacks
+  are plain C function pointers under the hood, so `App` routes them
+  through a static self-pointer rather than a capturing lambda. Every
+  sketch this replaces only ever had one `Screen`/`GestureDetector` pair as
+  globals anyway, so this isn't a new restriction in practice.
+- Not used by `kitchen-sink.ino`/`esp32-radio.ino`, which hand-assemble
+  their own board/surface/display/gestures/`Screen` instead, since they
+  need more than one board type or extra wiring `App` doesn't cover.
+
+### The shared sketch skeleton
+
+Every example below (and every sketch under `examples/controls/`) follows
+the same shape - construct an `App`, register widgets, then call
+`begin()`/`update()`:
+
+```cpp
+#include <TinyMaterialDesign.h>
+
+LCDBoardGuitionESP32_LVGL_2_4Display board;
+App<RGB565> app(board);
+
+// ... one or more widgets declared here, e.g.:
+// Button<RGB565> demoButton(Bounds((app.width() - 120) / 2, (app.height() - 40) / 2, 120, 40), "Tap me");
+
+void setup() {
+  app.begin();
+
+  // ... wire callbacks, app.screen().addWidget()/addFixedWidget()/presentDialog() ...
+}
+
+void loop() {
+  app.update();   // polls touch, advances animations, and redraws - only if
+                   // something actually changed, so an idle frame is cheap
+}
+```
+
+`App` bundles the board's display/touch driver, a `Surface` to draw into, a
+`GestureDetector` wired to a `Screen`, and the `Screen` itself - see
+[`App`](#app) in the Core Concepts section below for what it replaces and
+why. `LCDBoardGuitionESP32_LVGL_2_4Display` is used throughout this tutorial
+as a concrete stand-in for "whichever `LCDBoard` matches your hardware" -
+swap in `LCDBoardDesktopSDL` for a desktop preview window, or any other
+`LCDBoard` from `TinyGPU/Boards/` for different real hardware.
 
 The per-control sections below only show the parts that differ - the
 widget's own declaration and its `setup()` wiring - and link to the full,
@@ -168,11 +199,11 @@ A tappable pill-shaped control that triggers a single action, in one of five Mat
 
 ```cpp
 // --- Button (the control under test) --------------------------------------
-Button<RGB565> demoButton(Bounds((kWidth - 120) / 2, (kHeight - 40) / 2, 120, 40), "Tap me");
+Button<RGB565> demoButton(Bounds((app.width() - 120) / 2, (app.height() - 40) / 2, 120, 40), "Tap me");
 
 // setup():
 demoButton.onClick = []() { printf("Button tapped\n"); };
-screen.addWidget(demoButton);
+app.screen().addWidget(demoButton);
 ```
 
 ![Button](images/button.png)
@@ -192,12 +223,12 @@ A circular tap target hosting one vector glyph from `Draw/Icons.h` (or any funct
 
 ```cpp
 // --- IconButton (the control under test) -----------------------------------
-IconButton<RGB565> demoIconButton(Bounds((kWidth - 56) / 2, (kHeight - 56) / 2, 56, 56),
+IconButton<RGB565> demoIconButton(Bounds((app.width() - 56) / 2, (app.height() - 56) / 2, 56, 56),
                                   drawPlus<RGB565>, IconButtonVariant::kFilled);
 
 // setup():
 demoIconButton.onClick = []() { printf("Icon button tapped\n"); };
-screen.addWidget(demoIconButton);
+app.screen().addWidget(demoIconButton);
 ```
 
 ![IconButton](images/icon-button.png)
@@ -216,11 +247,11 @@ The Floating Action Button: a circular (or pill-shaped "extended" form, when con
 
 ```cpp
 // --- FloatingActionButton / FAB (the control under test) -------------------
-FAB demoFab(Bounds((kWidth - 140) / 2, (kHeight - 56) / 2, 140, 56), drawPlus<RGB565>, "Add");
+FAB demoFab(Bounds((app.width() - 140) / 2, (app.height() - 56) / 2, 140, 56), drawPlus<RGB565>, "Add");
 
 // setup():
 demoFab.onClick = []() { printf("FAB tapped\n"); };
-screen.addWidget(demoFab);
+app.screen().addWidget(demoFab);
 ```
 
 ![FloatingActionButton (FAB)](images/fab.png)
@@ -238,12 +269,12 @@ A small rounded-rect label, optionally a toggle ("filter chip") rather than a on
 
 ```cpp
 // --- Chip (the control under test) -------------------------------------------
-Chip<RGB565> demoChip(Bounds((kWidth - 100) / 2, (kHeight - 32) / 2, 100, 32), "Filter",
+Chip<RGB565> demoChip(Bounds((app.width() - 100) / 2, (app.height() - 32) / 2, 100, 32), "Filter",
                       /*selectable=*/true);
 
 // setup():
 demoChip.onChange = [](bool selected) { printf("Chip: %s\n", selected ? "selected" : "unselected"); };
-screen.addWidget(demoChip);
+app.screen().addWidget(demoChip);
 ```
 
 ![Chip](images/chip.png)
@@ -265,11 +296,11 @@ A square box toggled by tap, for one independent on/off choice (as opposed to `R
 
 ```cpp
 // --- Checkbox (the control under test) --------------------------------------
-Checkbox<RGB565> demoCheckbox(Bounds((kWidth - 24) / 2, (kHeight - 24) / 2, 24, 24), true);
+Checkbox<RGB565> demoCheckbox(Bounds((app.width() - 24) / 2, (app.height() - 24) / 2, 24, 24), true);
 
 // setup():
 demoCheckbox.onChange = [](bool checked) { printf("Checkbox: %s\n", checked ? "checked" : "unchecked"); };
-screen.addWidget(demoCheckbox);
+app.screen().addWidget(demoCheckbox);
 ```
 
 ![Checkbox](images/checkbox.png)
@@ -287,11 +318,11 @@ A track-and-thumb toggle, Material's alternative to `Checkbox` for a single on/o
 
 ```cpp
 // --- Switch (the control under test) ----------------------------------------
-Switch<RGB565> demoSwitch(Bounds((kWidth - 48) / 2, (kHeight - 28) / 2, 48, 28));
+Switch<RGB565> demoSwitch(Bounds((app.width() - 48) / 2, (app.height() - 28) / 2, 48, 28));
 
 // setup():
 demoSwitch.onChange = [](bool value) { printf("Switch: %s\n", value ? "on" : "off"); };
-screen.addWidget(demoSwitch);
+app.screen().addWidget(demoSwitch);
 ```
 
 ![Switch](images/switch.png)
@@ -305,17 +336,17 @@ One radio button never deselects itself on tap (radio semantics); `RadioGroup` (
 **Guidelines**
 
 - Always use at least 2 `RadioButton`s together via a `RadioGroup` in real usage - a lone one (as shown here) can only ever become selected, never deselected, which is correct radio behavior but not a meaningful choice on its own.
-- Each button still needs `screen.addWidget()`'d individually - `RadioGroup` only wires the mutual-exclusion logic, it doesn't register anything with `Screen`.
+- Each button still needs `app.screen().addWidget()`'d individually - `RadioGroup` only wires the mutual-exclusion logic, it doesn't register anything with `Screen`.
 
 ```cpp
 // --- RadioButton (the control under test) -----------------------------------
 // A lone RadioButton never deselects itself on tap (radio semantics) -
 // mutual exclusion across a group is RadioGroup's job, not shown here.
-RadioButton<RGB565> demoRadio(Bounds((kWidth - 24) / 2, (kHeight - 24) / 2, 24, 24));
+RadioButton<RGB565> demoRadio(Bounds((app.width() - 24) / 2, (app.height() - 24) / 2, 24, 24));
 
 // setup():
 demoRadio.onSelected = []() { printf("Radio selected\n"); };
-screen.addWidget(demoRadio);
+app.screen().addWidget(demoRadio);
 ```
 
 ![RadioButton](images/radio-button.png)
@@ -333,11 +364,11 @@ A draggable track-and-thumb control over a `[minValue, maxValue]` range. Tapping
 
 ```cpp
 // --- Slider (the control under test) ----------------------------------------
-Slider<RGB565> demoSlider(Bounds(20, (kHeight - 24) / 2, kWidth - 40, 24), 0.0f, 100.0f, 40.0f);
+Slider<RGB565> demoSlider(Bounds(20, (app.height() - 24) / 2, app.width() - 40, 24), 0.0f, 100.0f, 40.0f);
 
 // setup():
 demoSlider.onChange = [](float value) { printf("Slider: %d\n", static_cast<int>(value)); };
-screen.addWidget(demoSlider);
+app.screen().addWidget(demoSlider);
 ```
 
 ![Slider](images/slider.png)
@@ -355,14 +386,14 @@ A row of segments sharing one pill-shaped outline - Material's "segmented button
 
 ```cpp
 // --- SegmentedButton (the control under test) -------------------------------
-SegmentedButton<RGB565> demoSegmented(Bounds(20, (kHeight - 36) / 2, kWidth - 40, 36));
+SegmentedButton<RGB565> demoSegmented(Bounds(20, (app.height() - 36) / 2, app.width() - 40, 36));
 
 // setup():
 demoSegmented.addSegment("Day");
 demoSegmented.addSegment("Week");
 demoSegmented.addSegment("Month");
 demoSegmented.onChange = [](uint32_t mask) { printf("Segmented selection mask: %u\n", mask); };
-screen.addWidget(demoSegmented);
+app.screen().addWidget(demoSegmented);
 ```
 
 ![SegmentedButton](images/segmented-button.png)
@@ -382,10 +413,10 @@ A small, non-interactive status marker - either a plain dot (no text set) or a f
 // --- Badge (the control under test) -----------------------------------------
 // Non-interactive - typically overlaid on a corner of another widget (e.g.
 // an IconButton's bounds); shown centered on its own here.
-Badge<RGB565> demoBadge(Bounds((kWidth - 24) / 2, (kHeight - 24) / 2, 24, 24), "5");
+Badge<RGB565> demoBadge(Bounds((app.width() - 24) / 2, (app.height() - 24) / 2, 24, 24), "5");
 
 // setup():
-screen.addWidget(demoBadge);
+app.screen().addWidget(demoBadge);
 ```
 
 ![Badge](images/badge.png)
@@ -407,11 +438,11 @@ A horizontal progress bar, determinate (`value` in `[0,1]`) or indeterminate (a 
 
 ```cpp
 // --- LinearProgressIndicator (the control under test) -----------------------
-LinearProgressIndicator<RGB565> demoProgress(Bounds(20, (kHeight - 8) / 2, kWidth - 40, 8), 0.0f,
+LinearProgressIndicator<RGB565> demoProgress(Bounds(20, (app.height() - 8) / 2, app.width() - 40, 8), 0.0f,
                                              /*indeterminate=*/true);
 
 // setup():
-screen.addWidget(demoProgress);
+app.screen().addWidget(demoProgress);
 ```
 
 ![LinearProgressIndicator](images/linear-progress-indicator.png)
@@ -429,11 +460,11 @@ A circular "spinner" ring - the same determinate/indeterminate split as `LinearP
 
 ```cpp
 // --- CircularProgressIndicator (the control under test) ---------------------
-CircularProgressIndicator<RGB565> demoProgress(Bounds((kWidth - 48) / 2, (kHeight - 48) / 2, 48, 48),
+CircularProgressIndicator<RGB565> demoProgress(Bounds((app.width() - 48) / 2, (app.height() - 48) / 2, 48, 48),
                                                0.0f, /*indeterminate=*/true);
 
 // setup():
-screen.addWidget(demoProgress);
+app.screen().addWidget(demoProgress);
 ```
 
 ![CircularProgressIndicator](images/circular-progress-indicator.png)
@@ -451,11 +482,11 @@ A transient bottom message bar with an optional single text action, that hides i
 
 ```cpp
 // --- Snackbar (the control under test) ---------------------------------------
-Snackbar<RGB565> demoSnackbar(Bounds(16, kHeight - 64, kWidth - 32, 48));
+Snackbar<RGB565> demoSnackbar(Bounds(16, app.height() - 64, app.width() - 32, 48));
 
 // setup():
 demoSnackbar.onAction = []() { printf("Snackbar action tapped\n"); };
-screen.addFixedWidget(demoSnackbar);
+app.screen().addFixedWidget(demoSnackbar);
 demoSnackbar.show("Saved", "Undo");
 ```
 
@@ -479,8 +510,8 @@ Tooltip<RGB565> demoTooltip;
 // setup():
 // showFor() measures text using the theme, so the widget must already be
 // registered (and so themed) with Screen before calling it.
-screen.addFixedWidget(demoTooltip);
-demoTooltip.showFor(Bounds(kWidth / 2 - 10, kHeight / 2 - 10, 20, 20), "Hint text",
+app.screen().addFixedWidget(demoTooltip);
+demoTooltip.showFor(Bounds(app.width() / 2 - 10, app.height() / 2 - 10, 20, 20), "Hint text",
                     /*durationMs=*/60000);
 ```
 
@@ -502,10 +533,10 @@ A persistent, non-modal inline message with text actions - Material's "banner", 
 // --- Banner (the control under test) -----------------------------------------
 // Pinned to the bottom edge (see addFixedWidget() below) rather than just
 // under an app bar, so it reads as a persistent bottom-of-screen notice.
-Banner<RGB565> demoBanner(Bounds(0, kHeight - 80, kWidth, 80), "You're offline. Check your connection.");
+Banner<RGB565> demoBanner(Bounds(0, app.height() - 80, app.width(), 80), "You're offline. Check your connection.");
 
 // setup():
-screen.addFixedWidget(demoBanner);
+app.screen().addFixedWidget(demoBanner);
 ```
 
 ![Banner](images/banner.png)
@@ -527,11 +558,11 @@ An elevated rounded-rect container with an optional title and word-wrapped body 
 
 ```cpp
 // --- Card (the control under test) ------------------------------------------
-Card<RGB565> demoCard(Bounds(20, (kHeight - 140) / 2, kWidth - 40, 140), "TinyMaterialDesign",
+Card<RGB565> demoCard(Bounds(20, (app.height() - 140) / 2, app.width() - 40, 140), "TinyMaterialDesign",
                       "A simple elevated card with a title and word-wrapped body text.");
 
 // setup():
-screen.addWidget(demoCard);
+app.screen().addWidget(demoCard);
 ```
 
 ![Card](images/card.png)
@@ -549,11 +580,11 @@ A tappable card with a thumbnail image and a caption - e.g. one tile in a grid o
 
 ```cpp
 // --- MediaCard (the control under test) ---------------------------------------
-MediaCard<RGB565> demoMediaCard(Bounds((kWidth - 140) / 2, (kHeight - 140) / 2, 140, 140), "Jazz");
+MediaCard<RGB565> demoMediaCard(Bounds((app.width() - 140) / 2, (app.height() - 140) / 2, 140, 140), "Jazz");
 
 // setup():
 demoMediaCard.onClick = []() { printf("Media card tapped\n"); };
-screen.addWidget(demoMediaCard);
+app.screen().addWidget(demoMediaCard);
 ```
 
 ![MediaCard](images/media-card.png)
@@ -576,7 +607,7 @@ A horizontally paged, drag-to-swipe row of items (typically `MediaCard`), with a
 // --- Carousel (the control under test) ---------------------------------------
 // Items' own bounds are overwritten by addItem() (see Carousel::itemRect())
 // - the Bounds() passed to each MediaCard here is just a placeholder.
-Carousel<RGB565> demoCarousel(Bounds(0, (kHeight - 150) / 2, kWidth, 150), 120, 12);
+Carousel<RGB565> demoCarousel(Bounds(0, (app.height() - 150) / 2, app.width(), 150), 120, 12);
 MediaCard<RGB565> carouselItemA(Bounds(), "Jazz");
 MediaCard<RGB565> carouselItemB(Bounds(), "Rock");
 MediaCard<RGB565> carouselItemC(Bounds(), "Pop");
@@ -586,7 +617,7 @@ demoCarousel.addItem(carouselItemA);
 demoCarousel.addItem(carouselItemB);
 demoCarousel.addItem(carouselItemC);
 demoCarousel.onPageChange = [](int page) { printf("Carousel page: %d\n", page); };
-screen.addWidget(demoCarousel);
+app.screen().addWidget(demoCarousel);
 ```
 
 ![Carousel](images/carousel.png)
@@ -609,16 +640,16 @@ A widget that holds child widgets and scrolls its own content vertically once it
 // --- Container (the control under test) ---------------------------------------
 // Shorter than its children's combined height, so it scrolls; nestedPanel is
 // itself a Container, showing that they nest.
-Container<RGB565> demoContainer(Bounds(0, 0, kWidth, 260));
-Button<RGB565> buttonA(Bounds(20, 16, kWidth - 40, 48), "Button A");
-Container<RGB565> nestedPanel(Bounds(20, 136, kWidth - 40, 120));
-Card<RGB565> nestedCard(Bounds(0, 0, kWidth - 40, 100), "Nested", "Lives inside nestedPanel.");
+Container<RGB565> demoContainer(Bounds(0, 0, app.width(), 260));
+Button<RGB565> buttonA(Bounds(20, 16, app.width() - 40, 48), "Button A");
+Container<RGB565> nestedPanel(Bounds(20, 136, app.width() - 40, 120));
+Card<RGB565> nestedCard(Bounds(0, 0, app.width() - 40, 100), "Nested", "Lives inside nestedPanel.");
 
 // setup():
 nestedPanel.addChild(nestedCard);
 demoContainer.addChild(buttonA);
 demoContainer.addChild(nestedPanel);
-screen.addWidget(demoContainer);
+app.screen().addWidget(demoContainer);
 ```
 
 ![Container](images/container.png)
@@ -643,8 +674,8 @@ constexpr int32_t kRowHeight = 40;
 constexpr int kLogicalCount = 10000;  // how many rows the list *reports*
 constexpr size_t kPoolSize = 12;      // how many ListItem widgets actually exist
 
-AppBar<RGB565> appBar(Bounds(0, 0, kWidth, kAppBarHeight), "10,000 Rows");
-Container<RGB565> bigList(Bounds(0, kAppBarHeight, kWidth, kHeight - kAppBarHeight));
+AppBar<RGB565> appBar(Bounds(0, 0, app.width(), kAppBarHeight), "10,000 Rows");
+Container<RGB565> bigList(Bounds(0, kAppBarHeight, app.width(), app.height() - kAppBarHeight));
 ListItem<RGB565> pool[kPoolSize];  // whichever ~8 rows are visible reuse these 12
 
 // setup():
@@ -665,8 +696,8 @@ bigList.setChildProvider(
       return item;
     });
 
-screen.addFixedWidget(appBar);
-screen.addWidget(bigList);
+app.screen().addFixedWidget(appBar);
+app.screen().addWidget(bigList);
 ```
 
 ![Virtualized list](images/virtualized-list.png)
@@ -691,11 +722,11 @@ A tappable row: optional leading icon + title, with a selected state. The buildi
 
 ```cpp
 // --- ListItem (the control under test) ---------------------------------------
-ListItem<RGB565> demoListItem(Bounds(20, (kHeight - 48) / 2, kWidth - 40, 48), "Settings");
+ListItem<RGB565> demoListItem(Bounds(20, (app.height() - 48) / 2, app.width() - 40, 48), "Settings");
 
 // setup():
 demoListItem.onClick = []() { printf("List item tapped\n"); };
-screen.addWidget(demoListItem);
+app.screen().addWidget(demoListItem);
 ```
 
 ![ListItem](images/list-item.png)
@@ -712,10 +743,10 @@ A themed hairline that separates content into sections. Orientation follows the 
 
 ```cpp
 // --- Divider (the control under test) ---------------------------------------
-Divider<RGB565> demoDivider(Bounds(20, (kHeight - 2) / 2, kWidth - 40, 2));
+Divider<RGB565> demoDivider(Bounds(20, (app.height() - 2) / 2, app.width() - 40, 2));
 
 // setup():
-screen.addWidget(demoDivider);
+app.screen().addWidget(demoDivider);
 ```
 
 ![Divider](images/divider.png)
@@ -733,11 +764,11 @@ Non-interactive themed text at one of four typography roles (`kHeadline`/`kTitle
 
 ```cpp
 // --- Label (the control under test) -----------------------------------------
-Label<RGB565> demoLabel(Bounds(20, (kHeight - 24) / 2, kWidth - 40, 24), "Hello, Material Design!",
+Label<RGB565> demoLabel(Bounds(20, (app.height() - 24) / 2, app.width() - 40, 24), "Hello, Material Design!",
                         TypographyRole::kTitle, TextAlign::kCenter);
 
 // setup():
-screen.addWidget(demoLabel);
+app.screen().addWidget(demoLabel);
 ```
 
 ![Label](images/label.png)
@@ -762,7 +793,7 @@ A top app bar: a title plus optional leading/trailing icon widgets (typically `I
 // leading/trailing are plain pointer fields (see AppBar::leading/trailing) -
 // the IconButtons themselves are declared here and positioned/attached in
 // setup(), the same pattern kitchen-sink.ino uses.
-AppBar<RGB565> demoAppBar(Bounds(0, 0, kWidth, 48), "App Bar");
+AppBar<RGB565> demoAppBar(Bounds(0, 0, app.width(), 48), "App Bar");
 IconButton<RGB565> appBarMenu;
 IconButton<RGB565> appBarAdd;
 
@@ -779,7 +810,7 @@ appBarAdd.onClick = []() { printf("Add tapped\n"); };
 // primary color, independent of the rest of the screen.
 demoAppBar.setColorOverride(theme.colors.primary, theme.colors.onPrimary);
 
-screen.addFixedWidget(demoAppBar);
+app.screen().addFixedWidget(demoAppBar);
 ```
 
 ![AppBar](images/app-bar.png)
@@ -797,14 +828,14 @@ A row of evenly-spaced exclusive-selection labels (primary tabs), with a sliding
 
 ```cpp
 // --- TabBar (the control under test) -----------------------------------------
-TabBar<RGB565> demoTabs(Bounds(0, (kHeight - 40) / 2, kWidth, 40));
+TabBar<RGB565> demoTabs(Bounds(0, (app.height() - 40) / 2, app.width(), 40));
 
 // setup():
 demoTabs.addTab("One");
 demoTabs.addTab("Two");
 demoTabs.addTab("Three");
 demoTabs.onChange = [](int index) { printf("Tab selected: %d\n", index); };
-screen.addWidget(demoTabs);
+app.screen().addWidget(demoTabs);
 ```
 
 ![TabBar](images/tab-bar.png)
@@ -822,14 +853,14 @@ A bottom navigation bar: 3-5 exclusive destinations, each an icon with a label u
 
 ```cpp
 // --- NavigationBar (the control under test) ----------------------------------
-NavigationBar<RGB565> demoNavBar(Bounds(0, kHeight - 64, kWidth, 64));
+NavigationBar<RGB565> demoNavBar(Bounds(0, app.height() - 64, app.width(), 64));
 
 // setup():
 demoNavBar.addDestination(drawPlus<RGB565>, "Add");
 demoNavBar.addDestination(drawMinus<RGB565>, "Remove");
 demoNavBar.addDestination(drawMenu<RGB565>, "More");
 demoNavBar.onChange = [](int index) { printf("Nav destination: %d\n", index); };
-screen.addFixedWidget(demoNavBar);
+app.screen().addFixedWidget(demoNavBar);
 ```
 
 ![NavigationBar](images/navigation-bar.png)
@@ -846,14 +877,14 @@ A narrow vertical column of 3-7 exclusive destinations - the tablet/landscape co
 
 ```cpp
 // --- NavigationRail (the control under test) ---------------------------------
-NavigationRail<RGB565> demoNavRail(Bounds(0, 0, 72, kHeight));
+NavigationRail<RGB565> demoNavRail(Bounds(0, 0, 72, app.height()));
 
 // setup():
 demoNavRail.addDestination(drawPlus<RGB565>, "Add");
 demoNavRail.addDestination(drawMinus<RGB565>, "Remove");
 demoNavRail.addDestination(drawMenu<RGB565>, "More");
 demoNavRail.onChange = [](int index) { printf("Nav destination: %d\n", index); };
-screen.addFixedWidget(demoNavRail);
+app.screen().addFixedWidget(demoNavRail);
 ```
 
 ![NavigationRail](images/navigation-rail.png)
@@ -867,12 +898,12 @@ A modal side navigation panel holding a list of items (typically `ListItem`), sh
 **Guidelines**
 
 - Use for an app's top-level navigation destinations, opened from an app bar's leading menu icon (see `kitchen-sink.ino`).
-- Wire `onScrimTap` to `screen.dismissDialog()` for tap-outside-to-close, and dismiss from each item's own `onClick` too.
+- Wire `onScrimTap` to `app.screen().dismissDialog()` for tap-outside-to-close, and dismiss from each item's own `onClick` too.
 - The item area scrolls automatically once items overflow the panel's height (it's a `Container` under the hood - see `Core/Container.h`), and `setItemProvider()` is available as a callback-driven alternative to `addItem()` for a long settings-style list - see [Container - Virtualized content](#container---virtualized-content) section.
 
 ```cpp
 // --- Drawer (the control under test) -----------------------------------------
-Drawer<RGB565> demoDrawer(Bounds(0, 0, 220, kHeight));
+Drawer<RGB565> demoDrawer(Bounds(0, 0, 220, app.height()));
 ListItem<RGB565> drawerItem;
 
 // setup():
@@ -880,13 +911,13 @@ drawerItem = ListItem<RGB565>(demoDrawer.itemRect(0), "Home");
 drawerItem.setSelected(true);
 drawerItem.onClick = []() {
   printf("Drawer item tapped\n");
-  screen.dismissDialog();
+  app.screen().dismissDialog();
 };
 demoDrawer.addItem(drawerItem);
-demoDrawer.onScrimTap = []() { screen.dismissDialog(); };
+demoDrawer.onScrimTap = []() { app.screen().dismissDialog(); };
 
 // Shown immediately (no separate trigger control) - see Screen::presentDialog().
-screen.presentDialog(demoDrawer);
+app.screen().presentDialog(demoDrawer);
 ```
 
 ![Drawer](images/drawer.png)
@@ -900,25 +931,25 @@ A popover list of items (typically `ListItem`), anchored near whatever opened it
 **Guidelines**
 
 - Use for a small, contextual set of choices (a dropdown from a Button, a long-press context menu) - for full-screen navigation use `Drawer` instead.
-- Wire `onOutsideTap` to `screen.dismissDialog()` for the expected tap-outside-to-close behavior.
+- Wire `onOutsideTap` to `app.screen().dismissDialog()` for the expected tap-outside-to-close behavior.
 - Like `Drawer`, the item area is a `Container` under the hood - it scrolls automatically if items overflow, and `setItemProvider()` is available as a callback-driven alternative to `addItem()` - see [Container - Virtualized content](#container---virtualized-content) section.
 
 ```cpp
 // --- Menu (the control under test) -------------------------------------------
-Menu<RGB565> demoMenu(Bounds((kWidth - 160) / 2, (kHeight - 40) / 2, 160, 40));
+Menu<RGB565> demoMenu(Bounds((app.width() - 160) / 2, (app.height() - 40) / 2, 160, 40));
 ListItem<RGB565> menuItem;
 
 // setup():
 menuItem = ListItem<RGB565>(demoMenu.itemRect(0), "Option 1");
 menuItem.onClick = []() {
   printf("Menu item tapped\n");
-  screen.dismissDialog();
+  app.screen().dismissDialog();
 };
 demoMenu.addItem(menuItem);
-demoMenu.onOutsideTap = []() { screen.dismissDialog(); };
+demoMenu.onOutsideTap = []() { app.screen().dismissDialog(); };
 
 // Shown immediately (no separate trigger control) - see Screen::presentDialog().
-screen.presentDialog(demoMenu);
+app.screen().presentDialog(demoMenu);
 ```
 
 ![Menu](images/menu.png)
@@ -931,13 +962,13 @@ A modal alert: full-screen scrim + centered card + title + wrapped message + act
 
 **Guidelines**
 
-- Always give a Dialog at least one action wired to `screen.dismissDialog()` - without one there's no way for the user to close it (this example omits that follow-up wiring for brevity beyond the one OK action shown).
+- Always give a Dialog at least one action wired to `app.screen().dismissDialog()` - without one there's no way for the user to close it (this example omits that follow-up wiring for brevity beyond the one OK action shown).
 - Reserve dialogs for choices that truly need to interrupt the user - for a transient, non-blocking status message use `Snackbar` instead.
 - `setActionProvider()` is available as a callback-driven alternative to `addAction()` - see [Container - Virtualized content](#container---virtualized-content) section (not usually needed for a dialog's handful of actions, but available for consistency).
 
 ```cpp
 // --- Dialog (the control under test) -----------------------------------------
-Dialog<RGB565> demoDialog(Bounds(20, (kHeight - 160) / 2, kWidth - 40, 160), "Hello",
+Dialog<RGB565> demoDialog(Bounds(20, (app.height() - 160) / 2, app.width() - 40, 160), "Hello",
                           "This is a simple modal dialog with one action.");
 Button<RGB565> dialogOk(Bounds(0, 0, 80, 36), "OK");
 
@@ -945,12 +976,12 @@ Button<RGB565> dialogOk(Bounds(0, 0, 80, 36), "OK");
 dialogOk.bounds = demoDialog.actionRect(0, 1);
 dialogOk.onClick = []() {
   printf("Dialog OK tapped\n");
-  screen.dismissDialog();
+  app.screen().dismissDialog();
 };
 demoDialog.addAction(dialogOk);
 
 // Shown immediately (no separate trigger control) - see Screen::presentDialog().
-screen.presentDialog(demoDialog);
+app.screen().presentDialog(demoDialog);
 ```
 
 ![Dialog](images/dialog.png)
@@ -969,20 +1000,20 @@ A modal panel sliding up from the bottom edge, full width, with rounded top corn
 
 ```cpp
 // --- BottomSheet (the control under test) ------------------------------------
-BottomSheet<RGB565> demoSheet(Bounds(0, kHeight - 160, kWidth, 160), "Options");
+BottomSheet<RGB565> demoSheet(Bounds(0, app.height() - 160, app.width(), 160), "Options");
 ListItem<RGB565> sheetItem;
 
 // setup():
 sheetItem = ListItem<RGB565>(demoSheet.itemRect(0), "Share");
 sheetItem.onClick = []() {
   printf("Bottom sheet item tapped\n");
-  screen.dismissDialog();
+  app.screen().dismissDialog();
 };
 demoSheet.addItem(sheetItem);
-demoSheet.onScrimTap = []() { screen.dismissDialog(); };
+demoSheet.onScrimTap = []() { app.screen().dismissDialog(); };
 
 // Shown immediately (no separate trigger control) - see Screen::presentDialog().
-screen.presentDialog(demoSheet);
+app.screen().presentDialog(demoSheet);
 ```
 
 ![BottomSheet](images/bottom-sheet.png)
@@ -1006,11 +1037,11 @@ A single-line text input box. Only holds and displays text and focus state - it 
 // --- TextField (the control under test) ---------------------------------------
 // Tap to focus (a blinking cursor appears); pair with a Keyboard (see the
 // keyboard example) to actually type into it.
-TextField<RGB565> demoField(Bounds(20, (kHeight - 48) / 2, kWidth - 40, 48), "Name", "Your name");
+TextField<RGB565> demoField(Bounds(20, (app.height() - 48) / 2, app.width() - 40, 48), "Name", "Your name");
 
 // setup():
 demoField.onSubmit = []() { printf("Submitted: %s\n", demoField.text().c_str()); };
-screen.addWidget(demoField);
+app.screen().addWidget(demoField);
 ```
 
 ![TextField](images/text-field.png)
@@ -1030,11 +1061,11 @@ The multi-line, word-wrapped counterpart to `TextField` - same `TextInputTarget`
 // --- TextArea (the control under test) ---------------------------------------
 // Tap to focus (a blinking cursor appears); pair with a Keyboard (see the
 // keyboard example) to actually type into it.
-TextArea<RGB565> demoArea(Bounds(20, (kHeight - 140) / 2, kWidth - 40, 140), "Notes",
+TextArea<RGB565> demoArea(Bounds(20, (app.height() - 140) / 2, app.width() - 40, 140), "Notes",
                           "Write something...");
 
 // setup():
-screen.addWidget(demoArea);
+app.screen().addWidget(demoArea);
 ```
 
 ![TextArea](images/text-area.png)
@@ -1054,11 +1085,11 @@ A pill-shaped search input: leading magnifier glyph, typed text, and a trailing 
 // --- SearchBar (the control under test) ---------------------------------------
 // Tap to focus (a blinking cursor appears); pair with a Keyboard to
 // actually type into it - omitted here to keep this a single-control demo.
-SearchBar<RGB565> demoSearch(Bounds(20, (kHeight - 48) / 2, kWidth - 40, 48), "Search");
+SearchBar<RGB565> demoSearch(Bounds(20, (app.height() - 48) / 2, app.width() - 40, 48), "Search");
 
 // setup():
 demoSearch.onSubmit = []() { printf("Search submitted: %s\n", demoSearch.text().c_str()); };
-screen.addWidget(demoSearch);
+app.screen().addWidget(demoSearch);
 ```
 
 ![SearchBar](images/search-bar.png)
@@ -1081,11 +1112,11 @@ An on-screen QWERTY keyboard that drives one text input (`TextField` or `TextAre
 // Keyboard::manage()); forced visible here directly so this stays a
 // single-control demo - keys still respond, they just have no field to
 // insert characters into.
-Keyboard<RGB565> demoKeyboard(Bounds(0, kHeight - 190, kWidth, 190));
+Keyboard<RGB565> demoKeyboard(Bounds(0, app.height() - 190, app.width(), 190));
 
 // setup():
 demoKeyboard.visible = true;
-screen.addFixedWidget(demoKeyboard);
+app.screen().addFixedWidget(demoKeyboard);
 ```
 
 ![Keyboard](images/keyboard.png)
@@ -1131,7 +1162,7 @@ Wraps a row of equal-size cells to fit a container's width - the classic "N card
 
 ```cpp
 // --- GridLayout (the control under test) ------------------------------------
-GridLayout demoGrid(Bounds(10, 20, kWidth - 20, kHeight - 40), /*cellWidth=*/100, /*cellHeight=*/70);
+GridLayout demoGrid(Bounds(10, 20, app.width() - 20, app.height() - 40), /*cellWidth=*/100, /*cellHeight=*/70);
 Button<RGB565> cellA(Bounds(), "1");
 Button<RGB565> cellB(Bounds(), "2");
 Button<RGB565> cellC(Bounds(), "3");
@@ -1141,7 +1172,7 @@ Button<RGB565>* cells[] = {&cellA, &cellB, &cellC, &cellD};
 // setup():
 for (size_t i = 0; i < 4; ++i) {
   cells[i]->bounds = demoGrid.cellRect(static_cast<int>(i));
-  screen.addWidget(*cells[i]);
+  app.screen().addWidget(*cells[i]);
 }
 ```
 
@@ -1162,7 +1193,7 @@ Splits a container into equal or weighted slices along one axis - a row of butto
 
 ```cpp
 // --- LinearLayout (the control under test) ----------------------------------
-LinearLayout demoRow(Bounds(10, (kHeight - 48) / 2, kWidth - 20, 48), LayoutAxis::Horizontal);
+LinearLayout demoRow(Bounds(10, (app.height() - 48) / 2, app.width() - 20, 48), LayoutAxis::Horizontal);
 Button<RGB565> buttonA(Bounds(), "A");
 Button<RGB565> buttonB(Bounds(), "B (2x)");
 Button<RGB565> buttonC(Bounds(), "C");
@@ -1172,9 +1203,9 @@ float weights[] = {1.0f, 2.0f, 1.0f};
 buttonA.bounds = demoRow.itemRect(0, weights, 3);
 buttonB.bounds = demoRow.itemRect(1, weights, 3);
 buttonC.bounds = demoRow.itemRect(2, weights, 3);
-screen.addWidget(buttonA);
-screen.addWidget(buttonB);
-screen.addWidget(buttonC);
+app.screen().addWidget(buttonA);
+app.screen().addWidget(buttonB);
+app.screen().addWidget(buttonC);
 ```
 
 *Header: [`Core/LinearLayout.h`](../src/TinyMaterialDesign/Core/LinearLayout.h)*
@@ -1194,7 +1225,7 @@ Packs items of varying width left-to-right, wrapping to a new row when one would
 
 ```cpp
 // --- FlowLayout (the control under test) ------------------------------------
-FlowLayout demoFlow(Bounds(10, 20, kWidth - 20, kHeight - 40));
+FlowLayout demoFlow(Bounds(10, 20, app.width() - 20, app.height() - 40));
 Chip<RGB565> chipJazz(Bounds(), "Jazz");
 Chip<RGB565> chipRock(Bounds(), "Rock");
 Chip<RGB565> chipClassical(Bounds(), "Classical");
@@ -1207,7 +1238,7 @@ constexpr int32_t kChipWidths[] = {60, 60, 90, 60, 80, 100};
 // setup():
 for (size_t i = 0; i < 6; ++i) {
   chips[i]->bounds = demoFlow.next(kChipWidths[i], /*height=*/36);
-  screen.addWidget(*chips[i]);
+  app.screen().addWidget(*chips[i]);
 }
 ```
 
@@ -1233,11 +1264,11 @@ Card<RGB565> contentCard(Bounds(), "Content", "The remaining 65%, minus the gutt
 
 // setup():
 SplitLayout demoSplit =
-    SplitLayout::ratio(Bounds(0, 20, kWidth, kHeight - 40), LayoutAxis::Horizontal, 0.35f);
+    SplitLayout::ratio(Bounds(0, 20, app.width(), app.height() - 40), LayoutAxis::Horizontal, 0.35f);
 navCard.bounds = demoSplit.firstRect();
 contentCard.bounds = demoSplit.secondRect();
-screen.addWidget(navCard);
-screen.addWidget(contentCard);
+app.screen().addWidget(navCard);
+app.screen().addWidget(contentCard);
 ```
 
 *Header: [`Core/SplitLayout.h`](../src/TinyMaterialDesign/Core/SplitLayout.h)*
@@ -1257,7 +1288,7 @@ Positions a single rect relative to a corner or edge of a container - a FAB pinn
 
 ```cpp
 // --- AnchorLayout (the control under test) ----------------------------------
-Card<RGB565> backgroundCard(Bounds(10, 10, kWidth - 20, kHeight - 20), "AnchorLayout",
+Card<RGB565> backgroundCard(Bounds(10, 10, app.width() - 20, app.height() - 20), "AnchorLayout",
                             "Badge anchored to my corner; FAB anchored to the screen's.");
 Badge<RGB565> cornerBadge(Bounds(), "3");
 FAB demoFab(Bounds(), drawPlus<RGB565>);
@@ -1266,12 +1297,12 @@ FAB demoFab(Bounds(), drawPlus<RGB565>);
 AnchorLayout cardAnchor(backgroundCard.bounds);
 cornerBadge.bounds = cardAnchor.rect(Anchor::TopRight, 24, 24);
 
-AnchorLayout screenAnchor(Bounds(0, 0, kWidth, kHeight), /*margin=*/16);
+AnchorLayout screenAnchor(Bounds(0, 0, app.width(), app.height()), /*margin=*/16);
 demoFab.bounds = screenAnchor.rect(Anchor::BottomRight, 56, 56);
 
-screen.addWidget(backgroundCard);
-screen.addWidget(cornerBadge);
-screen.addWidget(demoFab);
+app.screen().addWidget(backgroundCard);
+app.screen().addWidget(cornerBadge);
+app.screen().addWidget(demoFab);
 ```
 
 *Header: [`Core/AnchorLayout.h`](../src/TinyMaterialDesign/Core/AnchorLayout.h)*
@@ -1298,7 +1329,7 @@ A single `StackLayout` instance is normally used for just one of these, not both
 ```cpp
 // --- StackLayout: centered() --------------------------------------------------
 // One icon, centered inside a larger card.
-Card<RGB565> panel(Bounds(10, 30, kWidth - 20, 90), nullptr, nullptr);
+Card<RGB565> panel(Bounds(10, 30, app.width() - 20, 90), nullptr, nullptr);
 IconButton<RGB565> centeredIcon(Bounds(), drawPlus<RGB565>, IconButtonVariant::kFilled);
 
 // setup():
@@ -1346,7 +1377,7 @@ Places item rects evenly spaced around a circle - dial/menu items on a round dis
 
 ```cpp
 // --- RadialLayout (the control under test) ----------------------------------
-RadialLayout demoDial(Bounds(0, 40, kWidth, kWidth), /*radius=*/90);
+RadialLayout demoDial(Bounds(0, 40, app.width(), app.width()), /*radius=*/90);
 Button<RGB565> item0(Bounds(), "12");
 Button<RGB565> item1(Bounds(), "2");
 Button<RGB565> item2(Bounds(), "4");
@@ -1358,7 +1389,7 @@ Button<RGB565>* items[] = {&item0, &item1, &item2, &item3, &item4, &item5};
 // setup():
 for (size_t i = 0; i < 6; ++i) {
   items[i]->bounds = demoDial.itemRect(static_cast<int>(i), 6, /*width=*/40, /*height=*/40);
-  screen.addWidget(*items[i]);
+  app.screen().addWidget(*items[i]);
 }
 ```
 
@@ -1381,7 +1412,7 @@ A grid with independently-sized columns and rows, for dashboards mixing wide/nar
 // --- TableLayout (the control under test) -----------------------------------
 constexpr int32_t kColumnWidths[] = {150, 60};
 constexpr int32_t kRowHeights[] = {70, 70, 70};
-TableLayout demoTable(Bounds(10, 20, kWidth - 20, kHeight - 40), kColumnWidths, 2, kRowHeights, 3);
+TableLayout demoTable(Bounds(10, 20, app.width() - 20, app.height() - 40), kColumnWidths, 2, kRowHeights, 3);
 
 Card<RGB565> wide0(Bounds(), "Wide", "Row 0");
 Card<RGB565> narrow0(Bounds(), "N", nullptr);
@@ -1398,12 +1429,12 @@ narrow1.bounds = demoTable.cellRect(1, 1);
 wide2.bounds = demoTable.cellRect(2, 0);
 narrow2.bounds = demoTable.cellRect(2, 1);
 
-screen.addWidget(wide0);
-screen.addWidget(narrow0);
-screen.addWidget(wide1);
-screen.addWidget(narrow1);
-screen.addWidget(wide2);
-screen.addWidget(narrow2);
+app.screen().addWidget(wide0);
+app.screen().addWidget(narrow0);
+app.screen().addWidget(wide1);
+app.screen().addWidget(narrow1);
+app.screen().addWidget(wide2);
+app.screen().addWidget(narrow2);
 ```
 
 *Header: [`Core/TableLayout.h`](../src/TinyMaterialDesign/Core/TableLayout.h)*
