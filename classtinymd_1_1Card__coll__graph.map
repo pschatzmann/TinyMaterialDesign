@@ -1,0 +1,9 @@
+<map id="Card&lt; RGB_T &gt;" name="Card&lt; RGB_T &gt;">
+<area shape="rect" id="node1" title=" " alt="" coords="83,285,209,311"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="75,211,217,236"/>
+<area shape="rect" id="node3" href="$structtinymd_1_1Bounds.html" title="Axis&#45;aligned pixel rectangle used for widget bounds and hit&#45;testing." alt="" coords="69,115,140,141"/>
+<area shape="rect" id="node4" href="$structtinymd_1_1MaterialTheme.html" title=" " alt="" coords="164,108,352,148"/>
+<area shape="rect" id="node5" href="$structtinymd_1_1ColorScheme.html" title=" " alt="" coords="5,5,180,45"/>
+<area shape="rect" id="node6" href="$structtinymd_1_1ShapeTokens.html" title="Material 3 shape&#45;scale corner radii, in pixels." alt="" coords="205,13,311,38"/>
+<area shape="rect" id="node7" href="$structtinymd_1_1Typography.html" title=" " alt="" coords="336,5,500,45"/>
+</map>

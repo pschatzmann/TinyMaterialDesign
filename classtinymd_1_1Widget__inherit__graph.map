@@ -1,0 +1,40 @@
+<map id="Widget&lt; RGB_T &gt;" name="Widget&lt; RGB_T &gt;">
+<area shape="rect" id="node1" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="5,891,147,917"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1Container.html" title=" " alt="" coords="195,5,411,45"/>
+<area shape="rect" id="node3" href="$classtinymd_1_1AppBar.html" title="Top app bar: a title plus optional leading/trailing icon widgets (typically IconButton)." alt="" coords="231,70,374,95"/>
+<area shape="rect" id="node4" href="$classtinymd_1_1Badge.html" title="Small status marker, typically overlaid on an icon&#39;s corner." alt="" coords="235,119,371,145"/>
+<area shape="rect" id="node5" href="$classtinymd_1_1Banner.html" title="Persistent, non&#45;modal inline message with text actions &#45; Material&#39;s &quot;banner&quot;, e.g...." alt="" coords="232,169,373,194"/>
+<area shape="rect" id="node6" href="$classtinymd_1_1BottomSheet.html" title="Modal panel sliding up from the bottom edge, full width, with rounded top corners and a drag&#45;handle b..." alt="" coords="213,218,393,243"/>
+<area shape="rect" id="node7" href="$classtinymd_1_1Button.html" title="Material Design button: Filled / Tonal / Outlined / Text / Elevated." alt="" coords="233,267,372,293"/>
+<area shape="rect" id="node8" href="$classtinymd_1_1Card.html" title=" " alt="" coords="240,317,365,342"/>
+<area shape="rect" id="node9" href="$classtinymd_1_1Carousel.html" title="Horizontally paged, drag&#45;to&#45;swipe row of items (typically MediaCard), with a snap&#45;to&#45;item animation a..." alt="" coords="227,366,379,391"/>
+<area shape="rect" id="node10" href="$classtinymd_1_1Checkbox.html" title="Square checkbox, toggled by tap." alt="" coords="223,415,382,441"/>
+<area shape="rect" id="node11" href="$classtinymd_1_1Chip.html" title=" " alt="" coords="241,465,365,490"/>
+<area shape="rect" id="node12" href="$classtinymd_1_1CircularProgressIndicator.html" title=" " alt="" coords="210,515,395,555"/>
+<area shape="rect" id="node13" href="$classtinymd_1_1Container.html" title="A widget that holds child widgets, draws/dispatches gestures to them, and scrolls its content vertica..." alt="" coords="223,579,382,605"/>
+<area shape="rect" id="node16" href="$classtinymd_1_1Dialog.html" title="Modal alert dialog: full&#45;screen scrim + centered card + title + wrapped message + action widgets (typ..." alt="" coords="234,629,371,654"/>
+<area shape="rect" id="node17" href="$classtinymd_1_1Divider.html" title=" " alt="" coords="231,678,374,703"/>
+<area shape="rect" id="node18" href="$classtinymd_1_1Drawer.html" title="Modal side navigation panel, holding a list of items (typically ListItem) that scrolls automatically ..." alt="" coords="231,727,374,753"/>
+<area shape="rect" id="node19" href="$classtinymd_1_1FloatingActionButton.html" title="Floating Action Button: a circular (or pill, when it has a label) elevated icon button for a screen&#39;s..." alt="" coords="223,777,382,817"/>
+<area shape="rect" id="node20" href="$classtinymd_1_1IconButton.html" title=" " alt="" coords="220,842,385,867"/>
+<area shape="rect" id="node21" href="$classtinymd_1_1Keyboard.html" title="On&#45;screen QWERTY keyboard that drives one text input at a time." alt="" coords="225,891,381,917"/>
+<area shape="rect" id="node22" href="$classtinymd_1_1Label.html" title="Single line of themed, non&#45;interactive text." alt="" coords="237,941,368,966"/>
+<area shape="rect" id="node23" href="$classtinymd_1_1LinearProgressIndicator.html" title=" " alt="" coords="215,991,390,1031"/>
+<area shape="rect" id="node24" href="$classtinymd_1_1ListItem.html" title="Tappable row: optional leading icon + title, with a selected state." alt="" coords="229,1055,377,1081"/>
+<area shape="rect" id="node25" href="$classtinymd_1_1MediaCard.html" title="Tappable card with a thumbnail image and a caption &#45; e.g. one tile in a grid of stations/genres/count..." alt="" coords="220,1105,385,1130"/>
+<area shape="rect" id="node26" href="$classtinymd_1_1Menu.html" title="Popover list of items (typically ListItem), anchored near whatever opened it &#45; e.g...." alt="" coords="237,1154,368,1179"/>
+<area shape="rect" id="node27" href="$classtinymd_1_1NavigationBar.html" title="Bottom navigation bar: 3&#45;5 exclusive destinations, each an icon with a label underneath and a pill hi..." alt="" coords="209,1203,397,1229"/>
+<area shape="rect" id="node28" href="$classtinymd_1_1NavigationRail.html" title="Side navigation rail: a narrow vertical column of 3&#45;7 exclusive destinations, each an icon with a lab..." alt="" coords="207,1253,398,1278"/>
+<area shape="rect" id="node29" href="$classtinymd_1_1RadioButton.html" title=" " alt="" coords="215,1302,390,1327"/>
+<area shape="rect" id="node30" href="$classtinymd_1_1SearchBar.html" title="Pill&#45;shaped search input: leading magnifier glyph, typed text, and a trailing &quot;x&quot; clear glyph shown o..." alt="" coords="222,1351,383,1377"/>
+<area shape="rect" id="node31" href="$classtinymd_1_1SegmentedButton.html" title=" " alt="" coords="197,1401,409,1426"/>
+<area shape="rect" id="node32" href="$classtinymd_1_1Slider.html" title="Draggable track&#45;and&#45;thumb slider over [minValue, maxValue]." alt="" coords="237,1450,369,1475"/>
+<area shape="rect" id="node33" href="$classtinymd_1_1Snackbar.html" title="Transient bottom message bar with an optional single text action." alt="" coords="225,1499,380,1525"/>
+<area shape="rect" id="node34" href="$classtinymd_1_1Switch.html" title=" " alt="" coords="233,1549,372,1574"/>
+<area shape="rect" id="node35" href="$classtinymd_1_1TabBar.html" title=" " alt="" coords="233,1598,372,1623"/>
+<area shape="rect" id="node36" href="$classtinymd_1_1TextArea.html" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="227,1647,379,1673"/>
+<area shape="rect" id="node37" href="$classtinymd_1_1TextField.html" title="Single&#45;line text input box." alt="" coords="226,1697,379,1722"/>
+<area shape="rect" id="node38" href="$classtinymd_1_1Tooltip.html" title="Small floating label, shown briefly above an anchor widget." alt="" coords="233,1746,372,1771"/>
+<area shape="rect" id="node14" href="$classtinymd_1_1Screen.html" title=" " alt="" coords="459,544,656,584"/>
+<area shape="rect" id="node15" href="$classtinymd_1_1Screen.html" title="Owns a set of widgets, draws them, and routes gesture events to whichever one should handle each even..." alt="" coords="488,609,627,634"/>
+</map>

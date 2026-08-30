@@ -1,0 +1,5 @@
+<map id="TextArea&lt; RGB_T &gt;" name="TextArea&lt; RGB_T &gt;">
+<area shape="rect" id="node1" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="77,79,229,104"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="5,5,147,31"/>
+<area shape="rect" id="node3" href="$classtinymd_1_1TextInputTarget.html" title="Minimal interface a Keyboard drives." alt="" coords="171,5,293,31"/>
+</map>

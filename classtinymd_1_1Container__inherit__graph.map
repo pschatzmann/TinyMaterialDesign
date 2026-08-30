@@ -1,0 +1,6 @@
+<map id="Container&lt; RGB_T &gt;" name="Container&lt; RGB_T &gt;">
+<area shape="rect" id="node1" title="A widget that holds child widgets, draws/dispatches gestures to them, and scrolls its content vertica..." alt="" coords="121,79,279,104"/>
+<area shape="rect" id="node3" href="$classtinymd_1_1Screen.html" title=" " alt="" coords="5,152,203,192"/>
+<area shape="rect" id="node4" href="$classtinymd_1_1Screen.html" title="Owns a set of widgets, draws them, and routes gesture events to whichever one should handle each even..." alt="" coords="227,159,365,185"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="129,5,271,31"/>
+</map>
