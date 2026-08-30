@@ -1,5 +1,5 @@
 <map id="CircularProgressIndicator&lt; RGB_T &gt;" name="CircularProgressIndicator&lt; RGB_T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="53,285,239,325"/>
+<area shape="rect" id="node1" title="Circular &quot;spinner&quot; ring. Determinate (value in [0,1], drawn as a sweep starting at 12 o&#39;clock) or ind..." alt="" coords="53,285,239,325"/>
 <area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="75,211,217,236"/>
 <area shape="rect" id="node3" href="$structtinymd_1_1Bounds.html" title="Axis&#45;aligned pixel rectangle used for widget bounds and hit&#45;testing." alt="" coords="69,115,140,141"/>
 <area shape="rect" id="node4" href="$structtinymd_1_1MaterialTheme.html" title=" " alt="" coords="164,108,352,148"/>

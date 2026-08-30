@@ -1,4 +1,4 @@
 <map id="RadioButton&lt; RGB_T &gt;" name="RadioButton&lt; RGB_T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,180,104"/>
+<area shape="rect" id="node1" title="One radio button. Tapping it selects it (radio semantics: a tap never deselects); mutual exclusion ac..." alt="" coords="5,79,180,104"/>
 <area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="22,5,163,31"/>
 </map>

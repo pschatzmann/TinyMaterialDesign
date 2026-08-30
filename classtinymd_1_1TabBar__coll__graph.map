@@ -1,5 +1,5 @@
 <map id="TabBar&lt; RGB_T &gt;" name="TabBar&lt; RGB_T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="77,285,215,311"/>
+<area shape="rect" id="node1" title="Row of evenly&#45;spaced exclusive&#45;selection labels (primary tabs), with a sliding indicator under the se..." alt="" coords="77,285,215,311"/>
 <area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="75,211,217,236"/>
 <area shape="rect" id="node3" href="$structtinymd_1_1Bounds.html" title="Axis&#45;aligned pixel rectangle used for widget bounds and hit&#45;testing." alt="" coords="69,115,140,141"/>
 <area shape="rect" id="node4" href="$structtinymd_1_1MaterialTheme.html" title=" " alt="" coords="164,108,352,148"/>
