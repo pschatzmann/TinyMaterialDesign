@@ -1,12 +1,12 @@
 <map id="src/TinyMaterialDesign/Draw/Icons.h" name="src/TinyMaterialDesign/Draw/Icons.h">
-<area shape="rect" id="node1" title=" " alt="" coords="313,5,485,45"/>
-<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="349,357,533,383"/>
-<area shape="rect" id="node3" href="$Checkbox_8h.html" title=" " alt="" coords="41,269,213,309"/>
-<area shape="rect" id="node4" href="$IconButton_8h.html" title=" " alt="" coords="313,93,485,133"/>
-<area shape="rect" id="node9" href="$RadioButton_8h.html" title=" " alt="" coords="744,269,919,309"/>
-<area shape="rect" id="node10" href="$SearchBar_8h.html" title=" " alt="" coords="871,93,1043,133"/>
-<area shape="rect" id="node5" href="$Fab_8h.html" title=" " alt="" coords="216,181,388,221"/>
-<area shape="rect" id="node6" href="$ListItem_8h.html" title=" " alt="" coords="412,181,584,221"/>
-<area shape="rect" id="node7" href="$NavigationBar_8h.html" title=" " alt="" coords="609,181,795,221"/>
-<area shape="rect" id="node8" href="$NavigationRail_8h.html" title=" " alt="" coords="529,269,720,309"/>
+<area shape="rect" id="node1" title=" " alt="" coords="312,5,483,50"/>
+<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="347,376,530,404"/>
+<area shape="rect" id="node3" href="$Checkbox_8h.html" title=" " alt="" coords="41,283,212,328"/>
+<area shape="rect" id="node4" href="$IconButton_8h.html" title=" " alt="" coords="312,98,483,143"/>
+<area shape="rect" id="node9" href="$RadioButton_8h.html" title=" " alt="" coords="741,283,915,328"/>
+<area shape="rect" id="node10" href="$SearchBar_8h.html" title=" " alt="" coords="866,98,1038,143"/>
+<area shape="rect" id="node5" href="$Fab_8h.html" title=" " alt="" coords="214,191,386,235"/>
+<area shape="rect" id="node6" href="$ListItem_8h.html" title=" " alt="" coords="410,191,582,235"/>
+<area shape="rect" id="node7" href="$NavigationBar_8h.html" title=" " alt="" coords="606,191,792,235"/>
+<area shape="rect" id="node8" href="$NavigationRail_8h.html" title=" " alt="" coords="526,283,717,328"/>
 </map>

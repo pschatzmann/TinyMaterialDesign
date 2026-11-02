@@ -81,6 +81,7 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;TinyGPU/Boards/LCDBoards.h&quot;</code><br />
 <code>#include &quot;TinyGPU/Drivers/DeviceOutput.h&quot;</code><br />
+<code>#include &quot;TinyGPU/IO/BMPExporter.h&quot;</code><br />
 <code>#include &quot;TinyGPU/Input/GestureDetector.h&quot;</code><br />
 <code>#include &quot;TinyGPU/Surface/Surface.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="TinyMaterialDesignConfig_8h_source.html">TinyMaterialDesignConfig.h</a>&quot;</code><br />
@@ -91,33 +92,34 @@ Include dependency graph for App.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="App_8h__incl.png" border="0" usemap="#asrc_2TinyMaterialDesign_2Core_2App_8h" alt=""/></div>
 <map name="asrc_2TinyMaterialDesign_2Core_2App_8h" id="asrc_2TinyMaterialDesign_2Core_2App_8h">
-<area shape="rect" title=" " alt="" coords="1420,5,1592,45"/>
-<area shape="rect" title=" " alt="" coords="5,533,220,559"/>
-<area shape="rect" title=" " alt="" coords="1594,101,1829,126"/>
-<area shape="rect" title=" " alt="" coords="1403,365,1641,390"/>
-<area shape="rect" title=" " alt="" coords="1853,101,2049,126"/>
-<area shape="rect" href="TinyMaterialDesignConfig_8h.html" title=" " alt="" coords="150,453,353,478"/>
-<area shape="rect" href="Screen_8h.html" title=" " alt="" coords="949,93,1098,133"/>
-<area shape="rect" href="MaterialTheme_8h.html" title=" " alt="" coords="965,357,1151,397"/>
-<area shape="rect" title=" " alt="" coords="245,533,306,559"/>
-<area shape="rect" title=" " alt="" coords="1559,533,1645,559"/>
-<area shape="rect" title=" " alt="" coords="567,277,627,302"/>
-<area shape="rect" title=" " alt="" coords="651,277,713,302"/>
-<area shape="rect" title=" " alt="" coords="907,189,1140,214"/>
-<area shape="rect" title=" " alt="" coords="1165,181,1367,221"/>
-<area shape="rect" href="Container_8h.html" title=" " alt="" coords="733,181,882,221"/>
-<area shape="rect" title=" " alt="" coords="963,277,1049,302"/>
-<area shape="rect" href="Widget_8h.html" title=" " alt="" coords="738,269,887,309"/>
-<area shape="rect" title=" " alt="" coords="504,533,575,559"/>
-<area shape="rect" title=" " alt="" coords="563,365,763,390"/>
-<area shape="rect" href="Bounds_8h.html" title=" " alt="" coords="390,357,539,397"/>
-<area shape="rect" title=" " alt="" coords="427,453,502,478"/>
-<area shape="rect" title=" " alt="" coords="1147,453,1331,478"/>
-<area shape="rect" title=" " alt="" coords="1355,453,1539,478"/>
-<area shape="rect" title=" " alt="" coords="785,453,969,478"/>
-<area shape="rect" title=" " alt="" coords="993,453,1123,478"/>
-<area shape="rect" href="MaterialColors_8h.html" title=" " alt="" coords="577,445,760,485"/>
-<area shape="rect" title=" " alt="" coords="637,533,700,559"/>
+<area shape="rect" title=" " alt="" coords="1344,5,1515,50"/>
+<area shape="rect" title=" " alt="" coords="5,561,219,589"/>
+<area shape="rect" title=" " alt="" coords="1707,106,1941,134"/>
+<area shape="rect" title=" " alt="" coords="1964,106,2158,134"/>
+<area shape="rect" title=" " alt="" coords="1631,384,1868,412"/>
+<area shape="rect" title=" " alt="" coords="2182,106,2378,134"/>
+<area shape="rect" href="TinyMaterialDesignConfig_8h.html" title=" " alt="" coords="150,477,351,505"/>
+<area shape="rect" href="Screen_8h.html" title=" " alt="" coords="1299,98,1448,143"/>
+<area shape="rect" href="MaterialTheme_8h.html" title=" " alt="" coords="921,376,1106,421"/>
+<area shape="rect" title=" " alt="" coords="243,561,304,589"/>
+<area shape="rect" title=" " alt="" coords="1503,561,1588,589"/>
+<area shape="rect" title=" " alt="" coords="968,292,1027,320"/>
+<area shape="rect" title=" " alt="" coords="1062,292,1124,320"/>
+<area shape="rect" title=" " alt="" coords="1257,199,1490,227"/>
+<area shape="rect" title=" " alt="" coords="1514,191,1716,235"/>
+<area shape="rect" href="Container_8h.html" title=" " alt="" coords="1084,191,1233,235"/>
+<area shape="rect" title=" " alt="" coords="1322,292,1408,320"/>
+<area shape="rect" href="Widget_8h.html" title=" " alt="" coords="1150,283,1298,328"/>
+<area shape="rect" title=" " alt="" coords="1334,561,1404,589"/>
+<area shape="rect" title=" " alt="" coords="1130,384,1329,412"/>
+<area shape="rect" href="Bounds_8h.html" title=" " alt="" coords="1407,376,1556,421"/>
+<area shape="rect" title=" " alt="" coords="1509,477,1582,505"/>
+<area shape="rect" title=" " alt="" coords="735,477,918,505"/>
+<area shape="rect" title=" " alt="" coords="943,477,1126,505"/>
+<area shape="rect" title=" " alt="" coords="375,477,558,505"/>
+<area shape="rect" title=" " alt="" coords="582,477,711,505"/>
+<area shape="rect" href="MaterialColors_8h.html" title=" " alt="" coords="1151,469,1332,513"/>
+<area shape="rect" title=" " alt="" coords="1210,561,1272,589"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -125,8 +127,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="App_8h__dep__incl.png" border="0" usemap="#asrc_2TinyMaterialDesign_2Core_2App_8hdep" alt=""/></div>
 <map name="asrc_2TinyMaterialDesign_2Core_2App_8hdep" id="asrc_2TinyMaterialDesign_2Core_2App_8hdep">
-<area shape="rect" title=" " alt="" coords="11,5,183,45"/>
-<area shape="rect" href="TinyMaterialDesign_8h.html" title=" " alt="" coords="5,93,189,119"/>
+<area shape="rect" title=" " alt="" coords="11,5,183,50"/>
+<area shape="rect" href="TinyMaterialDesign_8h.html" title=" " alt="" coords="5,98,189,126"/>
 </map>
 </div>
 </div>

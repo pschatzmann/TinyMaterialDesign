@@ -15,12 +15,13 @@ var searchData=
   ['clampscroll_12',['clampScroll',['../classtinymd_1_1Container.html#afe8ca6c6155d8cfe7f490e8a251836c2',1,'tinymd::Container']]],
   ['clearcoloroverride_13',['clearColorOverride',['../classtinymd_1_1AppBar.html#a00274aa2bf66f72252dfc8ad90e97c60',1,'tinymd::AppBar::clearColorOverride()'],['../classtinymd_1_1IconButton.html#a00274aa2bf66f72252dfc8ad90e97c60',1,'tinymd::IconButton::clearColorOverride()']]],
   ['cleartabs_14',['clearTabs',['../classtinymd_1_1TabBar.html#a497b9dd083f705c2aa7d18aa7eede014',1,'tinymd::TabBar']]],
-  ['colorfromhex_15',['colorFromHex',['../namespacetinymd.html#aaf8678b75bcc0a0e07b4dfa481587472',1,'tinymd']]],
-  ['colorfromhsl_16',['colorFromHsl',['../namespacetinymd.html#a25b9a8bc3dec8579bf866c018c3655e4',1,'tinymd']]],
-  ['colorschemefromhue_17',['colorSchemeFromHue',['../namespacetinymd.html#a65f6fd1282870daea366c43d73350b8d',1,'tinymd']]],
-  ['columns_18',['columns',['../classtinymd_1_1GridLayout.html#a189dc6e89efa487bba8f7a39970cb562',1,'tinymd::GridLayout::columns()'],['../classtinymd_1_1TableLayout.html#a189dc6e89efa487bba8f7a39970cb562',1,'tinymd::TableLayout::columns()']]],
-  ['container_19',['Container',['../classtinymd_1_1Container.html#a68394e5f499e61ad74ab750b362265ca',1,'tinymd::Container::Container()=default'],['../classtinymd_1_1Container.html#ac2b86ef70bc0b0ae4d071cdf28516ea6',1,'tinymd::Container::Container(Bounds containerBounds)']]],
-  ['contains_20',['contains',['../structtinymd_1_1Bounds.html#ad8f11d4961c2024042dddc2274ea70c3',1,'tinymd::Bounds']]],
-  ['contentheight_21',['contentHeight',['../classtinymd_1_1Container.html#a2211fcb06fe16653b8124e6095427d12',1,'tinymd::Container']]],
-  ['currentindex_22',['currentIndex',['../classtinymd_1_1Carousel.html#a47b78aa75abfea028a4db5d33778ac7d',1,'tinymd::Carousel']]]
+  ['clearyrange_15',['clearYRange',['../classtinymd_1_1LineChart.html#a34740f90ca4482e4352106a1542ff988',1,'tinymd::LineChart']]],
+  ['colorfromhex_16',['colorFromHex',['../namespacetinymd.html#aaf8678b75bcc0a0e07b4dfa481587472',1,'tinymd']]],
+  ['colorfromhsl_17',['colorFromHsl',['../namespacetinymd.html#a25b9a8bc3dec8579bf866c018c3655e4',1,'tinymd']]],
+  ['colorschemefromhue_18',['colorSchemeFromHue',['../namespacetinymd.html#a65f6fd1282870daea366c43d73350b8d',1,'tinymd']]],
+  ['columns_19',['columns',['../classtinymd_1_1GridLayout.html#a189dc6e89efa487bba8f7a39970cb562',1,'tinymd::GridLayout::columns()'],['../classtinymd_1_1TableLayout.html#a189dc6e89efa487bba8f7a39970cb562',1,'tinymd::TableLayout::columns()']]],
+  ['container_20',['Container',['../classtinymd_1_1Container.html#a68394e5f499e61ad74ab750b362265ca',1,'tinymd::Container::Container()=default'],['../classtinymd_1_1Container.html#ac2b86ef70bc0b0ae4d071cdf28516ea6',1,'tinymd::Container::Container(Bounds containerBounds)']]],
+  ['contains_21',['contains',['../structtinymd_1_1Bounds.html#ad8f11d4961c2024042dddc2274ea70c3',1,'tinymd::Bounds']]],
+  ['contentheight_22',['contentHeight',['../classtinymd_1_1Container.html#a2211fcb06fe16653b8124e6095427d12',1,'tinymd::Container']]],
+  ['currentindex_23',['currentIndex',['../classtinymd_1_1Carousel.html#a47b78aa75abfea028a4db5d33778ac7d',1,'tinymd::Carousel']]]
 ];

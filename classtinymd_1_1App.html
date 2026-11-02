@@ -93,6 +93,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab0bdf5cca484fb2ba637c39384b27fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5c54df7ed3b930268c8d7752c101725"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#ac5c54df7ed3b930268c8d7752c101725">update</a> ()</td></tr>
 <tr class="separator:ac5c54df7ed3b930268c8d7752c101725"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a238e0c16e59458f19772cf647bc8da6a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#a238e0c16e59458f19772cf647bc8da6a">saveScreenshot</a> (Print &amp;out)</td></tr>
+<tr class="separator:a238e0c16e59458f19772cf647bc8da6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a209db6f1800a11219113bab5da02cea3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#a209db6f1800a11219113bab5da02cea3">usesDirectRender</a> () const</td></tr>
 <tr class="separator:a209db6f1800a11219113bab5da02cea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f438812bf2bb65cec29cb12c86055e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtinymd_1_1Screen.html">Screen</a>&lt; RGB_T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#a9f438812bf2bb65cec29cb12c86055e1">screen</a> ()</td></tr>
@@ -207,6 +209,33 @@ class tinymd::App&lt; RGB_T &gt;</div><p>Bundles the surface + display + gesture
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a238e0c16e59458f19772cf647bc8da6a" name="a238e0c16e59458f19772cf647bc8da6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a238e0c16e59458f19772cf647bc8da6a">&#9670;&#160;</a></span>saveScreenshot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool saveScreenshot </td>
+          <td>(</td>
+          <td class="paramtype">Print &amp;&#160;</td>
+          <td class="paramname"><em>out</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Writes the current screen content as an uncompressed 24-bit BMP image to <code>out</code> - anything that is a <code>Print</code>: a <code>File</code> on an SD card or LittleFS, a network client, Serial, or on the desktop a file stream. Pending changes are drawn (and written to the display) first, so the image always matches what is on screen. Returns false while <a class="el" href="classtinymd_1_1App.html#a209db6f1800a11219113bab5da02cea3">usesDirectRender()</a> is true - there is no full-screen framebuffer to export then. </p>
 
 </div>
 </div>

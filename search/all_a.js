@@ -17,9 +17,14 @@ var searchData=
   ['linearprogressindicatorrgb565_14',['LinearProgressIndicatorRGB565',['../namespacetinymd.html#a18d27246de2778363d57a0800754ca9b',1,'tinymd']]],
   ['linearprogressindicatorrgb666_15',['LinearProgressIndicatorRGB666',['../namespacetinymd.html#a015038d57eb0f558af14b4043d0a25f2',1,'tinymd']]],
   ['linearprogressindicatorrgb888_16',['LinearProgressIndicatorRGB888',['../namespacetinymd.html#a5cb81cf7fe7a1e6ae0ebac5803a0f65d',1,'tinymd']]],
-  ['listitem_17',['ListItem',['../classtinymd_1_1ListItem.html#adba449170e55c77eb203cc578f6201bd',1,'tinymd::ListItem::ListItem()=default'],['../classtinymd_1_1ListItem.html#a222adbedc6e54089679d48f9f3cebd1b',1,'tinymd::ListItem::ListItem(Bounds bounds, const char *title, IconPainter&lt; RGB_T &gt; icon=nullptr)'],['../classtinymd_1_1ListItem.html',1,'ListItem&lt; RGB_T &gt;']]],
-  ['listitem_2eh_18',['ListItem.h',['../ListItem_8h.html',1,'']]],
-  ['listitemrgb565_19',['ListItemRGB565',['../namespacetinymd.html#a71e30b84e4cd1a154e581cdcb4aa38ad',1,'tinymd']]],
-  ['listitemrgb666_20',['ListItemRGB666',['../namespacetinymd.html#a474939e489905fa8b30594fb02bc0a82',1,'tinymd']]],
-  ['listitemrgb888_21',['ListItemRGB888',['../namespacetinymd.html#af1e5ef9b0616b009b68eaf20f34fca85',1,'tinymd']]]
+  ['linechart_17',['LineChart',['../classtinymd_1_1LineChart.html#a1466802ba1a155d7854b8f8d41a7c78a',1,'tinymd::LineChart::LineChart()=default'],['../classtinymd_1_1LineChart.html#a0bb25a99d8f2289229de154ef6a2b444',1,'tinymd::LineChart::LineChart(Bounds bounds, const char *title=nullptr)'],['../classtinymd_1_1LineChart.html',1,'LineChart&lt; RGB_T &gt;']]],
+  ['linechart_2eh_18',['LineChart.h',['../LineChart_8h.html',1,'']]],
+  ['linechartrgb565_19',['LineChartRGB565',['../namespacetinymd.html#aa64bcc0e00978b6730cbacd18ecf2a08',1,'tinymd']]],
+  ['linechartrgb666_20',['LineChartRGB666',['../namespacetinymd.html#affacceaee0d2f3589271a4f8ac4f58bf',1,'tinymd']]],
+  ['linechartrgb888_21',['LineChartRGB888',['../namespacetinymd.html#aadf08ada92b6c1043a1aa342eeeaf387',1,'tinymd']]],
+  ['listitem_22',['ListItem',['../classtinymd_1_1ListItem.html#a222adbedc6e54089679d48f9f3cebd1b',1,'tinymd::ListItem::ListItem(Bounds bounds, const char *title, IconPainter&lt; RGB_T &gt; icon=nullptr)'],['../classtinymd_1_1ListItem.html#adba449170e55c77eb203cc578f6201bd',1,'tinymd::ListItem::ListItem()=default'],['../classtinymd_1_1ListItem.html',1,'ListItem&lt; RGB_T &gt;']]],
+  ['listitem_2eh_23',['ListItem.h',['../ListItem_8h.html',1,'']]],
+  ['listitemrgb565_24',['ListItemRGB565',['../namespacetinymd.html#a71e30b84e4cd1a154e581cdcb4aa38ad',1,'tinymd']]],
+  ['listitemrgb666_25',['ListItemRGB666',['../namespacetinymd.html#a474939e489905fa8b30594fb02bc0a82',1,'tinymd']]],
+  ['listitemrgb888_26',['ListItemRGB888',['../namespacetinymd.html#af1e5ef9b0616b009b68eaf20f34fca85',1,'tinymd']]]
 ];
