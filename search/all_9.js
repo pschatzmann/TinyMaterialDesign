@@ -13,12 +13,13 @@ var searchData=
   ['klabel_10',['kLabel',['../namespacetinymd.html#a5a7184b2d3e760908141409546b77df7a6608e709edce0bfd1bb1eb49eb5f8bea',1,'tinymd']]],
   ['koutlined_11',['kOutlined',['../namespacetinymd.html#a605b71183edaa7b49bd2b485f1e92305a0b3a1317d79ca552995c1588df17af94',1,'tinymd']]],
   ['kprimary_12',['kPrimary',['../namespacetinymd.html#af498585b89016baa54d8128acf8b16d3a930ead0bde3996077f81ee645cb2e413',1,'tinymd']]],
-  ['ksecondary_13',['kSecondary',['../namespacetinymd.html#af498585b89016baa54d8128acf8b16d3a713915c746820f0b9b3b2dfc94f8a32d',1,'tinymd']]],
-  ['kstandard_14',['kStandard',['../namespacetinymd.html#a12c233b9a777d463be193832643d25bda821da62632c491ea619ead7b31c094bf',1,'tinymd']]],
-  ['kstart_15',['kStart',['../namespacetinymd.html#abdd7e81d0fb7db7f8a4e6465765bac0ba127f8e8149d57253ad94c9d2c752113d',1,'tinymd']]],
-  ['ksurface_16',['kSurface',['../namespacetinymd.html#af498585b89016baa54d8128acf8b16d3aec4fcf1849718308d69b4fe7856ff67c',1,'tinymd']]],
-  ['ktertiary_17',['kTertiary',['../namespacetinymd.html#af498585b89016baa54d8128acf8b16d3a058bdef626809931ccf867c5b6dfd2a9',1,'tinymd']]],
-  ['ktext_18',['kText',['../namespacetinymd.html#a605b71183edaa7b49bd2b485f1e92305a3c8cbd89acf49a4b20aded693e13ae86',1,'tinymd']]],
-  ['ktitle_19',['kTitle',['../namespacetinymd.html#a5a7184b2d3e760908141409546b77df7a75eccd462f7efb6d6a89f86cf4f55659',1,'tinymd']]],
-  ['ktonal_20',['kTonal',['../namespacetinymd.html#a605b71183edaa7b49bd2b485f1e92305a12728919bfdf94fe5d916aaebbf2c3d4',1,'tinymd::kTonal()'],['../namespacetinymd.html#a12c233b9a777d463be193832643d25bda12728919bfdf94fe5d916aaebbf2c3d4',1,'tinymd::kTonal()']]]
+  ['kscrollbartouchwidth_13',['kScrollbarTouchWidth',['../classtinymd_1_1Container.html#a46480176e3e5d17ce72da65e6da2665f',1,'tinymd::Container']]],
+  ['ksecondary_14',['kSecondary',['../namespacetinymd.html#af498585b89016baa54d8128acf8b16d3a713915c746820f0b9b3b2dfc94f8a32d',1,'tinymd']]],
+  ['kstandard_15',['kStandard',['../namespacetinymd.html#a12c233b9a777d463be193832643d25bda821da62632c491ea619ead7b31c094bf',1,'tinymd']]],
+  ['kstart_16',['kStart',['../namespacetinymd.html#abdd7e81d0fb7db7f8a4e6465765bac0ba127f8e8149d57253ad94c9d2c752113d',1,'tinymd']]],
+  ['ksurface_17',['kSurface',['../namespacetinymd.html#af498585b89016baa54d8128acf8b16d3aec4fcf1849718308d69b4fe7856ff67c',1,'tinymd']]],
+  ['ktertiary_18',['kTertiary',['../namespacetinymd.html#af498585b89016baa54d8128acf8b16d3a058bdef626809931ccf867c5b6dfd2a9',1,'tinymd']]],
+  ['ktext_19',['kText',['../namespacetinymd.html#a605b71183edaa7b49bd2b485f1e92305a3c8cbd89acf49a4b20aded693e13ae86',1,'tinymd']]],
+  ['ktitle_20',['kTitle',['../namespacetinymd.html#a5a7184b2d3e760908141409546b77df7a75eccd462f7efb6d6a89f86cf4f55659',1,'tinymd']]],
+  ['ktonal_21',['kTonal',['../namespacetinymd.html#a605b71183edaa7b49bd2b485f1e92305a12728919bfdf94fe5d916aaebbf2c3d4',1,'tinymd::kTonal()'],['../namespacetinymd.html#a12c233b9a777d463be193832643d25bda12728919bfdf94fe5d916aaebbf2c3d4',1,'tinymd::kTonal()']]]
 ];

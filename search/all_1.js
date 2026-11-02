@@ -29,13 +29,14 @@ var searchData=
   ['bottomsheetrgb565_26',['BottomSheetRGB565',['../namespacetinymd.html#a3c4f12a0d1b374a1bb2f3704a9cfa0a6',1,'tinymd']]],
   ['bottomsheetrgb666_27',['BottomSheetRGB666',['../namespacetinymd.html#a826d6c381007ad7ed094f4425b114bd0',1,'tinymd']]],
   ['bottomsheetrgb888_28',['BottomSheetRGB888',['../namespacetinymd.html#af6cc2f8f9ab8b1b31973e0d95a77867b',1,'tinymd']]],
-  ['bounds_29',['bounds',['../classtinymd_1_1Widget.html#a024318f4225ee6bedb20b7f865205d34',1,'tinymd::Widget']]],
-  ['bounds_30',['Bounds',['../structtinymd_1_1Bounds.html#a1b033bfa55f178b58eb9328cd2c3f8c0',1,'tinymd::Bounds::Bounds(int32_t x, int32_t y, int32_t w, int32_t h)'],['../structtinymd_1_1Bounds.html#afb8f28eaf1a186c872b01359a0762458',1,'tinymd::Bounds::Bounds()=default'],['../structtinymd_1_1Bounds.html',1,'Bounds']]],
-  ['bounds_2eh_31',['Bounds.h',['../Bounds_8h.html',1,'']]],
-  ['button_32',['Button',['../classtinymd_1_1Button.html#aa3ef5fc2bea58e541618397f32f9f9ae',1,'tinymd::Button::Button()=default'],['../classtinymd_1_1Button.html#a926bd389641db6d267c053d6bdb3afe0',1,'tinymd::Button::Button(Bounds bounds, const char *label, ButtonVariant variant=ButtonVariant::kFilled)'],['../classtinymd_1_1Button.html',1,'Button&lt; RGB_T &gt;']]],
-  ['button_2eh_33',['Button.h',['../Button_8h.html',1,'']]],
-  ['buttonrgb565_34',['ButtonRGB565',['../namespacetinymd.html#a93f34a93f684c74938ab7a7dfd4a79d4',1,'tinymd']]],
-  ['buttonrgb666_35',['ButtonRGB666',['../namespacetinymd.html#aae0b9de622d32487bd56a0680bf726ea',1,'tinymd']]],
-  ['buttonrgb888_36',['ButtonRGB888',['../namespacetinymd.html#a33b56f9ff7923b6c6dd2bd714231db5f',1,'tinymd']]],
-  ['buttonvariant_37',['ButtonVariant',['../namespacetinymd.html#a605b71183edaa7b49bd2b485f1e92305',1,'tinymd']]]
+  ['bounds_29',['Bounds',['../structtinymd_1_1Bounds.html#a1b033bfa55f178b58eb9328cd2c3f8c0',1,'tinymd::Bounds::Bounds(int32_t x, int32_t y, int32_t w, int32_t h)'],['../structtinymd_1_1Bounds.html#afb8f28eaf1a186c872b01359a0762458',1,'tinymd::Bounds::Bounds()=default']]],
+  ['bounds_30',['bounds',['../classtinymd_1_1Widget.html#a024318f4225ee6bedb20b7f865205d34',1,'tinymd::Widget']]],
+  ['bounds_31',['Bounds',['../structtinymd_1_1Bounds.html',1,'tinymd']]],
+  ['bounds_2eh_32',['Bounds.h',['../Bounds_8h.html',1,'']]],
+  ['button_33',['Button',['../classtinymd_1_1Button.html#aa3ef5fc2bea58e541618397f32f9f9ae',1,'tinymd::Button::Button()=default'],['../classtinymd_1_1Button.html#a926bd389641db6d267c053d6bdb3afe0',1,'tinymd::Button::Button(Bounds bounds, const char *label, ButtonVariant variant=ButtonVariant::kFilled)'],['../classtinymd_1_1Button.html',1,'Button&lt; RGB_T &gt;']]],
+  ['button_2eh_34',['Button.h',['../Button_8h.html',1,'']]],
+  ['buttonrgb565_35',['ButtonRGB565',['../namespacetinymd.html#a93f34a93f684c74938ab7a7dfd4a79d4',1,'tinymd']]],
+  ['buttonrgb666_36',['ButtonRGB666',['../namespacetinymd.html#aae0b9de622d32487bd56a0680bf726ea',1,'tinymd']]],
+  ['buttonrgb888_37',['ButtonRGB888',['../namespacetinymd.html#a33b56f9ff7923b6c6dd2bd714231db5f',1,'tinymd']]],
+  ['buttonvariant_38',['ButtonVariant',['../namespacetinymd.html#a605b71183edaa7b49bd2b485f1e92305',1,'tinymd']]]
 ];

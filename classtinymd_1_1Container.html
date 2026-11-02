@@ -77,6 +77,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classtinymd_1_1Container-members.html">List of all members</a>  </div>
@@ -190,10 +191,21 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:afca388b9d09aad4908a6905283de0a36"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#afca388b9d09aad4908a6905283de0a36">isContinuousType</a> (tinygpu::GestureType type)</td></tr>
 <tr class="separator:afca388b9d09aad4908a6905283de0a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a46480176e3e5d17ce72da65e6da2665f"><td class="memItemLeft" align="right" valign="top">static constexpr int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#a46480176e3e5d17ce72da65e6da2665f">kScrollbarTouchWidth</a> = 12</td></tr>
+<tr class="separator:a46480176e3e5d17ce72da65e6da2665f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a2211fcb06fe16653b8124e6095427d12"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#a2211fcb06fe16653b8124e6095427d12">contentHeight</a> () const</td></tr>
 <tr class="separator:a2211fcb06fe16653b8124e6095427d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a275678ae5ef8d5220d290e38401ac832"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#a275678ae5ef8d5220d290e38401ac832">scrollThumbHeight</a> (int32_t content) const</td></tr>
+<tr class="separator:a275678ae5ef8d5220d290e38401ac832"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e0d417336ecf631ec19f6441d35c6b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#a2e0d417336ecf631ec19f6441d35c6b6">isOnScrollbar</a> (int32_t x, int32_t y) const</td></tr>
+<tr class="separator:a2e0d417336ecf631ec19f6441d35c6b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0570d96d39d04dfdb9134f10aafea1d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#a0570d96d39d04dfdb9134f10aafea1d0">scrollToTrackY</a> (int32_t y)</td></tr>
+<tr class="separator:a0570d96d39d04dfdb9134f10aafea1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe8ca6c6155d8cfe7f490e8a251836c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#afe8ca6c6155d8cfe7f490e8a251836c2">clampScroll</a> ()</td></tr>
 <tr class="separator:afe8ca6c6155d8cfe7f490e8a251836c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf3f1462aaec2be06b4434cb2008fde2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#aaf3f1462aaec2be06b4434cb2008fde2">effectiveCount</a> () const</td></tr>
@@ -219,6 +231,9 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ac409179801b1504211469520e2be5252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cc1464c946db32348833823d8b8ba79"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#a8cc1464c946db32348833823d8b8ba79">scrollDragActive_</a> = false</td></tr>
 <tr class="separator:a8cc1464c946db32348833823d8b8ba79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2b652cceb62ebc4dfa0502a8945b1d5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#af2b652cceb62ebc4dfa0502a8945b1d5">scrollbarDragActive_</a> = false</td></tr>
+<tr class="memdesc:af2b652cceb62ebc4dfa0502a8945b1d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A continuous gesture started on the scrollbar (see <a class="el" href="classtinymd_1_1Container.html#a2e0d417336ecf631ec19f6441d35c6b6">isOnScrollbar()</a>).  <br /></td></tr>
+<tr class="separator:af2b652cceb62ebc4dfa0502a8945b1d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2b08622f7a56b952885c0570cb35e83"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Container.html#aa2b08622f7a56b952885c0570cb35e83">scrollOffset_</a> = 0</td></tr>
 <tr class="separator:aa2b08622f7a56b952885c0570cb35e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classtinymd_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classtinymd_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classtinymd_1_1Widget.html">Widget&lt; RGB_T &gt;</a></td></tr>
@@ -671,6 +686,43 @@ class tinymd::Container&lt; RGB_T &gt;</div><p>A widget that holds child widgets
 
 </div>
 </div>
+<a id="a2e0d417336ecf631ec19f6441d35c6b6" name="a2e0d417336ecf631ec19f6441d35c6b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e0d417336ecf631ec19f6441d35c6b6">&#9670;&#160;</a></span>isOnScrollbar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isOnScrollbar </td>
+          <td>(</td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>True if (x, y) - same coordinate space as <code>bounds</code> - is inside the scrollbar touch zone (see kScrollbarTouchWidth) while the content overflows. </p>
+
+</div>
+</div>
 <a id="a27cc3a69c6b2408aa53101ddb953b9d0" name="a27cc3a69c6b2408aa53101ddb953b9d0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a27cc3a69c6b2408aa53101ddb953b9d0">&#9670;&#160;</a></span>onGesture()</h2>
 
@@ -727,6 +779,60 @@ class tinymd::Container&lt; RGB_T &gt;</div><p>A widget that holds child widgets
 </div><div class="memdoc">
 
 <p>Current vertical scroll offset (0 = content's natural top). </p>
+
+</div>
+</div>
+<a id="a275678ae5ef8d5220d290e38401ac832" name="a275678ae5ef8d5220d290e38401ac832"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a275678ae5ef8d5220d290e38401ac832">&#9670;&#160;</a></span>scrollThumbHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32_t scrollThumbHeight </td>
+          <td>(</td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>content</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Height of the scrollbar thumb for <code>content</code> pixels of content (see <a class="el" href="classtinymd_1_1Container.html#a2211fcb06fe16653b8124e6095427d12">contentHeight()</a>). Shared by drawing and touch handling so both agree. </p>
+
+</div>
+</div>
+<a id="a0570d96d39d04dfdb9134f10aafea1d0" name="a0570d96d39d04dfdb9134f10aafea1d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0570d96d39d04dfdb9134f10aafea1d0">&#9670;&#160;</a></span>scrollToTrackY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void scrollToTrackY </td>
+          <td>(</td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>y</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Scrolls so that the thumb is centered on track position <code>y</code> (same coordinate space as <code>bounds</code>). </p>
 
 </div>
 </div>
@@ -942,6 +1048,53 @@ class tinymd::Container&lt; RGB_T &gt;</div><p>A widget that holds child widgets
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a46480176e3e5d17ce72da65e6da2665f" name="a46480176e3e5d17ce72da65e6da2665f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46480176e3e5d17ce72da65e6da2665f">&#9670;&#160;</a></span>kScrollbarTouchWidth</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int32_t kScrollbarTouchWidth = 12</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Width (in pixels, from the right edge) of the touch zone of the scrollbar - wider than the drawn bar so it is easy to hit with a finger. Tapping in it scrolls to the touched position, dragging in it moves the thumb with the finger. The zone only exists while the content overflows and takes priority over children below it, so keep interactive children this far from the right edge of a scrolling container. </p>
+
+</div>
+</div>
+<a id="af2b652cceb62ebc4dfa0502a8945b1d5" name="af2b652cceb62ebc4dfa0502a8945b1d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2b652cceb62ebc4dfa0502a8945b1d5">&#9670;&#160;</a></span>scrollbarDragActive_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool scrollbarDragActive_ = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A continuous gesture started on the scrollbar (see <a class="el" href="classtinymd_1_1Container.html#a2e0d417336ecf631ec19f6441d35c6b6">isOnScrollbar()</a>). </p>
 
 </div>
 </div>
