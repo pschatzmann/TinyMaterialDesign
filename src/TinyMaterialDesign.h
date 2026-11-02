@@ -54,6 +54,7 @@
 #include "TinyMaterialDesign/Widgets/SearchBar.h"
 #include "TinyMaterialDesign/Widgets/Banner.h"
 #include "TinyMaterialDesign/Widgets/Carousel.h"
+#include "TinyMaterialDesign/Widgets/LineChart.h"
 
 #if defined(ARDUINO) || defined(TINYMD_AUTO_NAMESPACE)
 using namespace tinymd;

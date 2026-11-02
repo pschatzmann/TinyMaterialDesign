@@ -1,6 +1,7 @@
 #pragma once
 #include "TinyGPU/Boards/LCDBoards.h"
 #include "TinyGPU/Drivers/DeviceOutput.h"
+#include "TinyGPU/IO/BMPExporter.h"
 #include "TinyGPU/Input/GestureDetector.h"
 #include "TinyGPU/Surface/Surface.h"
 #include "TinyMaterialDesignConfig.h"
@@ -132,6 +133,23 @@ class App {
         display_.writeData(surface_);
       }
     }
+  }
+
+  /// Writes the current screen content as an uncompressed 24-bit BMP image
+  /// to `out` - anything that is a `Print`: a `File` on an SD card or
+  /// LittleFS, a network client, Serial, or on the desktop a file stream.
+  /// Pending changes are drawn (and written to the display) first, so the
+  /// image always matches what is on screen. Returns false while
+  /// usesDirectRender() is true - there is no full-screen framebuffer to
+  /// export then.
+  bool saveScreenshot(Print& out) {
+    if (directRender_) return false;
+    if (screen_.isDirty()) {
+      screen_.draw(surface_);
+      display_.writeData(surface_);
+    }
+    tinygpu::BMPExporter<RGB_T> exporter(surface_);
+    return exporter.save(out);
   }
 
   /// True once begin() has fallen back to the low-RAM Screen::drawDirect()

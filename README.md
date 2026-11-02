@@ -30,6 +30,11 @@ for touch interaction.
   nested-widget dispatch) at any nesting depth, and an optional
   callback-driven "virtualized content" mode for lists too large to keep
   every item resident in memory
+- A `LineChart` widget for data: multiple series, automatic or fixed value
+  scale, reference lines (e.g. thresholds), gaps for missing values and a
+  rolling "newest at the right" mode
+- Screenshots: `App::saveScreenshot()` writes the screen as a BMP image to
+  any `Print` (SD card file, Serial, ...)
 
 ## Documentation
 - [Tutorial](https://github.com/pschatzmann/TinyMaterialDesign/wiki/TinyMaterialDesign-Tutorial)
