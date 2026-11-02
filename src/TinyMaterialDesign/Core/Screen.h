@@ -433,8 +433,9 @@ class Screen : public Container<RGB_T> {
                     blend(ownedTheme_.colors.surface, ownedTheme_.colors.outline, 0.25f));
 
     const int32_t maxScroll = content - viewportHeight;
-    const int32_t thumbHeight =
-        std::max(int32_t(24), viewportHeight * viewportHeight / content);
+    // drawDirect() has set bounds.h = viewportHeight, so this matches the
+    // thumb that touch handling (Container::scrollToTrackY()) assumes
+    const int32_t thumbHeight = this->scrollThumbHeight(content);
     const int32_t thumbY = maxScroll > 0
                                ? (this->scrollOffset_ * (viewportHeight - thumbHeight)) / maxScroll
                                : 0;

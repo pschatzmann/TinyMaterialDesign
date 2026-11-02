@@ -129,6 +129,9 @@ class Container : public Widget<RGB_T> {
 
     if (isContinuousType(event.type)) {
       if (event.phase == GesturePhase::kBegan) {
+        scrollbarDragActive_ = isOnScrollbar(event.startPoint.x, event.startPoint.y);
+      }
+      if (event.phase == GesturePhase::kBegan && !scrollbarDragActive_) {
         // Only claim a pan/scroll for this container's own scroll if it
         // actually has somewhere to scroll to - otherwise it would swallow
         // every such gesture starting anywhere inside it (clamped to a
@@ -152,7 +155,11 @@ class Container : public Widget<RGB_T> {
       }
 
       bool handled = false;
-      if (scrollDragActive_) {
+      if (scrollbarDragActive_) {
+        // dragging on the scrollbar: the thumb follows the finger
+        scrollToTrackY(event.point.y);
+        handled = true;
+      } else if (scrollDragActive_) {
         scrollOffset_ -= event.stepDeltaY;
         clampScroll();
         handled = true;
@@ -163,8 +170,15 @@ class Container : public Widget<RGB_T> {
       if (event.phase == GesturePhase::kEnded) {
         activeChild_ = nullptr;
         scrollDragActive_ = false;
+        scrollbarDragActive_ = false;
       }
       return handled;
+    }
+
+    // a tap on the scrollbar jumps to the touched position
+    if (isTapGesture(event.type) && isOnScrollbar(event.point.x, event.point.y)) {
+      scrollToTrackY(event.point.y);
+      return true;
     }
 
     Widget<RGB_T>* hit = hitTest(event.point.x, event.point.y);
@@ -187,10 +201,21 @@ class Container : public Widget<RGB_T> {
   /// same method on the outer one) to this so a drag starting on it, at
   /// any nesting depth, is classified correctly.
   bool isDraggableAt(int32_t x, int32_t y) const override {
+    // a drag starting on the scrollbar moves the thumb (see onGesture())
+    if (isOnScrollbar(x, y)) return true;
     Widget<RGB_T>* hit = hitTest(x, y);
     if (hit == nullptr) return false;
     return hit->isDraggableAt(x, y + scrollOffset_);
   }
+
+  /// Width (in pixels, from the right edge) of the touch zone of the
+  /// scrollbar - wider than the drawn bar so it is easy to hit with a
+  /// finger. Tapping in it scrolls to the touched position, dragging in it
+  /// moves the thumb with the finger. The zone only exists while the content
+  /// overflows and takes priority over children below it, so keep
+  /// interactive children this far from the right edge of a scrolling
+  /// container.
+  static constexpr int32_t kScrollbarTouchWidth = 12;
 
   /// True for a gesture type that spans multiple events (kBegan/kChanged/
   /// kEnded) rather than firing once - used by callers that compose a
@@ -236,6 +261,32 @@ class Container : public Widget<RGB_T> {
     return bottom - bounds.y;
   }
 
+  /// Height of the scrollbar thumb for `content` pixels of content (see
+  /// contentHeight()). Shared by drawing and touch handling so both agree.
+  int32_t scrollThumbHeight(int32_t content) const {
+    return std::max(int32_t(24), bounds.h * bounds.h / content);
+  }
+
+  /// True if (x, y) - same coordinate space as `bounds` - is inside the
+  /// scrollbar touch zone (see kScrollbarTouchWidth) while the content
+  /// overflows.
+  bool isOnScrollbar(int32_t x, int32_t y) const {
+    return x >= bounds.right() - kScrollbarTouchWidth && x < bounds.right() && y >= bounds.y &&
+           y < bounds.bottom() && contentHeight() > bounds.h;
+  }
+
+  /// Scrolls so that the thumb is centered on track position `y` (same
+  /// coordinate space as `bounds`).
+  void scrollToTrackY(int32_t y) {
+    const int32_t content = contentHeight();
+    const int32_t maxScroll = content - bounds.h;
+    if (maxScroll <= 0) return;
+    const int32_t thumb = scrollThumbHeight(content);
+    const int32_t track = bounds.h - thumb;
+    scrollOffset_ = track > 0 ? (y - bounds.y - thumb / 2) * maxScroll / track : 0;
+    clampScroll();
+  }
+
   void clampScroll() {
     const int32_t maxScroll = std::max(int32_t{0}, contentHeight() - bounds.h);
     scrollOffset_ = std::min(std::max(scrollOffset_, int32_t{0}), maxScroll);
@@ -267,6 +318,8 @@ class Container : public Widget<RGB_T> {
   int32_t uniformItemHeight_ = 0;
   Widget<RGB_T>* activeChild_ = nullptr;
   bool scrollDragActive_ = false;
+  /// A continuous gesture started on the scrollbar (see isOnScrollbar()).
+  bool scrollbarDragActive_ = false;
   int32_t scrollOffset_ = 0;
 
  private:
@@ -308,7 +361,7 @@ class Container : public Widget<RGB_T> {
                     blend(this->theme().colors.surface, this->theme().colors.outline, 0.25f));
 
     const int32_t maxScroll = content - bounds.h;
-    const int32_t thumbHeight = std::max(int32_t(24), bounds.h * bounds.h / content);
+    const int32_t thumbHeight = scrollThumbHeight(content);
     const int32_t thumbY =
         maxScroll > 0 ? bounds.y + (scrollOffset_ * (bounds.h - thumbHeight)) / maxScroll : bounds.y;
     target.fillRoundRect(toPx(trackX), toPx(thumbY), toPx(kBarWidth), toPx(thumbHeight), toPx(kBarWidth / 2),
