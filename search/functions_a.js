@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['label_0',['label',['../classtinymd_1_1Button.html#a4f0b24914cbb33868035e88f9ace5254',1,'tinymd::Button']]],
-  ['label_1',['Label',['../classtinymd_1_1Label.html#aa3acc0d4595ef47fd4af336243a32620',1,'tinymd::Label::Label()=default'],['../classtinymd_1_1Label.html#aeba8a33c9afc108e5a98091eec063881',1,'tinymd::Label::Label(Bounds bounds, const char *text, TypographyRole role=TypographyRole::kBody, TextAlign align=TextAlign::kStart)']]],
+  ['label_0',['Label',['../classtinymd_1_1Label.html#aa3acc0d4595ef47fd4af336243a32620',1,'tinymd::Label::Label()=default'],['../classtinymd_1_1Label.html#aeba8a33c9afc108e5a98091eec063881',1,'tinymd::Label::Label(Bounds bounds, const char *text, TypographyRole role=TypographyRole::kBody, TextAlign align=TextAlign::kStart)']]],
+  ['label_1',['label',['../classtinymd_1_1Button.html#a4f0b24914cbb33868035e88f9ace5254',1,'tinymd::Button']]],
   ['leadingrect_2',['leadingRect',['../classtinymd_1_1AppBar.html#a7e3c9cad5f5888be1b0df870c7a6b55a',1,'tinymd::AppBar']]],
   ['lightcolorscheme_3',['lightColorScheme',['../namespacetinymd.html#a3fc086f5b63364bb584024c1e453eab7',1,'tinymd']]],
   ['linearlayout_4',['LinearLayout',['../classtinymd_1_1LinearLayout.html#a929cc4c292ef8e4110b9e50f9f427270',1,'tinymd::LinearLayout']]],

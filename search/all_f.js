@@ -22,7 +22,8 @@ var searchData=
   ['redtheme_19',['redTheme',['../namespacetinymd.html#abe961703c3fdd439b45613af33aac9e9',1,'tinymd']]],
   ['removechild_20',['removeChild',['../classtinymd_1_1Container.html#ae088130458368412703db86bdfa2060a',1,'tinymd::Container']]],
   ['reset_21',['reset',['../classtinymd_1_1FlowLayout.html#ad20897c5c8bd47f5d4005989bead0e55',1,'tinymd::FlowLayout']]],
-  ['right_22',['right',['../structtinymd_1_1Bounds.html#a0038b6ea615eca8e2486006035236d94',1,'tinymd::Bounds']]],
-  ['rows_23',['rows',['../classtinymd_1_1TableLayout.html#ad107abcacb84cbabb41b87ba81360f91',1,'tinymd::TableLayout']]],
-  ['rssi_24',['rssi',['../structtinymd_1_1WifiNetwork.html#ab6f4522a5a5c4577c16d0e23339a1414',1,'tinymd::WifiNetwork']]]
+  ['resizebuffer_22',['resizeBuffer',['../classtinymd_1_1OffsetSurface.html#abcf7242fd54ee5f3c2ac3e11568cf10d',1,'tinymd::OffsetSurface']]],
+  ['right_23',['right',['../structtinymd_1_1Bounds.html#a0038b6ea615eca8e2486006035236d94',1,'tinymd::Bounds']]],
+  ['rows_24',['rows',['../classtinymd_1_1TableLayout.html#ad107abcacb84cbabb41b87ba81360f91',1,'tinymd::TableLayout']]],
+  ['rssi_25',['rssi',['../structtinymd_1_1WifiNetwork.html#ab6f4522a5a5c4577c16d0e23339a1414',1,'tinymd::WifiNetwork']]]
 ];

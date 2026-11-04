@@ -1,5 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classtinymd_1_1WifiControl.html" title="The WiFi of a device as WifiLoginPage uses it: scan, connect and the stored credentials...." alt="" coords="5,32,99,60"/>
-<area shape="rect" id="node2" href="$classtinymd_1_1Esp32Wifi.html" title="WifiControl for the ESP32: asynchronous scan and connection, the credentials are stored in the flash ..." alt="" coords="160,5,246,33"/>
-<area shape="rect" id="node3" href="$classtinymd_1_1SimulatedWifi.html" title="WiFi without hardware, for the desktop and tests: a fixed list of networks; connecting succeeds after..." alt="" coords="147,57,259,85"/>
+<area shape="rect" id="node1" href="$classtinymd_1_1Widget.html" title=" " alt="" coords="5,5,204,50"/>
 </map>

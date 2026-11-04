@@ -9,7 +9,7 @@ var searchData=
   ['wificontrol_6',['WifiControl',['../classtinymd_1_1WifiControl.html',1,'tinymd']]],
   ['wificontrol_2eh_7',['WifiControl.h',['../WifiControl_8h.html',1,'']]],
   ['wifiesp32_2eh_8',['WifiEsp32.h',['../WifiEsp32_8h.html',1,'']]],
-  ['wifiloginpage_9',['WifiLoginPage',['../classtinymd_1_1WifiLoginPage.html',1,'WifiLoginPage&lt; RGB_T &gt;'],['../classtinymd_1_1WifiLoginPage.html#a158c318a83924b81d241ff1e6543ff40',1,'tinymd::WifiLoginPage::WifiLoginPage()']]],
+  ['wifiloginpage_9',['WifiLoginPage',['../classtinymd_1_1WifiLoginPage.html',1,'WifiLoginPage&lt; RGB_T &gt;'],['../classtinymd_1_1WifiLoginPage.html#a61390c3f4ca8727fb1e9fe1aab093d56',1,'tinymd::WifiLoginPage::WifiLoginPage()']]],
   ['wifiloginpage_2eh_10',['WifiLoginPage.h',['../WifiLoginPage_8h.html',1,'']]],
   ['wifinetwork_11',['WifiNetwork',['../structtinymd_1_1WifiNetwork.html',1,'tinymd']]],
   ['wifinetworkrow_12',['WifiNetworkRow',['../classtinymd_1_1WifiNetworkRow.html',1,'tinymd']]],

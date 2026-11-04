@@ -16,7 +16,8 @@ var searchData=
   ['medium_13',['medium',['../structtinymd_1_1ShapeTokens.html#acd1274f3e9c5cd3737f080a499acb208',1,'tinymd::ShapeTokens']]],
   ['menu_14',['Menu',['../classtinymd_1_1Menu.html#a6505ecf8b16a12f94c3cfe5c693e2a10',1,'tinymd::Menu::Menu(Bounds bounds)'],['../classtinymd_1_1Menu.html#a96ced4f42be87ed4c8d9a48742b9bff4',1,'tinymd::Menu::Menu()=default'],['../classtinymd_1_1Menu.html',1,'Menu&lt; RGB_T &gt;']]],
   ['menu_2eh_15',['Menu.h',['../Menu_8h.html',1,'']]],
-  ['menurgb565_16',['MenuRGB565',['../namespacetinymd.html#ab7d1348e7e4d02581b8dc64b97a08588',1,'tinymd']]],
-  ['menurgb666_17',['MenuRGB666',['../namespacetinymd.html#a6fc789908c290eef5b3f28904012df11',1,'tinymd']]],
-  ['menurgb888_18',['MenuRGB888',['../namespacetinymd.html#a4dd4edeb18b1466c2b5b817b3b5f24c8',1,'tinymd']]]
+  ['menu_3c_20tinymd_5fdefault_5frgb_5ft_20_3e_16',['Menu&lt; TINYMD_DEFAULT_RGB_T &gt;',['../classtinymd_1_1Menu.html',1,'tinymd']]],
+  ['menurgb565_17',['MenuRGB565',['../namespacetinymd.html#ab7d1348e7e4d02581b8dc64b97a08588',1,'tinymd']]],
+  ['menurgb666_18',['MenuRGB666',['../namespacetinymd.html#a6fc789908c290eef5b3f28904012df11',1,'tinymd']]],
+  ['menurgb888_19',['MenuRGB888',['../namespacetinymd.html#a4dd4edeb18b1466c2b5b817b3b5f24c8',1,'tinymd']]]
 ];

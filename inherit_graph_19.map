@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classtinymd_1_1TableLayout.html" title="Grid with explicit, independently&#45;sized column widths and row heights." alt="" coords="5,5,105,33"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,108,33"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1OffsetSurface.html" title="Draws into target moved up by dy pixels, only inside the rows [clipTop, clipBottom) of target." alt="" coords="156,5,338,33"/>
 </map>

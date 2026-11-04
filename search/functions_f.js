@@ -11,6 +11,7 @@ var searchData=
   ['redtheme_8',['redTheme',['../namespacetinymd.html#abe961703c3fdd439b45613af33aac9e9',1,'tinymd']]],
   ['removechild_9',['removeChild',['../classtinymd_1_1Container.html#ae088130458368412703db86bdfa2060a',1,'tinymd::Container']]],
   ['reset_10',['reset',['../classtinymd_1_1FlowLayout.html#ad20897c5c8bd47f5d4005989bead0e55',1,'tinymd::FlowLayout']]],
-  ['right_11',['right',['../structtinymd_1_1Bounds.html#a0038b6ea615eca8e2486006035236d94',1,'tinymd::Bounds']]],
-  ['rows_12',['rows',['../classtinymd_1_1TableLayout.html#ad107abcacb84cbabb41b87ba81360f91',1,'tinymd::TableLayout']]]
+  ['resizebuffer_11',['resizeBuffer',['../classtinymd_1_1OffsetSurface.html#abcf7242fd54ee5f3c2ac3e11568cf10d',1,'tinymd::OffsetSurface']]],
+  ['right_12',['right',['../structtinymd_1_1Bounds.html#a0038b6ea615eca8e2486006035236d94',1,'tinymd::Bounds']]],
+  ['rows_13',['rows',['../classtinymd_1_1TableLayout.html#ad107abcacb84cbabb41b87ba81360f91',1,'tinymd::TableLayout']]]
 ];

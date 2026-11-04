@@ -1,5 +1,5 @@
 <map id="WifiLoginPage&lt; RGB_T &gt;" name="WifiLoginPage&lt; RGB_T &gt;">
-<area shape="rect" id="node1" title="WiFi selection and login as a Page: the state of the connection, SSID and password (masked,..." alt="" coords="86,488,272,516"/>
+<area shape="rect" id="node1" title="WiFi selection and login as a Page: the state of the connection, the SSID with a button that opens th..." alt="" coords="86,488,272,516"/>
 <area shape="rect" id="node2" href="$classtinymd_1_1Page.html" title="One page (tab) of an app: a scrollable Container with a title and an icon for the navigation,..." alt="" coords="116,411,242,439"/>
 <area shape="rect" id="node3" href="$classtinymd_1_1Container.html" title="A widget that holds child widgets, draws/dispatches gestures to them, and scrolls its content vertica..." alt="" coords="100,334,258,362"/>
 <area shape="rect" id="node4" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="13,233,153,261"/>
