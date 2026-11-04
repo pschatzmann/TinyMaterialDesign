@@ -6,6 +6,7 @@
 
 #include "TinyGPU/Input/GestureDetector.h"
 #include "TinyMaterialDesign/Core/Widget.h"
+#include "TinyMaterialDesign/Core/OffsetSurface.h"
 
 namespace tinymd {
 
@@ -379,10 +380,28 @@ class Container : public Widget<RGB_T> {
       Widget<RGB_T>* child = effectiveChild(i);
       if (child == nullptr || !child->visible) continue;
       child->bounds.y -= scrollOffset_;
-      if (intersectsBounds(child->bounds)) child->draw(target);
+      if (intersectsBounds(child->bounds)) {
+        if (child->bounds.y < 0) {
+          drawAboveTop(target, *child);
+        } else {
+          child->draw(target);
+        }
+      }
       child->bounds.y += scrollOffset_;
     }
     target.popClipRect();
+  }
+
+  /// A child whose top is above the edge of the surface (scrolled up): the
+  /// drawing primitives only take coordinates >= 0 (toPx() clamps), so it is
+  /// drawn moved down and an OffsetSurface writes it back to its real place,
+  /// clipped to this container.
+  void drawAboveTop(tinygpu::ISurface<RGB_T>& target, Widget<RGB_T>& child) {
+    const int32_t dy = -child.bounds.y;
+    OffsetSurface<RGB_T> shifted(target, dy, bounds.y, bounds.bottom());
+    child.bounds.y += dy;
+    child.draw(shifted);
+    child.bounds.y -= dy;
   }
 
   /// A thin right-edge indicator of scroll position/range, confined to this

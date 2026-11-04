@@ -372,6 +372,9 @@ class Screen : public Container<RGB_T> {
     dialog_ = nullptr;
     dirty_ = true;
   }
+
+  /// True while a dialog (or menu, ...) is presented.
+  bool hasDialog() const { return dialog_ != nullptr; }
   bool isDialogPresented() const { return dialog_ != nullptr; }
 
  private:

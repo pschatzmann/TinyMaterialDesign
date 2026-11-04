@@ -1,9 +1,10 @@
 /**
  * @file wifi-login.ino
  * @brief WiFi selection and login with WifiLoginPage: the page is shown on
- * startup when the device is not connected; after the login (or "Continue
- * without WiFi") a second page shows the state of the connection, with a
- * button to come back.
+ * startup when the device is not connected; after the login (or Cancel) a
+ * second page shows the state of the connection, with a
+ * button to come back. The button next to the SSID field opens the list of
+ * the networks.
  *
  * On an ESP32 the real WiFi is used (Esp32Wifi: the credentials are stored
  * in the flash); on the desktop a simulated one (SimulatedWifi: the password
@@ -12,6 +13,8 @@
 #include <TinyMaterialDesign.h>
 
 #if defined(ESP32)
+#include <SPI.h>   // display (TinyGPU)
+#include <Wire.h>  // touch (TinyGPU)
 #include "TinyMaterialDesign/Wifi/WifiEsp32.h"
 Esp32Wifi wifi;
 #else
@@ -20,17 +23,16 @@ SimulatedWifi wifi;
 
 App<RGB565> app(DefaultBoard, defaultDarkTheme<RGB565>());
 Keyboard<RGB565> keyboard;
-WifiLoginPage<RGB565> login(keyboard);
+WifiLoginPage<RGB565> login(keyboard, app.screen());
 
 // the "application": the state of the connection
 Container<RGB565> home;
 Label<RGB565> state;
 Button<RGB565> change;
 
-void showLogin(bool startup) {
+void showLogin() {
   home.visible = false;
   login.visible = true;
-  login.setStartup(startup);
   login.onShow();
   app.screen().invalidate();
 }
@@ -57,7 +59,7 @@ void setup() {
   state = Label<RGB565>(Bounds(16, 40, w - 32, 20), "", TypographyRole::kBody, TextAlign::kCenter);
   state.setOnBackground(true);
   change = Button<RGB565>(Bounds(16, 80, w - 32, 36), "WiFi settings", ButtonVariant::kOutlined);
-  change.onClick = []() { showLogin(false); };
+  change.onClick = []() { showLogin(); };
   app.screen().addWidget(home);
   home.addChild(state);
   home.addChild(change);
@@ -73,7 +75,7 @@ void setup() {
   if (wifi.state() == WifiControl::State::kConnected) {
     showHome();
   } else {
-    showLogin(true);
+    showLogin();
   }
 }
 
