@@ -39,8 +39,19 @@ class Card : public Widget<RGB_T> {
     this->bounds = bounds;
   }
 
+  /// Color of the border (default: the outline color of the theme), e.g. an
+  /// accent for a highlighted card.
+  void setOutlineColor(RGB_T color) {
+    outline_ = color;
+    hasOutline_ = true;
+  }
+  void clearOutlineColor() { hasOutline_ = false; }
+
+  /// Corner radius from the theme's large shape instead of the medium one.
+  bool largeCorners = false;
+
   void draw(tinygpu::ISurface<RGB_T>& target) override {
-    const size_t radius = toPx(this->theme().shape.medium);
+    const size_t radius = toPx(largeCorners ? this->theme().shape.large : this->theme().shape.medium);
 
     if (elevated) {
       const RGB_T shadow = blend(this->theme().colors.surface, this->theme().colors.onBackground, 0.30f);
@@ -51,7 +62,7 @@ class Card : public Widget<RGB_T> {
     target.fillRoundRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
                          toPx(this->bounds.h), radius, this->theme().colors.surface);
     target.drawRoundRect(toPx(this->bounds.x), toPx(this->bounds.y), toPx(this->bounds.w),
-                         toPx(this->bounds.h), radius, this->theme().colors.outline);
+                         toPx(this->bounds.h), radius, hasOutline_ ? outline_ : this->theme().colors.outline);
 
     const int32_t pad = this->theme().spacing;
     int32_t cursorY = this->bounds.y + pad;
@@ -91,6 +102,8 @@ class Card : public Widget<RGB_T> {
   std::string body_;
   bool hasTitle_ = false;
   bool hasBody_ = false;
+  RGB_T outline_{};
+  bool hasOutline_ = false;
 };
 
 using CardRGB565 = Card<tinygpu::RGB565>;

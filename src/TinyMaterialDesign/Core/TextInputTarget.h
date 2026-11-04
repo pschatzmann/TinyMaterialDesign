@@ -15,9 +15,16 @@ namespace tinymd {
  * (which *is* templated on RGB_T, since it draws itself) hold a single
  * `TextInputTarget*` regardless of the field's color type.
  */
+/// What a text input expects: a Keyboard shows its numeric keypad for
+/// kNumber.
+enum class InputType { kText, kNumber };
+
 class TextInputTarget {
  public:
   virtual ~TextInputTarget() = default;
+
+  /// The kind of input - Keyboard picks its layout from it. Default: text.
+  virtual InputType inputType() const { return InputType::kText; }
 
   virtual void insertChar(char c) = 0;
   virtual void backspace() = 0;

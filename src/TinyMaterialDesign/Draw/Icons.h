@@ -115,4 +115,35 @@ void drawSearch(tinygpu::ISurface<RGB_T>& target, const Bounds& r, RGB_T color,
   drawLineThick(target, handleX0, handleY0, r.right(), r.bottom(), color, thickness);
 }
 
+/// WiFi glyph: a dot with three arcs above it.
+template <typename RGB_T>
+void drawWifi(tinygpu::ISurface<RGB_T>& target, const Bounds& r, RGB_T color, uint8_t thickness = 2) {
+  const int32_t cx = r.centerX();
+  const int32_t cy = r.bottom() - r.h / 5;
+  target.fillCircle(toPx(cx), toPx(cy), 2, color);
+  for (int i = 1; i <= 3; ++i) {
+    target.drawArc(toPx(cx), toPx(cy), toPx(r.w * i / 8 + 1), 225.0f, 315.0f, color, thickness);
+  }
+}
+
+/// Signal strength: 4 bars of growing height, the first `bars` (0-4) in
+/// `on`, the others in `off`.
+template <typename RGB_T>
+void drawSignalBars(tinygpu::ISurface<RGB_T>& target, const Bounds& r, int bars, RGB_T on, RGB_T off) {
+  const int32_t w = r.w / 5;
+  for (int i = 0; i < 4; ++i) {
+    const int32_t h = r.h * (i + 1) / 4;
+    target.fillRect(toPx(r.x + i * (w + w / 3)), toPx(r.bottom() - h), toPx(w), toPx(h), i < bars ? on : off);
+  }
+}
+
+/// Padlock (e.g. a secured network).
+template <typename RGB_T>
+void drawLock(tinygpu::ISurface<RGB_T>& target, const Bounds& r, RGB_T color, uint8_t thickness = 1) {
+  const int32_t bodyH = r.h / 2;
+  target.fillRect(toPx(r.x), toPx(r.bottom() - bodyH), toPx(r.w), toPx(bodyH), color);
+  target.drawArc(toPx(r.centerX()), toPx(r.bottom() - bodyH), toPx(r.w / 2 - 1), 180.0f, 360.0f, color,
+                 thickness + 1);
+}
+
 }  // namespace tinymd

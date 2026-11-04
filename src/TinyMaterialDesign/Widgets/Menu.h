@@ -51,6 +51,9 @@ class Menu : public Widget<RGB_T> {
 
   void addItem(Widget<RGB_T>& item) { items_.addChild(item); }
 
+  /// Removes all items (they are not deleted) - e.g. to fill the menu anew.
+  void clearItems() { items_.clearChildren(); }
+
   /// Switches to callback-driven items - see Container.h's class comment
   /// and Drawer.h's own setItemProvider() for the same pattern.
   void setItemProvider(typename Container<RGB_T>::ChildCountFn count,

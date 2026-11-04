@@ -24,6 +24,7 @@ else()
 
     option(TMD_BUILD_EXAMPLES "Build Examples" ON)
     option(TMD_BUILD_TESTS "Build unit tests" ON)
+    option(TMD_USE_HTTPS "Desktop builds with HTTPS (wolfSSL): needed only by the esp32-radio example" OFF)
 
     # TinyGPU builds its own examples (font-test, bouncing-ball, ...) when
     # TGPU_BUILD_EXAMPLES is ON, which is its default. We only want our own
@@ -56,13 +57,15 @@ else()
       # still needs that include path - TinyGPU only pulls Arduino-Emulator
       # in itself (from its own examples build), which we disabled above.
       #
-      # USE_HTTPS pulls in wolfSSL (a real, if slow-to-build, TLS stack) so
-      # WiFiClientSecure works on the desktop debug build too - needed by
-      # esp32-radio.ino for https:// station streams. Must be set before
-      # FetchContent_MakeAvailable() below, since that's what actually runs
-      # Arduino-Emulator's own CMakeLists.txt (and its own `option(USE_HTTPS
-      # ...)`, which only takes the FIRST value the cache sees).
-      set(USE_HTTPS ON CACHE BOOL "" FORCE)
+      # USE_HTTPS pulls in wolfSSL (a real, but slow-to-build, TLS stack) so
+      # WiFiClientSecure works on the desktop debug build too - needed only
+      # by esp32-radio.ino for https:// station streams, so it is off unless
+      # TMD_USE_HTTPS is set (without it, esp32-radio is not built). Must be
+      # set before FetchContent_MakeAvailable() below, since that's what
+      # actually runs Arduino-Emulator's own CMakeLists.txt (and its own
+      # `option(USE_HTTPS ...)`, which only takes the FIRST value the cache
+      # sees).
+      set(USE_HTTPS ${TMD_USE_HTTPS} CACHE BOOL "" FORCE)
       FetchContent_Declare(
         arduino_emulator
         GIT_REPOSITORY https://github.com/pschatzmann/Arduino-Emulator.git

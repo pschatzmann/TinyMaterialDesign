@@ -69,6 +69,43 @@ class Container : public Widget<RGB_T> {
     if (this->theme_ != nullptr) child.setTheme(*this->theme_);
   }
 
+  /// Removes `child` (it is not deleted - the container does not own it).
+  /// @return false if it was not a child.
+  bool removeChild(Widget<RGB_T>& child) {
+    for (size_t i = 0; i < children_.size(); ++i) {
+      if (children_[i] == &child) {
+        if (activeChild_ == &child) activeChild_ = nullptr;
+        children_.erase(children_.begin() + static_cast<long>(i));
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Removes all children (they are not deleted) and scrolls to the top.
+  void clearChildren() {
+    children_.clear();
+    activeChild_ = nullptr;
+    scrollOffset_ = 0;
+  }
+
+  /// Number of children added with addChild().
+  int childrenCount() const { return static_cast<int>(children_.size()); }
+
+  /// Scrolls the content by `offset` pixels (0 = top), limited to the
+  /// content height.
+  void setScrollOffset(int32_t offset) {
+    scrollOffset_ = offset;
+    clampScroll();
+  }
+
+  /// Scrolls so that `child` is `margin` pixels below the top of the
+  /// container (as far as the content height allows) - e.g. to keep a text
+  /// field visible above an on-screen keyboard.
+  void scrollToChild(const Widget<RGB_T>& child, int32_t margin = 4) {
+    setScrollOffset(child.bounds.y - bounds.y - margin);
+  }
+
   /// Switches this container to callback-driven content - see the class
   /// comment. Pass empty functions (the default-constructed state) to
   /// switch back to addChild()'s stored-vector mode.

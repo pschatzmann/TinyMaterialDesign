@@ -40,6 +40,9 @@ class NavigationBar : public Widget<RGB_T> {
   }
 
   int selectedIndex() const { return selectedIndex_; }
+  /// No destination is highlighted (e.g. while a screen outside the
+  /// navigation is shown); a tap on any destination then selects it.
+  void clearSelection() { selectedIndex_ = -1; }
   void setSelectedIndex(int index) {
     if (index >= 0 && index < static_cast<int>(destinations_.size())) selectedIndex_ = index;
   }

@@ -57,10 +57,45 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
   std::function<void(const std::string&)> onChange;
   /// Fired when a Keyboard's Enter/Done key (or submit()) is pressed.
   std::function<void()> onSubmit;
+  /// Fired when the field loses the focus (blur(), submit(), or the
+  /// Keyboard switched to another field): editing has ended.
+  std::function<void()> onBlur;
+
+  /// kNumber: only digits (and . - + :) are accepted and a Keyboard shows
+  /// its numeric keypad.
+  void setInputType(InputType type) { inputType_ = type; }
+  InputType inputType() const override { return inputType_; }
+
+  /// Shows the field in the error color with `text` as supporting text below
+  /// the box (it needs 14 px of the bounds); nullptr or "" clears the error.
+  void setError(const char* text) { error_ = text != nullptr ? text : ""; }
+  bool hasError() const { return !error_.empty(); }
+  const std::string& errorText() const { return error_; }
+
+  /// Checks the text after each change: if `valid` returns false the field
+  /// shows `errorText` (see setError()).
+  void setValidator(std::function<bool(const std::string&)> valid, const char* errorText) {
+    validator_ = std::move(valid);
+    validatorError_ = errorText != nullptr ? errorText : "";
+    validate();
+  }
+  /// True if there is no validator or it accepts the text.
+  bool isValid() const { return !validator_ || validator_(text_); }
+
+  /// Shows a '*' for each character (e.g. for a password); text() still
+  /// returns the real text.
+  void setPasswordMode(bool password) { password_ = password; }
+  bool passwordMode() const { return password_; }
+
+  /// The field is directly on a page: the label above the box (and the error
+  /// text below it) are drawn on the theme's background color instead of the
+  /// surface color.
+  void setOnBackground(bool onBackground) { onBackground_ = onBackground; }
 
   const std::string& text() const { return text_; }
   void setText(const char* text) {
     text_ = text != nullptr ? text : "";
+    validate();
     if (onChange) onChange(text_);
   }
   /// 0 (the default) means unlimited.
@@ -71,25 +106,36 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
     focused_ = true;
     if (onFocus) onFocus();
   }
-  void blur() override { focused_ = false; }
+  void blur() override {
+    const bool was = focused_;
+    focused_ = false;
+    if (was && onBlur) onBlur();
+  }
 
   /// Appends one character - called by whatever is driving text entry
   /// (typically a Keyboard key tap).
   void insertChar(char c) override {
     if (maxLength_ != 0 && text_.size() >= maxLength_) return;
+    if (inputType_ == InputType::kNumber && !((c >= '0' && c <= '9') || c == '.' || c == '-' || c == '+' || c == ':')) {
+      return;
+    }
     text_.push_back(c);
+    validate();
     if (onChange) onChange(text_);
   }
   void backspace() override {
     if (text_.empty()) return;
     text_.pop_back();
+    validate();
     if (onChange) onChange(text_);
   }
   /// Loses focus and fires onSubmit - called directly, or via a Keyboard's
   /// Enter/Done key through handleEnter().
   void submit() {
+    const bool was = focused_;
     focused_ = false;
     if (onSubmit) onSubmit();
+    if (was && onBlur) onBlur();
   }
 
   /// TextInputTarget: single-line semantics - Enter submits and tells the
@@ -101,18 +147,30 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
 
   void draw(tinygpu::ISurface<RGB_T>& target) override {
     const int32_t labelHeight = hasLabel_ ? 14 : 0;
+    const int32_t errorHeight = error_.empty() ? 0 : 14;
     const Bounds box(this->bounds.x, this->bounds.y + labelHeight, this->bounds.w,
-                     this->bounds.h - labelHeight);
+                     this->bounds.h - labelHeight - errorHeight);
+    const RGB_T outside = onBackground_ ? this->theme().colors.background : this->theme().colors.surface;
+    const bool error = !error_.empty();
 
     if (hasLabel_) {
-      RGB_T labelColor = focused_ ? this->theme().colors.primary : this->theme().colors.onSurfaceVariant;
+      RGB_T labelColor = error      ? this->theme().colors.error
+                         : focused_ ? this->theme().colors.primary
+                                    : this->theme().colors.onSurfaceVariant;
       if (!this->enabled) labelColor = blend(labelColor, this->theme().colors.surface, 0.5f);
       this->theme().typography.label->drawText(target, static_cast<int16_t>(this->bounds.x),
                                        static_cast<int16_t>(this->bounds.y), label_.c_str(),
-                                       labelColor, this->theme().colors.surface, false);
+                                       labelColor, outside, false);
+    }
+    if (error) {
+      this->theme().typography.label->drawText(target, static_cast<int16_t>(this->bounds.x + 4),
+                                       static_cast<int16_t>(box.bottom() + 3), error_.c_str(),
+                                       this->theme().colors.error, outside, false);
     }
 
-    RGB_T borderColor = focused_ ? this->theme().colors.primary : this->theme().colors.outline;
+    RGB_T borderColor = error      ? this->theme().colors.error
+                        : focused_ ? this->theme().colors.primary
+                                   : this->theme().colors.outline;
     if (!this->enabled) borderColor = blend(borderColor, this->theme().colors.surface, 0.5f);
     const size_t radius = toPx(this->theme().shape.small);
     target.fillRoundRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h), radius,
@@ -132,12 +190,13 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
       return;
     }
 
+    const std::string shown = password_ ? std::string(text_.size(), '*') : text_;
     this->theme().typography.body->drawText(target, static_cast<int16_t>(textX),
-                                    static_cast<int16_t>(textY), text_.c_str(),
+                                    static_cast<int16_t>(textY), shown.c_str(),
                                     this->theme().colors.onSurface, this->theme().colors.surface, false);
 
     if (focused_ && cursorVisible_) {
-      const size_t textWidth = this->theme().typography.body->measureTextWidth(text_.c_str());
+      const size_t textWidth = this->theme().typography.body->measureTextWidth(shown.c_str());
       const int32_t cursorX = textX + static_cast<int32_t>(textWidth) + 1;
       target.drawLine(toPx(cursorX), toPx(box.y + 6), toPx(cursorX), toPx(box.bottom() - 6),
                       this->theme().colors.primary);
@@ -169,7 +228,17 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
   std::string text_;
   std::string label_;
   std::string placeholder_;
+  std::string error_;
+  std::string validatorError_;
+  std::function<bool(const std::string&)> validator_;
+  InputType inputType_ = InputType::kText;
+  bool onBackground_ = false;
+  bool password_ = false;
   bool hasLabel_ = false;
+
+  void validate() {
+    if (validator_) error_ = validator_(text_) ? "" : validatorError_;
+  }
   size_t maxLength_ = 0;
   bool focused_ = false;
   bool cursorVisible_ = true;

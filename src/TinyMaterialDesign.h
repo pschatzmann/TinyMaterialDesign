@@ -55,6 +55,12 @@
 #include "TinyMaterialDesign/Widgets/Banner.h"
 #include "TinyMaterialDesign/Widgets/Carousel.h"
 #include "TinyMaterialDesign/Widgets/LineChart.h"
+#include "TinyMaterialDesign/Widgets/TextBlock.h"
+#include "TinyMaterialDesign/Widgets/StatTile.h"
+#include "TinyMaterialDesign/Widgets/SettingRows.h"
+#include "TinyMaterialDesign/Core/Page.h"
+#include "TinyMaterialDesign/Wifi/WifiControl.h"
+#include "TinyMaterialDesign/Widgets/WifiLoginPage.h"
 
 #if defined(ARDUINO) || defined(TINYMD_AUTO_NAMESPACE)
 using namespace tinymd;

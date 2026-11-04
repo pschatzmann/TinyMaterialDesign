@@ -48,6 +48,17 @@ class Label : public Widget<RGB_T> {
     colorOverride_ = color;
     hasColorOverride_ = true;
   }
+  /// Color behind the text (default: the surface color of the theme). Use
+  /// the background color for a label directly on a page.
+  void setBackgroundColor(RGB_T color) {
+    background_ = color;
+    hasBackground_ = true;
+  }
+  /// Draw the text on the theme's page background instead of the surface.
+  void setOnBackground(bool onBackground) { onBackground_ = onBackground; }
+  /// Secondary text: the theme's onSurfaceVariant color instead of onSurface
+  /// (ignored if a color was set with setColor()).
+  void setVariantColor(bool variant) { variant_ = variant; }
 
   /// Explicit font, taking priority over the role-derived one in draw()
   /// below - nullptr (the default) means "use the theme's font for role()".
@@ -56,7 +67,9 @@ class Label : public Widget<RGB_T> {
 
   void draw(tinygpu::ISurface<RGB_T>& target) override {
     tinygpu::IFont<RGB_T>& font = font_ != nullptr ? *font_ : *fontForTypographyRole(role_, this->theme());
-    RGB_T color = hasColorOverride_ ? colorOverride_ : this->theme().colors.onSurface;
+    RGB_T color = hasColorOverride_ ? colorOverride_
+                  : variant_        ? this->theme().colors.onSurfaceVariant
+                                    : this->theme().colors.onSurface;
     if (!this->enabled) color = blend(color, this->theme().colors.surface, 0.5f);
 
     const size_t textWidth = font.measureTextWidth(text_.c_str());
@@ -66,8 +79,11 @@ class Label : public Widget<RGB_T> {
                               : this->bounds.x;
     const int32_t textY = this->bounds.centerY() - static_cast<int32_t>(textHeight) / 2;
 
+    const RGB_T background = hasBackground_   ? background_
+                             : onBackground_ ? this->theme().colors.background
+                                             : this->theme().colors.surface;
     font.drawText(target, static_cast<int16_t>(textX), static_cast<int16_t>(textY),
-                 text_.c_str(), color, this->theme().colors.surface, false);
+                 text_.c_str(), color, background, false);
   }
 
  private:
@@ -76,6 +92,10 @@ class Label : public Widget<RGB_T> {
   TextAlign align_ = TextAlign::kStart;
   RGB_T colorOverride_{};
   bool hasColorOverride_ = false;
+  RGB_T background_{};
+  bool hasBackground_ = false;
+  bool onBackground_ = false;
+  bool variant_ = false;
   tinygpu::IFont<RGB_T>* font_ = nullptr;
 };
 

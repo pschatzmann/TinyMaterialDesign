@@ -57,6 +57,12 @@ class Keyboard : public Widget<RGB_T> {
     field.onFocus = [this, &field]() {
       if (target_ != nullptr && target_ != &field) target_->blur();
       target_ = &field;
+      // numeric keypad for number fields, letters otherwise
+      if (field.inputType() == InputType::kNumber) {
+        mode_ = Mode::kNumeric;
+      } else if (mode_ == Mode::kNumeric) {
+        mode_ = Mode::kLetters;
+      }
       this->visible = true;
     };
   }
@@ -109,7 +115,7 @@ class Keyboard : public Widget<RGB_T> {
 
  private:
   enum class Action { kChar, kShift, kBackspace, kSpace, kNewline, kEnter, kToggleSymbols };
-  enum class Mode { kLetters, kSymbols };
+  enum class Mode { kLetters, kSymbols, kNumeric };
 
   struct Key {
     Action action;
@@ -161,6 +167,18 @@ class Keyboard : public Widget<RGB_T> {
       {Action::kChar, '"', "\"", 1}, {Action::kChar, ',', ",", 1}, {Action::kChar, '.', ".", 1},
       {Action::kChar, '/', "/", 1},
   };
+  // Numeric keypad (number fields): 7-8-9 / 4-5-6 / 1-2-3 / . 0 - and a
+  // control row; "ABC" switches to the letters.
+  static constexpr Key kNum0[] = {
+      {Action::kChar, '7', "7", 1}, {Action::kChar, '8', "8", 1}, {Action::kChar, '9', "9", 1}};
+  static constexpr Key kNum1[] = {
+      {Action::kChar, '4', "4", 1}, {Action::kChar, '5', "5", 1}, {Action::kChar, '6', "6", 1}};
+  static constexpr Key kNum2[] = {
+      {Action::kChar, '1', "1", 1}, {Action::kChar, '2', "2", 1}, {Action::kChar, '3', "3", 1}};
+  static constexpr Key kNum3[] = {
+      {Action::kChar, '.', ".", 1}, {Action::kChar, '0', "0", 1}, {Action::kChar, '-', "-", 1}};
+  static constexpr Key kNum4[] = {
+      {Action::kToggleSymbols, 0, "ABC", 1}, {Action::kBackspace, 0, "<-", 1}, {Action::kEnter, 0, "Done", 1}};
   static constexpr Key kRow4[] = {
       {Action::kShift, 0, "Shift", 1.5f},
       {Action::kSpace, 0, "", 3.5f},
@@ -186,7 +204,10 @@ class Keyboard : public Widget<RGB_T> {
       size_t count;
     };
     const bool symbols = mode_ == Mode::kSymbols;
-    const Row rows[] = {
+    const Row numeric[] = {
+        {kNum0, 3}, {kNum1, 3}, {kNum2, 3}, {kNum3, 3}, {kNum4, 3},
+    };
+    const Row letters[] = {
         {kRow0, sizeof(kRow0) / sizeof(kRow0[0])},
         symbols ? Row{kRow1Symbols, sizeof(kRow1Symbols) / sizeof(kRow1Symbols[0])}
                : Row{kRow1, sizeof(kRow1) / sizeof(kRow1[0])},
@@ -196,7 +217,8 @@ class Keyboard : public Widget<RGB_T> {
                : Row{kRow3, sizeof(kRow3) / sizeof(kRow3[0])},
         {kRow4, sizeof(kRow4) / sizeof(kRow4[0])},
     };
-    constexpr size_t kRowCount = sizeof(rows) / sizeof(rows[0]);
+    const Row* rows = mode_ == Mode::kNumeric ? numeric : letters;
+    constexpr size_t kRowCount = sizeof(letters) / sizeof(letters[0]);
     const int32_t rowHeight = this->bounds.h / static_cast<int32_t>(kRowCount);
 
     for (size_t r = 0; r < kRowCount; ++r) {
@@ -243,6 +265,7 @@ class Keyboard : public Widget<RGB_T> {
         if (target_ == nullptr || target_->handleEnter()) this->visible = false;
         break;
       case Action::kToggleSymbols:
+        // letters <-> symbols; from the numeric keypad back to the letters
         mode_ = (mode_ == Mode::kLetters) ? Mode::kSymbols : Mode::kLetters;
         break;
     }
