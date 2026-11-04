@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['textalign_0',['TextAlign',['../namespacetinymd.html#abdd7e81d0fb7db7f8a4e6465765bac0b',1,'tinymd']]],
-  ['typographyrole_1',['TypographyRole',['../namespacetinymd.html#a5a7184b2d3e760908141409546b77df7',1,'tinymd']]]
+  ['state_0',['State',['../classtinymd_1_1WifiControl.html#a5d74787dedbc4e11c1ab15bf487e61f8',1,'tinymd::WifiControl']]]
 ];

@@ -1,0 +1,10 @@
+<map id="src/TinyMaterialDesign/Wifi/WifiEsp32.h" name="src/TinyMaterialDesign/Wifi/WifiEsp32.h">
+<area shape="rect" id="node1" title="The WiFi of the ESP32 for WifiLoginPage. Not part of TinyMaterialDesign.h: include it in ESP32 sketch..." alt="" coords="84,5,256,50"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,106,116,134"/>
+<area shape="rect" id="node3" title=" " alt="" coords="139,106,200,134"/>
+<area shape="rect" id="node4" href="$WifiControl_8h.html" title=" " alt="" coords="225,98,373,143"/>
+<area shape="rect" id="node5" title=" " alt="" coords="115,191,185,218"/>
+<area shape="rect" id="node6" title=" " alt="" coords="209,191,293,218"/>
+<area shape="rect" id="node7" title=" " alt="" coords="318,191,376,218"/>
+<area shape="rect" id="node8" title=" " alt="" coords="400,191,462,218"/>
+</map>

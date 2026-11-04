@@ -92,7 +92,7 @@ Inheritance diagram for SearchBar&lt; RGB_T &gt;:</div>
 <map name="aSearchBar_3_01RGB__T_01_4_inherit__map" id="aSearchBar_3_01RGB__T_01_4_inherit__map">
 <area shape="rect" title="Pill&#45;shaped search input: leading magnifier glyph, typed text, and a trailing &quot;x&quot; clear glyph shown o..." alt="" coords="73,81,233,109"/>
 <area shape="rect" href="classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="5,5,146,33"/>
-<area shape="rect" href="classtinymd_1_1TextInputTarget.html" title="Minimal interface a Keyboard drives." alt="" coords="170,5,291,33"/>
+<area shape="rect" href="classtinymd_1_1TextInputTarget.html" title=" " alt="" coords="170,5,291,33"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -107,7 +107,7 @@ Collaboration diagram for SearchBar&lt; RGB_T &gt;:</div>
 <area shape="rect" href="structtinymd_1_1ColorScheme.html" title=" " alt="" coords="5,5,180,50"/>
 <area shape="rect" href="structtinymd_1_1ShapeTokens.html" title="Material 3 shape&#45;scale corner radii, in pixels." alt="" coords="204,14,309,42"/>
 <area shape="rect" href="structtinymd_1_1Typography.html" title=" " alt="" coords="334,5,497,50"/>
-<area shape="rect" href="classtinymd_1_1TextInputTarget.html" title="Minimal interface a Keyboard drives." alt="" coords="238,225,360,252"/>
+<area shape="rect" href="classtinymd_1_1TextInputTarget.html" title=" " alt="" coords="238,225,360,252"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -172,6 +172,9 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classtinymd_1_1TextInputTarget"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtinymd_1_1TextInputTarget')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtinymd_1_1TextInputTarget.html">TextInputTarget</a></td></tr>
 <tr class="memitem:a61fd6ec6c5cac452dec5a334658eefa7 inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#a61fd6ec6c5cac452dec5a334658eefa7">~TextInputTarget</a> ()=default</td></tr>
 <tr class="separator:a61fd6ec6c5cac452dec5a334658eefa7 inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0837720431074b4edebb73362a55603 inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacetinymd.html#a5fc772c800c3d40d2b95564e8a839bab">InputType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#ac0837720431074b4edebb73362a55603">inputType</a> () const</td></tr>
+<tr class="memdesc:ac0837720431074b4edebb73362a55603 inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="mdescLeft">&#160;</td><td class="mdescRight">The kind of input - <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> picks its layout from it. Default: text.  <br /></td></tr>
+<tr class="separator:ac0837720431074b4edebb73362a55603 inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3bf79a890a2dac8517207115db62ecd inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#ab3bf79a890a2dac8517207115db62ecd">insertChar</a> (char c)=0</td></tr>
 <tr class="separator:ab3bf79a890a2dac8517207115db62ecd inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8f6ecead49fe5ddc439782ed65140ce inherit pub_methods_classtinymd_1_1TextInputTarget"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#af8f6ecead49fe5ddc439782ed65140ce">backspace</a> ()=0</td></tr>
@@ -210,7 +213,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename RGB_T = TINYMD_DEFAULT_RGB_T&gt;<br />
 class tinymd::SearchBar&lt; RGB_T &gt;</div><p>Pill-shaped search input: leading magnifier glyph, typed text, and a trailing "x" clear glyph shown once there's something to clear. </p>
-<p>Implements <a class="el" href="classtinymd_1_1TextInputTarget.html" title="Minimal interface a Keyboard drives.">TextInputTarget</a> the same way <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a> does, so it can be driven by a <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> via <a class="el" href="classtinymd_1_1Keyboard.html#a2ace5fe06c0a249ff376b456bb877c2d">Keyboard::manage()</a> - see <a class="el" href="TextField_8h.html">TextField.h</a>'s class comment for the field/keyboard wiring example, which applies here unchanged. Enter submits, same single-line semantics as <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a>. </p>
+<p>Implements <a class="el" href="classtinymd_1_1TextInputTarget.html">TextInputTarget</a> the same way <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a> does, so it can be driven by a <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> via <a class="el" href="classtinymd_1_1Keyboard.html#a2ace5fe06c0a249ff376b456bb877c2d">Keyboard::manage()</a> - see <a class="el" href="TextField_8h.html">TextField.h</a>'s class comment for the field/keyboard wiring example, which applies here unchanged. Enter submits, same single-line semantics as <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7d0c71d13600b843bb11ba8abc635ec9" name="a7d0c71d13600b843bb11ba8abc635ec9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7d0c71d13600b843bb11ba8abc635ec9">&#9670;&#160;</a></span>SearchBar() <span class="overload">[1/2]</span></h2>

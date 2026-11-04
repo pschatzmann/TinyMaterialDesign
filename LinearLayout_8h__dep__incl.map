@@ -1,9 +1,11 @@
 <map id="src/TinyMaterialDesign/Core/LinearLayout.h" name="src/TinyMaterialDesign/Core/LinearLayout.h">
-<area shape="rect" id="node1" title=" " alt="" coords="230,5,401,50"/>
-<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="216,283,399,311"/>
-<area shape="rect" id="node3" href="$SplitLayout_8h.html" title=" " alt="" coords="34,191,205,235"/>
-<area shape="rect" id="node4" href="$NavigationBar_8h.html" title=" " alt="" coords="157,98,343,143"/>
-<area shape="rect" id="node5" href="$NavigationRail_8h.html" title=" " alt="" coords="279,191,469,235"/>
-<area shape="rect" id="node6" href="$SegmentedButton_8h.html" title=" " alt="" coords="494,191,705,235"/>
-<area shape="rect" id="node7" href="$TabBar_8h.html" title=" " alt="" coords="604,98,776,143"/>
+<area shape="rect" id="node1" title=" " alt="" coords="338,5,510,50"/>
+<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="258,376,441,404"/>
+<area shape="rect" id="node3" href="$SplitLayout_8h.html" title=" " alt="" coords="25,283,196,328"/>
+<area shape="rect" id="node4" href="$NavigationBar_8h.html" title=" " alt="" coords="265,98,452,143"/>
+<area shape="rect" id="node7" href="$NavigationRail_8h.html" title=" " alt="" coords="450,191,640,235"/>
+<area shape="rect" id="node8" href="$SegmentedButton_8h.html" title=" " alt="" coords="665,191,876,235"/>
+<area shape="rect" id="node9" href="$TabBar_8h.html" title=" " alt="" coords="782,98,954,143"/>
+<area shape="rect" id="node5" href="$Page_8h.html" title=" " alt="" coords="254,191,426,235"/>
+<area shape="rect" id="node6" href="$WifiLoginPage_8h.html" title=" " alt="" coords="322,283,507,328"/>
 </map>

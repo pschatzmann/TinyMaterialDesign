@@ -1,0 +1,4 @@
+<map id="Esp32Wifi" name="Esp32Wifi">
+<area shape="rect" id="node1" title="WifiControl for the ESP32: asynchronous scan and connection, the credentials are stored in the flash ..." alt="" coords="9,81,95,109"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1WifiControl.html" title="The WiFi of a device as WifiLoginPage uses it: scan, connect and the stored credentials...." alt="" coords="5,5,99,33"/>
+</map>

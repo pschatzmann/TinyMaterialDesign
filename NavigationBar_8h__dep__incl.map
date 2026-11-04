@@ -1,5 +1,7 @@
 <map id="src/TinyMaterialDesign/Widgets/NavigationBar.h" name="src/TinyMaterialDesign/Widgets/NavigationBar.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,192,50"/>
-<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="7,191,190,218"/>
-<area shape="rect" id="node3" href="$NavigationRail_8h.html" title=" " alt="" coords="70,98,260,143"/>
+<area shape="rect" id="node1" title=" " alt="" coords="40,5,226,50"/>
+<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="5,283,189,311"/>
+<area shape="rect" id="node3" href="$Page_8h.html" title=" " alt="" coords="47,98,219,143"/>
+<area shape="rect" id="node5" href="$NavigationRail_8h.html" title=" " alt="" coords="279,191,470,235"/>
+<area shape="rect" id="node4" href="$WifiLoginPage_8h.html" title=" " alt="" coords="70,191,255,235"/>
 </map>

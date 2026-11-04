@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['gridlayout_0',['GridLayout',['../classtinymd_1_1GridLayout.html',1,'tinymd']]]
+  ['floatingactionbutton_0',['FloatingActionButton',['../classtinymd_1_1FloatingActionButton.html',1,'tinymd']]],
+  ['flowlayout_1',['FlowLayout',['../classtinymd_1_1FlowLayout.html',1,'tinymd']]]
 ];

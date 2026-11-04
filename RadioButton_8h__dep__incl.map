@@ -1,4 +1,6 @@
 <map id="src/TinyMaterialDesign/Widgets/RadioButton.h" name="src/TinyMaterialDesign/Widgets/RadioButton.h">
-<area shape="rect" id="node1" title=" " alt="" coords="10,5,184,50"/>
-<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="5,98,189,126"/>
+<area shape="rect" id="node1" title=" " alt="" coords="22,5,196,50"/>
+<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="5,283,189,311"/>
+<area shape="rect" id="node3" href="$SettingRows_8h.html" title="Rows for settings and detail pages: a caption combined with a control or a value. Each row is one wid..." alt="" coords="84,98,259,143"/>
+<area shape="rect" id="node4" href="$WifiLoginPage_8h.html" title=" " alt="" coords="135,191,320,235"/>
 </map>

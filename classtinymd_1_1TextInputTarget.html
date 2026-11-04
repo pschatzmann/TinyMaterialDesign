@@ -80,19 +80,17 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Minimal interface a <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> drives.  
- <a href="classtinymd_1_1TextInputTarget.html#details">More...</a></p>
-
 <p><code>#include &lt;<a class="el" href="TextInputTarget_8h_source.html">TextInputTarget.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for TextInputTarget:</div>
 <div class="dyncontent">
 <div class="center"><img src="classtinymd_1_1TextInputTarget__inherit__graph.png" border="0" usemap="#aTextInputTarget_inherit__map" alt="Inheritance graph"/></div>
 <map name="aTextInputTarget_inherit__map" id="aTextInputTarget_inherit__map">
-<area shape="rect" title="Minimal interface a Keyboard drives." alt="" coords="205,5,326,33"/>
-<area shape="rect" href="classtinymd_1_1SearchBar.html" title="Pill&#45;shaped search input: leading magnifier glyph, typed text, and a trailing &quot;x&quot; clear glyph shown o..." alt="" coords="5,81,166,109"/>
-<area shape="rect" href="classtinymd_1_1TextArea.html" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="190,81,341,109"/>
-<area shape="rect" href="classtinymd_1_1TextField.html" title="Single&#45;line text input box." alt="" coords="365,81,518,109"/>
+<area shape="rect" title=" " alt="" coords="5,100,127,128"/>
+<area shape="rect" href="classtinymd_1_1TextField.html" title=" " alt="" coords="175,5,385,50"/>
+<area shape="rect" href="classtinymd_1_1SearchBar.html" title="Pill&#45;shaped search input: leading magnifier glyph, typed text, and a trailing &quot;x&quot; clear glyph shown o..." alt="" coords="200,74,360,102"/>
+<area shape="rect" href="classtinymd_1_1TextArea.html" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="204,126,356,154"/>
+<area shape="rect" href="classtinymd_1_1TextField.html" title="Single&#45;line text input box." alt="" coords="204,178,356,206"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -100,6 +98,9 @@ Inheritance diagram for TextInputTarget:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a61fd6ec6c5cac452dec5a334658eefa7"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#a61fd6ec6c5cac452dec5a334658eefa7">~TextInputTarget</a> ()=default</td></tr>
 <tr class="separator:a61fd6ec6c5cac452dec5a334658eefa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0837720431074b4edebb73362a55603"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacetinymd.html#a5fc772c800c3d40d2b95564e8a839bab">InputType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#ac0837720431074b4edebb73362a55603">inputType</a> () const</td></tr>
+<tr class="memdesc:ac0837720431074b4edebb73362a55603"><td class="mdescLeft">&#160;</td><td class="mdescRight">The kind of input - <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> picks its layout from it. Default: text.  <br /></td></tr>
+<tr class="separator:ac0837720431074b4edebb73362a55603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3bf79a890a2dac8517207115db62ecd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#ab3bf79a890a2dac8517207115db62ecd">insertChar</a> (char c)=0</td></tr>
 <tr class="separator:ab3bf79a890a2dac8517207115db62ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8f6ecead49fe5ddc439782ed65140ce"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#af8f6ecead49fe5ddc439782ed65140ce">backspace</a> ()=0</td></tr>
@@ -109,11 +110,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2848fe7883a11b1ebc82e74183045917"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextInputTarget.html#a2848fe7883a11b1ebc82e74183045917">handleEnter</a> ()=0</td></tr>
 <tr class="separator:a2848fe7883a11b1ebc82e74183045917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Minimal interface a <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> drives. </p>
-<p><a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a> and <a class="el" href="classtinymd_1_1TextArea.html" title="Multi-line, word-wrapped text input box.">TextArea</a> both implement this alongside Widget&lt;RGB_T&gt;, so a single <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> can serve either kind of field interchangeably via <a class="el" href="classtinymd_1_1Keyboard.html#a2ace5fe06c0a249ff376b456bb877c2d">Keyboard::manage()</a> - it only ever talks to its target through this interface, never caring which concrete widget it's driving.</p>
-<p>Not templated on RGB_T: character insertion has nothing to do with pixel format, and keeping this interface non-generic is what lets <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> (which <em>is</em> templated on RGB_T, since it draws itself) hold a single <code>TextInputTarget*</code> regardless of the field's color type. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a61fd6ec6c5cac452dec5a334658eefa7" name="a61fd6ec6c5cac452dec5a334658eefa7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a61fd6ec6c5cac452dec5a334658eefa7">&#9670;&#160;</a></span>~TextInputTarget()</h2>
 
@@ -163,7 +160,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#a1be47686c1837fd353721bcbf5451d82">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#a1be47686c1837fd353721bcbf5451d82">TextArea&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#a1be47686c1837fd353721bcbf5451d82">TextField&lt; RGB_T &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#a1be47686c1837fd353721bcbf5451d82">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#a1be47686c1837fd353721bcbf5451d82">TextArea&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextField.html#a1be47686c1837fd353721bcbf5451d82">TextField&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#a1be47686c1837fd353721bcbf5451d82">TextField&lt; TINYMD_DEFAULT_RGB_T &gt;</a>.</p>
 
 </div>
 </div>
@@ -190,7 +187,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#a85c44bdde3c4f51956118745e6cc9ae6">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#a85c44bdde3c4f51956118745e6cc9ae6">TextArea&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#a85c44bdde3c4f51956118745e6cc9ae6">TextField&lt; RGB_T &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#a85c44bdde3c4f51956118745e6cc9ae6">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#a85c44bdde3c4f51956118745e6cc9ae6">TextArea&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextField.html#a85c44bdde3c4f51956118745e6cc9ae6">TextField&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#a85c44bdde3c4f51956118745e6cc9ae6">TextField&lt; TINYMD_DEFAULT_RGB_T &gt;</a>.</p>
 
 </div>
 </div>
@@ -219,7 +216,36 @@ Public Member Functions</h2></td></tr>
 <p>Called when the keyboard's Done key is tapped (a separate Enter key handles literal newlines via insertChar('<br  />
 ') directly, without going through this). </p><dl class="section return"><dt>Returns</dt><dd>true if the keyboard should hide itself afterward - both <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a> and <a class="el" href="classtinymd_1_1TextArea.html" title="Multi-line, word-wrapped text input box.">TextArea</a> return true here, since Done always means "finished editing", but the interface leaves room for a future field that wants Done to keep editing open instead. </dd></dl>
 
-<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#a66ebec5bbf65f734ea7b235fce8484d6">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#a66ebec5bbf65f734ea7b235fce8484d6">TextArea&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#a66ebec5bbf65f734ea7b235fce8484d6">TextField&lt; RGB_T &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#a66ebec5bbf65f734ea7b235fce8484d6">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#a66ebec5bbf65f734ea7b235fce8484d6">TextArea&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextField.html#a66ebec5bbf65f734ea7b235fce8484d6">TextField&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#a66ebec5bbf65f734ea7b235fce8484d6">TextField&lt; TINYMD_DEFAULT_RGB_T &gt;</a>.</p>
+
+</div>
+</div>
+<a id="ac0837720431074b4edebb73362a55603" name="ac0837720431074b4edebb73362a55603"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0837720431074b4edebb73362a55603">&#9670;&#160;</a></span>inputType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacetinymd.html#a5fc772c800c3d40d2b95564e8a839bab">InputType</a> inputType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The kind of input - <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a> picks its layout from it. Default: text. </p>
+
+<p>Reimplemented in <a class="el" href="classtinymd_1_1TextField.html#a67d0a5a93d99075878721e0b530cac9c">TextField&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#a67d0a5a93d99075878721e0b530cac9c">TextField&lt; TINYMD_DEFAULT_RGB_T &gt;</a>.</p>
 
 </div>
 </div>
@@ -247,7 +273,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#ad773b28a7ee457c6e7344bcac88946cd">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#ad773b28a7ee457c6e7344bcac88946cd">TextArea&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#ad773b28a7ee457c6e7344bcac88946cd">TextField&lt; RGB_T &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classtinymd_1_1SearchBar.html#ad773b28a7ee457c6e7344bcac88946cd">SearchBar&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextArea.html#ad773b28a7ee457c6e7344bcac88946cd">TextArea&lt; RGB_T &gt;</a>, <a class="el" href="classtinymd_1_1TextField.html#ad773b28a7ee457c6e7344bcac88946cd">TextField&lt; RGB_T &gt;</a>, and <a class="el" href="classtinymd_1_1TextField.html#ad773b28a7ee457c6e7344bcac88946cd">TextField&lt; TINYMD_DEFAULT_RGB_T &gt;</a>.</p>
 
 </div>
 </div>

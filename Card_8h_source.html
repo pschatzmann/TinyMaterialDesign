@@ -117,72 +117,88 @@ $(function() {
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">this</span>-&gt;bounds = bounds;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  }</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classtinymd_1_1Card.html#aa9b29dcd644b6729d8be1b9edef7112c">   42</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classtinymd_1_1Card.html#aa9b29dcd644b6729d8be1b9edef7112c">draw</a>(tinygpu::ISurface&lt;RGB_T&gt;&amp; target) <span class="keyword">override</span> {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">const</span> size_t radius = toPx(<span class="keyword">this</span>-&gt;theme().shape.medium);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classtinymd_1_1Card.html#a6d449b82ad7473e3de33d99af35ad212">elevated</a>) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keyword">const</span> RGB_T shadow = blend(<span class="keyword">this</span>-&gt;theme().colors.surface, <span class="keyword">this</span>-&gt;theme().colors.onBackground, 0.30f);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      target.fillRoundRect(toPx(<span class="keyword">this</span>-&gt;bounds.x + 1), toPx(<span class="keyword">this</span>-&gt;bounds.y + 2),</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                           toPx(<span class="keyword">this</span>-&gt;bounds.w), toPx(<span class="keyword">this</span>-&gt;bounds.h), radius, shadow);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    target.fillRoundRect(toPx(<span class="keyword">this</span>-&gt;bounds.x), toPx(<span class="keyword">this</span>-&gt;bounds.y), toPx(<span class="keyword">this</span>-&gt;bounds.w),</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                         toPx(<span class="keyword">this</span>-&gt;bounds.h), radius, <span class="keyword">this</span>-&gt;theme().colors.surface);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    target.drawRoundRect(toPx(<span class="keyword">this</span>-&gt;bounds.x), toPx(<span class="keyword">this</span>-&gt;bounds.y), toPx(<span class="keyword">this</span>-&gt;bounds.w),</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                         toPx(<span class="keyword">this</span>-&gt;bounds.h), radius, <span class="keyword">this</span>-&gt;theme().colors.outline);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="comment">/// Color of the border (default: the outline color of the theme), e.g. an</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="comment">/// accent for a highlighted card.</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classtinymd_1_1Card.html#ac3956ad3c7358f0bdc358552873d5b22">   44</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classtinymd_1_1Card.html#ac3956ad3c7358f0bdc358552873d5b22">setOutlineColor</a>(RGB_T color) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    outline_ = color;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    hasOutline_ = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classtinymd_1_1Card.html#a016f95eec05fbad3a14b33ed8102ee76">   48</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classtinymd_1_1Card.html#a016f95eec05fbad3a14b33ed8102ee76">clearOutlineColor</a>() { hasOutline_ = <span class="keyword">false</span>; }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="comment">/// Corner radius from the theme&#39;s large shape instead of the medium one.</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classtinymd_1_1Card.html#a3c88b3d84a9ed9d41974ab57593a59d8">   51</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classtinymd_1_1Card.html#a3c88b3d84a9ed9d41974ab57593a59d8">largeCorners</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classtinymd_1_1Card.html#aa9b29dcd644b6729d8be1b9edef7112c">   53</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classtinymd_1_1Card.html#aa9b29dcd644b6729d8be1b9edef7112c">draw</a>(tinygpu::ISurface&lt;RGB_T&gt;&amp; target) <span class="keyword">override</span> {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">const</span> size_t radius = toPx(largeCorners ? <span class="keyword">this</span>-&gt;theme().shape.large : <span class="keyword">this</span>-&gt;theme().shape.medium);</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">const</span> int32_t pad = <span class="keyword">this</span>-&gt;theme().spacing;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    int32_t cursorY = <span class="keyword">this</span>-&gt;bounds.y + pad;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">if</span> (hasTitle_) {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      tinygpu::IFont&lt;RGB_T&gt;&amp; titleFont = *<span class="keyword">this</span>-&gt;theme().typography.title;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      titleFont.drawText(target, <span class="keyword">static_cast</span>&lt;int16_t&gt;(<span class="keyword">this</span>-&gt;bounds.x + pad),</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                         <span class="keyword">static_cast</span>&lt;int16_t&gt;(cursorY), title_.c_str(), <span class="keyword">this</span>-&gt;theme().colors.onSurface,</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                         <span class="keyword">this</span>-&gt;theme().colors.surface, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      cursorY += <span class="keyword">static_cast</span>&lt;int32_t&gt;(titleFont.getHeight(1)) + pad / 2;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classtinymd_1_1Card.html#a6d449b82ad7473e3de33d99af35ad212">elevated</a>) {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keyword">const</span> RGB_T shadow = blend(<span class="keyword">this</span>-&gt;theme().colors.surface, <span class="keyword">this</span>-&gt;theme().colors.onBackground, 0.30f);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      target.fillRoundRect(toPx(<span class="keyword">this</span>-&gt;bounds.x + 1), toPx(<span class="keyword">this</span>-&gt;bounds.y + 2),</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                           toPx(<span class="keyword">this</span>-&gt;bounds.w), toPx(<span class="keyword">this</span>-&gt;bounds.h), radius, shadow);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    target.fillRoundRect(toPx(<span class="keyword">this</span>-&gt;bounds.x), toPx(<span class="keyword">this</span>-&gt;bounds.y), toPx(<span class="keyword">this</span>-&gt;bounds.w),</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                         toPx(<span class="keyword">this</span>-&gt;bounds.h), radius, <span class="keyword">this</span>-&gt;theme().colors.surface);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    target.drawRoundRect(toPx(<span class="keyword">this</span>-&gt;bounds.x), toPx(<span class="keyword">this</span>-&gt;bounds.y), toPx(<span class="keyword">this</span>-&gt;bounds.w),</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                         toPx(<span class="keyword">this</span>-&gt;bounds.h), radius, hasOutline_ ? outline_ : <span class="keyword">this</span>-&gt;theme().colors.outline);</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordflow">if</span> (hasBody_) {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      <span class="comment">// LinePrinter&#39;s borders are measured from the *target surface&#39;s*</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      <span class="comment">// edges (it&#39;s designed for &quot;print with margins&quot;, not &quot;wrap inside an</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <span class="comment">// arbitrary rect&quot;) - so the right border has to be back-computed from</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="comment">// the card&#39;s right edge rather than set directly.</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      <span class="keyword">const</span> int32_t rightEdge = <span class="keyword">this</span>-&gt;bounds.right() - pad;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      <span class="keyword">const</span> size_t rightBorder =</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>          rightEdge &lt; <span class="keyword">static_cast</span>&lt;int32_t&gt;(target.width())</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>              ? target.width() - <span class="keyword">static_cast</span>&lt;size_t&gt;(rightEdge)</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>              : 0;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">const</span> int32_t pad = <span class="keyword">this</span>-&gt;theme().spacing;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    int32_t cursorY = <span class="keyword">this</span>-&gt;bounds.y + pad;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">if</span> (hasTitle_) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      tinygpu::IFont&lt;RGB_T&gt;&amp; titleFont = *<span class="keyword">this</span>-&gt;theme().typography.title;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      titleFont.drawText(target, <span class="keyword">static_cast</span>&lt;int16_t&gt;(<span class="keyword">this</span>-&gt;bounds.x + pad),</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                         <span class="keyword">static_cast</span>&lt;int16_t&gt;(cursorY), title_.c_str(), <span class="keyword">this</span>-&gt;theme().colors.onSurface,</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                         <span class="keyword">this</span>-&gt;theme().colors.surface, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      cursorY += <span class="keyword">static_cast</span>&lt;int32_t&gt;(titleFont.getHeight(1)) + pad / 2;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    }</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      tinygpu::LinePrinter&lt;RGB_T&gt; printer;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      printer.setFont(*<span class="keyword">this</span>-&gt;theme().typography.body);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      printer.setTarget(target);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      printer.setColor(<span class="keyword">this</span>-&gt;theme().colors.onSurfaceVariant);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      printer.setTopBorder(toPx(cursorY));</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      printer.setLeftBorder(toPx(<span class="keyword">this</span>-&gt;bounds.x + pad));</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      printer.setRightBorder(rightBorder);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>      printer.print(body_.c_str());</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    }</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">if</span> (hasBody_) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      <span class="comment">// LinePrinter&#39;s borders are measured from the *target surface&#39;s*</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <span class="comment">// edges (it&#39;s designed for &quot;print with margins&quot;, not &quot;wrap inside an</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="comment">// arbitrary rect&quot;) - so the right border has to be back-computed from</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <span class="comment">// the card&#39;s right edge rather than set directly.</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      <span class="keyword">const</span> int32_t rightEdge = <span class="keyword">this</span>-&gt;bounds.right() - pad;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      <span class="keyword">const</span> size_t rightBorder =</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>          rightEdge &lt; <span class="keyword">static_cast</span>&lt;int32_t&gt;(target.width())</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>              ? target.width() - <span class="keyword">static_cast</span>&lt;size_t&gt;(rightEdge)</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>              : 0;</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  std::string title_;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  std::string body_;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keywordtype">bool</span> hasTitle_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keywordtype">bool</span> hasBody_ = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>};</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="namespacetinymd.html#a533153b9b4e8b96b3aa534f177c8a0ab">   96</a></span><span class="keyword">using</span> <a class="code hl_namespace" href="namespacetinymd.html">CardRGB565</a> = <a class="code hl_namespace" href="namespacetinymd.html">Card</a>&lt;<a class="code hl_namespace" href="namespacetinymd.html">tinygpu</a>::<a class="code hl_namespace" href="namespacetinymd.html">RGB565</a>&gt;;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="namespacetinymd.html#a5291f2bd4619e09d21395864e088a208">   97</a></span><span class="keyword">using</span> <a class="code hl_namespace" href="namespacetinymd.html">CardRGB666</a> = <a class="code hl_namespace" href="namespacetinymd.html">Card</a>&lt;<a class="code hl_namespace" href="namespacetinymd.html">tinygpu</a>::<a class="code hl_namespace" href="namespacetinymd.html">RGB666</a>&gt;;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="namespacetinymd.html#a7d0014fae8589425fc58ec1ed8a18aa8">   98</a></span><span class="keyword">using</span> <a class="code hl_namespace" href="namespacetinymd.html">CardRGB888</a> = <a class="code hl_namespace" href="namespacetinymd.html">Card</a>&lt;<a class="code hl_namespace" href="namespacetinymd.html">tinygpu</a>::<a class="code hl_namespace" href="namespacetinymd.html">RGB888</a>&gt;;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      tinygpu::LinePrinter&lt;RGB_T&gt; printer;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      printer.setFont(*<span class="keyword">this</span>-&gt;theme().typography.body);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      printer.setTarget(target);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      printer.setColor(<span class="keyword">this</span>-&gt;theme().colors.onSurfaceVariant);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      printer.setTopBorder(toPx(cursorY));</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      printer.setLeftBorder(toPx(<span class="keyword">this</span>-&gt;bounds.x + pad));</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      printer.setRightBorder(rightBorder);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>      printer.print(body_.c_str());</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  }</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}  <span class="comment">// namespace tinymd</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  std::string title_;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  std::string body_;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="keywordtype">bool</span> hasTitle_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keywordtype">bool</span> hasBody_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  RGB_T outline_{};</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keywordtype">bool</span> hasOutline_ = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>};</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="namespacetinymd.html#a533153b9b4e8b96b3aa534f177c8a0ab">  109</a></span><span class="keyword">using</span> <a class="code hl_namespace" href="namespacetinymd.html">CardRGB565</a> = <a class="code hl_namespace" href="namespacetinymd.html">Card</a>&lt;<a class="code hl_namespace" href="namespacetinymd.html">tinygpu</a>::<a class="code hl_namespace" href="namespacetinymd.html">RGB565</a>&gt;;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="namespacetinymd.html#a5291f2bd4619e09d21395864e088a208">  110</a></span><span class="keyword">using</span> <a class="code hl_namespace" href="namespacetinymd.html">CardRGB666</a> = <a class="code hl_namespace" href="namespacetinymd.html">Card</a>&lt;<a class="code hl_namespace" href="namespacetinymd.html">tinygpu</a>::<a class="code hl_namespace" href="namespacetinymd.html">RGB666</a>&gt;;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="namespacetinymd.html#a7d0014fae8589425fc58ec1ed8a18aa8">  111</a></span><span class="keyword">using</span> <a class="code hl_namespace" href="namespacetinymd.html">CardRGB888</a> = <a class="code hl_namespace" href="namespacetinymd.html">Card</a>&lt;<a class="code hl_namespace" href="namespacetinymd.html">tinygpu</a>::<a class="code hl_namespace" href="namespacetinymd.html">RGB888</a>&gt;;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}  <span class="comment">// namespace tinymd</span></div>
 <div class="ttc" id="aclasstinymd_1_1Card_html"><div class="ttname"><a href="classtinymd_1_1Card.html">tinymd::Card</a></div><div class="ttdoc">Elevated rounded-rect container with an optional title and word-wrapped body text.</div><div class="ttdef"><b>Definition:</b> Card.h:15</div></div>
+<div class="ttc" id="aclasstinymd_1_1Card_html_a016f95eec05fbad3a14b33ed8102ee76"><div class="ttname"><a href="classtinymd_1_1Card.html#a016f95eec05fbad3a14b33ed8102ee76">tinymd::Card::clearOutlineColor</a></div><div class="ttdeci">void clearOutlineColor()</div><div class="ttdef"><b>Definition:</b> Card.h:48</div></div>
 <div class="ttc" id="aclasstinymd_1_1Card_html_a3458958786a90125286f519f751cca2b"><div class="ttname"><a href="classtinymd_1_1Card.html#a3458958786a90125286f519f751cca2b">tinymd::Card::setBody</a></div><div class="ttdeci">void setBody(const char *body)</div><div class="ttdef"><b>Definition:</b> Card.h:33</div></div>
+<div class="ttc" id="aclasstinymd_1_1Card_html_a3c88b3d84a9ed9d41974ab57593a59d8"><div class="ttname"><a href="classtinymd_1_1Card.html#a3c88b3d84a9ed9d41974ab57593a59d8">tinymd::Card::largeCorners</a></div><div class="ttdeci">bool largeCorners</div><div class="ttdoc">Corner radius from the theme's large shape instead of the medium one.</div><div class="ttdef"><b>Definition:</b> Card.h:51</div></div>
 <div class="ttc" id="aclasstinymd_1_1Card_html_a6d449b82ad7473e3de33d99af35ad212"><div class="ttname"><a href="classtinymd_1_1Card.html#a6d449b82ad7473e3de33d99af35ad212">tinymd::Card::elevated</a></div><div class="ttdeci">bool elevated</div><div class="ttdef"><b>Definition:</b> Card.h:26</div></div>
 <div class="ttc" id="aclasstinymd_1_1Card_html_a739e1c40665e6ef96b281afcdd96068f"><div class="ttname"><a href="classtinymd_1_1Card.html#a739e1c40665e6ef96b281afcdd96068f">tinymd::Card::Card</a></div><div class="ttdeci">Card(Bounds bounds, const char *title=nullptr, const char *body=nullptr)</div><div class="ttdef"><b>Definition:</b> Card.h:18</div></div>
 <div class="ttc" id="aclasstinymd_1_1Card_html_aa8a9a31265993b3aa8534ecbaedd3862"><div class="ttname"><a href="classtinymd_1_1Card.html#aa8a9a31265993b3aa8534ecbaedd3862">tinymd::Card::setBounds</a></div><div class="ttdeci">void setBounds(Bounds bounds)</div><div class="ttdef"><b>Definition:</b> Card.h:38</div></div>
-<div class="ttc" id="aclasstinymd_1_1Card_html_aa9b29dcd644b6729d8be1b9edef7112c"><div class="ttname"><a href="classtinymd_1_1Card.html#aa9b29dcd644b6729d8be1b9edef7112c">tinymd::Card::draw</a></div><div class="ttdeci">void draw(tinygpu::ISurface&lt; RGB_T &gt; &amp;target) override</div><div class="ttdef"><b>Definition:</b> Card.h:42</div></div>
+<div class="ttc" id="aclasstinymd_1_1Card_html_aa9b29dcd644b6729d8be1b9edef7112c"><div class="ttname"><a href="classtinymd_1_1Card.html#aa9b29dcd644b6729d8be1b9edef7112c">tinymd::Card::draw</a></div><div class="ttdeci">void draw(tinygpu::ISurface&lt; RGB_T &gt; &amp;target) override</div><div class="ttdef"><b>Definition:</b> Card.h:53</div></div>
 <div class="ttc" id="aclasstinymd_1_1Card_html_abe2e50a232bad4a94bed067db8316f2f"><div class="ttname"><a href="classtinymd_1_1Card.html#abe2e50a232bad4a94bed067db8316f2f">tinymd::Card::Card</a></div><div class="ttdeci">Card()=default</div></div>
+<div class="ttc" id="aclasstinymd_1_1Card_html_ac3956ad3c7358f0bdc358552873d5b22"><div class="ttname"><a href="classtinymd_1_1Card.html#ac3956ad3c7358f0bdc358552873d5b22">tinymd::Card::setOutlineColor</a></div><div class="ttdeci">void setOutlineColor(RGB_T color)</div><div class="ttdef"><b>Definition:</b> Card.h:44</div></div>
 <div class="ttc" id="aclasstinymd_1_1Card_html_acce946de612c75a27238ad2442c688a0"><div class="ttname"><a href="classtinymd_1_1Card.html#acce946de612c75a27238ad2442c688a0">tinymd::Card::setTitle</a></div><div class="ttdeci">void setTitle(const char *title)</div><div class="ttdef"><b>Definition:</b> Card.h:28</div></div>
 <div class="ttc" id="aclasstinymd_1_1Widget_html"><div class="ttname"><a href="classtinymd_1_1Widget.html">tinymd::Widget</a></div><div class="ttdoc">Base class every TinyMaterialDesign widget derives from.</div><div class="ttdef"><b>Definition:</b> Widget.h:58</div></div>
 <div class="ttc" id="anamespacetinymd_html"><div class="ttname"><a href="namespacetinymd.html">tinymd</a></div><div class="ttdef"><b>Definition:</b> AnchorLayout.h:4</div></div>

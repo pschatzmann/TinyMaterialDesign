@@ -117,6 +117,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6505ecf8b16a12f94c3cfe5c693e2a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72e7f257dab92ad1cf73cc609deca649"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Menu.html#a72e7f257dab92ad1cf73cc609deca649">addItem</a> (<a class="el" href="classtinymd_1_1Widget.html">Widget</a>&lt; RGB_T &gt; &amp;item)</td></tr>
 <tr class="separator:a72e7f257dab92ad1cf73cc609deca649"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa236b0d36b5d4f6a45c32b9d0e00f44b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Menu.html#aa236b0d36b5d4f6a45c32b9d0e00f44b">clearItems</a> ()</td></tr>
+<tr class="memdesc:aa236b0d36b5d4f6a45c32b9d0e00f44b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all items (they are not deleted) - e.g. to fill the menu anew.  <br /></td></tr>
+<tr class="separator:aa236b0d36b5d4f6a45c32b9d0e00f44b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d29c826f44bf9543f072669dcb0e5f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Menu.html#a4d29c826f44bf9543f072669dcb0e5f6">setItemProvider</a> (typename <a class="el" href="classtinymd_1_1Container.html">Container</a>&lt; RGB_T &gt;::ChildCountFn count, typename <a class="el" href="classtinymd_1_1Container.html">Container</a>&lt; RGB_T &gt;::ChildAtFn at)</td></tr>
 <tr class="separator:a4d29c826f44bf9543f072669dcb0e5f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae24393752daf896bec02a5c7f8584e9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Menu.html#ae24393752daf896bec02a5c7f8584e9f">setTheme</a> (const <a class="el" href="structtinymd_1_1MaterialTheme.html">MaterialTheme</a>&lt; RGB_T &gt; &amp;<a class="el" href="classtinymd_1_1Widget.html#ad5243e9fa9df2b57da435c9c36ad241a">theme</a>) override</td></tr>
@@ -332,6 +335,33 @@ class tinymd::Menu&lt; RGB_T &gt;</div><p>Popover list of items (typically <a cl
 <p>Number of child widgets this one draws as part of itself, if any (0 by default) - a composite widget like <a class="el" href="classtinymd_1_1Drawer.html" title="Modal side navigation panel, holding a list of items (typically ListItem) that scrolls automatically ...">Drawer</a> overrides this + <a class="el" href="classtinymd_1_1Menu.html#a4fbb5c1401c16f2c7a275cd3fa4de484">child()</a> to expose its items (<a class="el" href="classtinymd_1_1Dialog.html" title="Modal alert dialog: full-screen scrim + centered card + title + wrapped message + action widgets (typ...">Dialog</a> its actions, etc.), so <a class="el" href="classtinymd_1_1Screen.html#a645e2f2ba01cb98d23dba58d6024e506">Screen::drawDirect()</a> can draw a presented modal's children individually, each into its own small right-sized buffer, instead of needing one buffer big enough for the whole modal - see <a class="el" href="classtinymd_1_1Menu.html#af0476188eca7cfc055f926218c1ee731">drawBackground()</a>. </p>
 
 <p>Reimplemented from <a class="el" href="classtinymd_1_1Widget.html#acbd23255b7708e53472e3336988d27f8">Widget&lt; RGB_T &gt;</a>.</p>
+
+</div>
+</div>
+<a id="aa236b0d36b5d4f6a45c32b9d0e00f44b" name="aa236b0d36b5d4f6a45c32b9d0e00f44b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa236b0d36b5d4f6a45c32b9d0e00f44b">&#9670;&#160;</a></span>clearItems()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void clearItems </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes all items (they are not deleted) - e.g. to fill the menu anew. </p>
 
 </div>
 </div>

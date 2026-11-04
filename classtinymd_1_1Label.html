@@ -124,6 +124,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aeeba264b1efa854af68f50308c48af38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcbebcfae5161c60f1699d6c51d8cae1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Label.html#abcbebcfae5161c60f1699d6c51d8cae1">setColor</a> (RGB_T color)</td></tr>
 <tr class="separator:abcbebcfae5161c60f1699d6c51d8cae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Label.html#a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac">setBackgroundColor</a> (RGB_T color)</td></tr>
+<tr class="separator:a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad67361fe33e3f7ac5f6d195685aa5aea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Label.html#ad67361fe33e3f7ac5f6d195685aa5aea">setOnBackground</a> (bool onBackground)</td></tr>
+<tr class="memdesc:ad67361fe33e3f7ac5f6d195685aa5aea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the text on the theme's page background instead of the surface.  <br /></td></tr>
+<tr class="separator:ad67361fe33e3f7ac5f6d195685aa5aea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacc7191b7cd0d17f60d2bd91d702517b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Label.html#aacc7191b7cd0d17f60d2bd91d702517b">setVariantColor</a> (bool variant)</td></tr>
+<tr class="separator:aacc7191b7cd0d17f60d2bd91d702517b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1f0179cd42bc600bf1f7daf24c70bb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Label.html#ac1f0179cd42bc600bf1f7daf24c70bb9">setFont</a> (tinygpu::IFont&lt; RGB_T &gt; *<a class="el" href="classtinymd_1_1Label.html#a70be0a4788130b92bbb3108c53f3f8bc">font</a>)</td></tr>
 <tr class="separator:ac1f0179cd42bc600bf1f7daf24c70bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70be0a4788130b92bbb3108c53f3f8bc"><td class="memItemLeft" align="right" valign="top">tinygpu::IFont&lt; RGB_T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Label.html#a70be0a4788130b92bbb3108c53f3f8bc">font</a> () const</td></tr>
@@ -333,6 +340,33 @@ class tinymd::Label&lt; RGB_T &gt;</div><p>Single line of themed, non-interactiv
 
 </div>
 </div>
+<a id="a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac" name="a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac">&#9670;&#160;</a></span>setBackgroundColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setBackgroundColor </td>
+          <td>(</td>
+          <td class="paramtype">RGB_T&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Color behind the text (default: the surface color of the theme). Use the background color for a label directly on a page. </p>
+
+</div>
+</div>
 <a id="abcbebcfae5161c60f1699d6c51d8cae1" name="abcbebcfae5161c60f1699d6c51d8cae1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abcbebcfae5161c60f1699d6c51d8cae1">&#9670;&#160;</a></span>setColor()</h2>
 
@@ -386,6 +420,34 @@ class tinymd::Label&lt; RGB_T &gt;</div><p>Single line of themed, non-interactiv
 
 </div>
 </div>
+<a id="ad67361fe33e3f7ac5f6d195685aa5aea" name="ad67361fe33e3f7ac5f6d195685aa5aea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad67361fe33e3f7ac5f6d195685aa5aea">&#9670;&#160;</a></span>setOnBackground()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setOnBackground </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>onBackground</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draw the text on the theme's page background instead of the surface. </p>
+
+</div>
+</div>
 <a id="a4a4d59ce766d1aa61bd8bd785fe2d9f4" name="a4a4d59ce766d1aa61bd8bd785fe2d9f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a4d59ce766d1aa61bd8bd785fe2d9f4">&#9670;&#160;</a></span>setRole()</h2>
 
@@ -435,6 +497,33 @@ class tinymd::Label&lt; RGB_T &gt;</div><p>Single line of themed, non-interactiv
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="aacc7191b7cd0d17f60d2bd91d702517b" name="aacc7191b7cd0d17f60d2bd91d702517b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacc7191b7cd0d17f60d2bd91d702517b">&#9670;&#160;</a></span>setVariantColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setVariantColor </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>variant</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Secondary text: the theme's onSurfaceVariant color instead of onSurface (ignored if a color was set with <a class="el" href="classtinymd_1_1Label.html#abcbebcfae5161c60f1699d6c51d8cae1">setColor()</a>). </p>
 
 </div>
 </div>

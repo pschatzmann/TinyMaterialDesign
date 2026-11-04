@@ -14,8 +14,11 @@ var searchData=
   ['flowlayout_11',['FlowLayout',['../classtinymd_1_1FlowLayout.html#a85f948ab8f629fdaaeb3948fdf005e51',1,'tinymd::FlowLayout::FlowLayout()'],['../classtinymd_1_1FlowLayout.html',1,'FlowLayout']]],
   ['flowlayout_2eh_12',['FlowLayout.h',['../FlowLayout_8h.html',1,'']]],
   ['focus_13',['focus',['../classtinymd_1_1TextField.html#acfd704f3ba532ccf17108280a3efa6e6',1,'tinymd::TextField::focus()'],['../classtinymd_1_1TextArea.html#acfd704f3ba532ccf17108280a3efa6e6',1,'tinymd::TextArea::focus()'],['../classtinymd_1_1SearchBar.html#acfd704f3ba532ccf17108280a3efa6e6',1,'tinymd::SearchBar::focus()']]],
-  ['focused_14',['focused',['../classtinymd_1_1TextArea.html#ac81473bf7b971bcb299de8ee4c46c4f6',1,'tinymd::TextArea::focused()'],['../classtinymd_1_1TextField.html#ac81473bf7b971bcb299de8ee4c46c4f6',1,'tinymd::TextField::focused()'],['../classtinymd_1_1SearchBar.html#ac81473bf7b971bcb299de8ee4c46c4f6',1,'tinymd::SearchBar::focused()']]],
+  ['focused_14',['focused',['../classtinymd_1_1TextField.html#ac81473bf7b971bcb299de8ee4c46c4f6',1,'tinymd::TextField::focused()'],['../classtinymd_1_1TextArea.html#ac81473bf7b971bcb299de8ee4c46c4f6',1,'tinymd::TextArea::focused()'],['../classtinymd_1_1SearchBar.html#ac81473bf7b971bcb299de8ee4c46c4f6',1,'tinymd::SearchBar::focused()']]],
   ['font_15',['font',['../classtinymd_1_1Label.html#a70be0a4788130b92bbb3108c53f3f8bc',1,'tinymd::Label']]],
   ['fontfortypographyrole_16',['fontForTypographyRole',['../namespacetinymd.html#a6c7369d55927bbdfe76799886552af72',1,'tinymd']]],
-  ['full_17',['full',['../structtinymd_1_1ShapeTokens.html#afa46bd032dd9b7ce12ab42466db69f7b',1,'tinymd::ShapeTokens']]]
+  ['foreachline_17',['forEachLine',['../classtinymd_1_1TextBlock.html#a22cd46b09d9ed5a956ec65c3de5db351',1,'tinymd::TextBlock']]],
+  ['forget_18',['forget',['../classtinymd_1_1Esp32Wifi.html#af32c29192e78d046a6f82538d9b177ff',1,'tinymd::Esp32Wifi::forget()'],['../classtinymd_1_1SimulatedWifi.html#af32c29192e78d046a6f82538d9b177ff',1,'tinymd::SimulatedWifi::forget()'],['../classtinymd_1_1WifiControl.html#ad63e28fbe95a3458c97c60bfacd47ab8',1,'tinymd::WifiControl::forget()']]],
+  ['formatter_19',['Formatter',['../classtinymd_1_1SliderRow.html#ad2ba7d49b2669e1051e5e604acef471f',1,'tinymd::SliderRow']]],
+  ['full_20',['full',['../structtinymd_1_1ShapeTokens.html#afa46bd032dd9b7ce12ab42466db69f7b',1,'tinymd::ShapeTokens']]]
 ];

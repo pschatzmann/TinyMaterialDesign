@@ -1,8 +1,9 @@
 <map id="src/TinyMaterialDesign/Core/TextInputTarget.h" name="src/TinyMaterialDesign/Core/TextInputTarget.h">
-<area shape="rect" id="node1" title=" " alt="" coords="299,5,470,50"/>
-<area shape="rect" id="node2" href="$Keyboard_8h.html" title=" " alt="" coords="5,98,177,143"/>
-<area shape="rect" id="node4" href="$SearchBar_8h.html" title=" " alt="" coords="201,98,373,143"/>
-<area shape="rect" id="node5" href="$TextArea_8h.html" title=" " alt="" coords="397,98,569,143"/>
-<area shape="rect" id="node6" href="$TextField_8h.html" title=" " alt="" coords="593,98,765,143"/>
-<area shape="rect" id="node3" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="293,191,476,218"/>
+<area shape="rect" id="node1" title=" " alt="" coords="241,5,413,50"/>
+<area shape="rect" id="node2" href="$Keyboard_8h.html" title=" " alt="" coords="144,98,315,143"/>
+<area shape="rect" id="node5" href="$SearchBar_8h.html" title=" " alt="" coords="5,191,177,235"/>
+<area shape="rect" id="node6" href="$TextArea_8h.html" title=" " alt="" coords="512,191,683,235"/>
+<area shape="rect" id="node7" href="$TextField_8h.html" title=" " alt="" coords="340,98,511,143"/>
+<area shape="rect" id="node3" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="253,283,436,311"/>
+<area shape="rect" id="node4" href="$WifiLoginPage_8h.html" title=" " alt="" coords="252,191,437,235"/>
 </map>

@@ -1,0 +1,9 @@
+<map id="SettingRow&lt; RGB_T &gt;" name="SettingRow&lt; RGB_T &gt;">
+<area shape="rect" id="node1" title="Common part of the rows: caption and background." alt="" coords="194,126,362,154"/>
+<area shape="rect" id="node3" href="$classtinymd_1_1SwitchRow.html" title=" " alt="" coords="410,5,633,50"/>
+<area shape="rect" id="node4" href="$classtinymd_1_1KeyValueRow.html" title="Key on the left, value on the right (label font)." alt="" coords="430,74,613,102"/>
+<area shape="rect" id="node5" href="$classtinymd_1_1RadioRow.html" title="RadioButton and caption; tapping the row selects it." alt="" coords="442,126,601,154"/>
+<area shape="rect" id="node6" href="$classtinymd_1_1SliderRow.html" title="Caption and formatted value on one line, a Slider below. The value is quantized to step:" alt="" coords="442,178,601,206"/>
+<area shape="rect" id="node7" href="$classtinymd_1_1SwitchRow.html" title="Caption on the left, Switch on the right; tapping the row toggles it." alt="" coords="439,230,604,258"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="5,126,146,154"/>
+</map>

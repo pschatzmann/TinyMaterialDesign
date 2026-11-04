@@ -1,6 +1,7 @@
 <map id="TextInputTarget" name="TextInputTarget">
-<area shape="rect" id="node1" title="Minimal interface a Keyboard drives." alt="" coords="205,5,326,33"/>
-<area shape="rect" id="node2" href="$classtinymd_1_1SearchBar.html" title="Pill&#45;shaped search input: leading magnifier glyph, typed text, and a trailing &quot;x&quot; clear glyph shown o..." alt="" coords="5,81,166,109"/>
-<area shape="rect" id="node3" href="$classtinymd_1_1TextArea.html" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="190,81,341,109"/>
-<area shape="rect" id="node4" href="$classtinymd_1_1TextField.html" title="Single&#45;line text input box." alt="" coords="365,81,518,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,100,127,128"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1TextField.html" title=" " alt="" coords="175,5,385,50"/>
+<area shape="rect" id="node3" href="$classtinymd_1_1SearchBar.html" title="Pill&#45;shaped search input: leading magnifier glyph, typed text, and a trailing &quot;x&quot; clear glyph shown o..." alt="" coords="200,74,360,102"/>
+<area shape="rect" id="node4" href="$classtinymd_1_1TextArea.html" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="204,126,356,154"/>
+<area shape="rect" id="node5" href="$classtinymd_1_1TextField.html" title="Single&#45;line text input box." alt="" coords="204,178,356,206"/>
 </map>

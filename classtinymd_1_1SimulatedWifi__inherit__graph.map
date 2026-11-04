@@ -1,0 +1,4 @@
+<map id="SimulatedWifi" name="SimulatedWifi">
+<area shape="rect" id="node1" title="WiFi without hardware, for the desktop and tests: a fixed list of networks; connecting succeeds after..." alt="" coords="5,81,118,109"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1WifiControl.html" title="The WiFi of a device as WifiLoginPage uses it: scan, connect and the stored credentials...." alt="" coords="15,5,108,33"/>
+</map>

@@ -75,6 +75,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classtinymd_1_1LineChart-members.html">List of all members</a>  </div>
@@ -110,6 +111,12 @@ Collaboration diagram for LineChart&lt; RGB_T &gt;:</div>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a07466646533c8c8a0b318b6e747df259"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#a07466646533c8c8a0b318b6e747df259">AxisFormatter</a> = std::function&lt; void(float value, char *buf, size_t len)&gt;</td></tr>
+<tr class="memdesc:a07466646533c8c8a0b318b6e747df259"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a value of an axis label.  <br /></td></tr>
+<tr class="separator:a07466646533c8c8a0b318b6e747df259"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1466802ba1a155d7854b8f8d41a7c78a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#a1466802ba1a155d7854b8f8d41a7c78a">LineChart</a> ()=default</td></tr>
@@ -126,6 +133,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af296176c8a42f46c9ffb9498013fda93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad511c6bb6db48f54492a6ac9eb0f368c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#ad511c6bb6db48f54492a6ac9eb0f368c">seriesCount</a> () const</td></tr>
 <tr class="separator:ad511c6bb6db48f54492a6ac9eb0f368c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa163cdc82844cc2beb201bc3f99e02b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#aa163cdc82844cc2beb201bc3f99e02b2">setSeriesLabel</a> (int index, const char *label)</td></tr>
+<tr class="separator:aa163cdc82844cc2beb201bc3f99e02b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd15c483c1d94df67a84debabf818f2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#abd15c483c1d94df67a84debabf818f2a">setSeriesDashed</a> (int index, bool dashed)</td></tr>
+<tr class="memdesc:abd15c483c1d94df67a84debabf818f2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the series dashed.  <br /></td></tr>
+<tr class="separator:abd15c483c1d94df67a84debabf818f2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63b735052aff0e7040ff1b8656c4f478"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtinymd_1_1ChartSeries.html">ChartSeries</a>&lt; RGB_T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#a63b735052aff0e7040ff1b8656c4f478">series</a> (int index)</td></tr>
 <tr class="separator:a63b735052aff0e7040ff1b8656c4f478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55034f6cc0e7e74a65d08302eb689abb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#a55034f6cc0e7e74a65d08302eb689abb">setValues</a> (int index, const std::vector&lt; float &gt; &amp;values)</td></tr>
@@ -154,6 +166,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a773408837e9a838858e5bd151ef3f3a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae871bc71abe3f5cacff00464b482a8d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#ae871bc71abe3f5cacff00464b482a8d2">setVisiblePoints</a> (int count)</td></tr>
 <tr class="separator:ae871bc71abe3f5cacff00464b482a8d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4133d734bc9da1fb38022658c4c8389"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#ab4133d734bc9da1fb38022658c4c8389">setXAxis</a> (float first, float last, int ticks=3, <a class="el" href="classtinymd_1_1LineChart.html#a07466646533c8c8a0b318b6e747df259">AxisFormatter</a> format=nullptr)</td></tr>
+<tr class="separator:ab4133d734bc9da1fb38022658c4c8389"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dbd95fb1b8f43d91574a05ca6d4e953"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#a0dbd95fb1b8f43d91574a05ca6d4e953">clearXAxis</a> ()</td></tr>
+<tr class="memdesc:a0dbd95fb1b8f43d91574a05ca6d4e953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the X axis labels.  <br /></td></tr>
+<tr class="separator:a0dbd95fb1b8f43d91574a05ca6d4e953"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9b29dcd644b6729d8be1b9edef7112c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1LineChart.html#aa9b29dcd644b6729d8be1b9edef7112c">draw</a> (tinygpu::ISurface&lt; RGB_T &gt; &amp;target) override</td></tr>
 <tr class="separator:aa9b29dcd644b6729d8be1b9edef7112c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtinymd_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtinymd_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtinymd_1_1Widget.html">Widget&lt; RGB_T &gt;</a></td></tr>
@@ -213,7 +230,24 @@ class tinymd::LineChart&lt; RGB_T &gt;</div><p>Line chart with one or more serie
 <p>Y axis: automatic (the range of all visible values, snapped outward to a 1/2/5 x 10^n step - see <a class="el" href="classtinymd_1_1LineChart.html#aea806aa301e43c9bafbaacfbdcfb8dde" title="Approximate number of grid lines of the automatic scale (default 4).">setGridCount()</a>) or fixed via <a class="el" href="classtinymd_1_1LineChart.html#af8f03c49d028576cc41d7ba52e9916d8" title="Fixes the value range of the Y axis.">setYRange()</a>; the grid values can also be given explicitly via <a class="el" href="classtinymd_1_1LineChart.html#a773408837e9a838858e5bd151ef3f3a9" title="Uses exactly these grid values (labelled) instead of the automatic ones.">setGridValues()</a>.</p>
 <p>X axis: by default the points of each series are stretched over the full plot width. setVisiblePoints(n) instead gives every point a fixed spacing of width / (n - 1) with the newest point at the right edge - a rolling "oscilloscope" trace that scrolls in from the right as points are added.</p>
 <p>Series with more points than the plot has pixel columns are drawn as a min/max envelope per column, so peaks are never lost however many points there are. All drawing goes through clipped primitives, so the chart works inside a scrolling <a class="el" href="classtinymd_1_1Container.html" title="A widget that holds child widgets, draws/dispatches gestures to them, and scrolls its content vertica...">Container</a>. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a07466646533c8c8a0b318b6e747df259" name="a07466646533c8c8a0b318b6e747df259"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07466646533c8c8a0b318b6e747df259">&#9670;&#160;</a></span>AxisFormatter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classtinymd_1_1LineChart.html#a07466646533c8c8a0b318b6e747df259">AxisFormatter</a> =  std::function&lt;void(float value, char* buf, size_t len)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Formats a value of an axis label. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1466802ba1a155d7854b8f8d41a7c78a" name="a1466802ba1a155d7854b8f8d41a7c78a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1466802ba1a155d7854b8f8d41a7c78a">&#9670;&#160;</a></span>LineChart() <span class="overload">[1/2]</span></h2>
 
@@ -398,6 +432,33 @@ class tinymd::LineChart&lt; RGB_T &gt;</div><p>Line chart with one or more serie
 </table>
 </div><div class="memdoc">
 <p>Appends one value to the series <code>index</code>, dropping the oldest value once the series holds <code>maxPoints</code> values (0 = unlimited). </p>
+
+</div>
+</div>
+<a id="a0dbd95fb1b8f43d91574a05ca6d4e953" name="a0dbd95fb1b8f43d91574a05ca6d4e953"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dbd95fb1b8f43d91574a05ca6d4e953">&#9670;&#160;</a></span>clearXAxis()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void clearXAxis </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes the X axis labels. </p>
 
 </div>
 </div>
@@ -628,6 +689,81 @@ class tinymd::LineChart&lt; RGB_T &gt;</div><p>Line chart with one or more serie
 
 </div>
 </div>
+<a id="abd15c483c1d94df67a84debabf818f2a" name="abd15c483c1d94df67a84debabf818f2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd15c483c1d94df67a84debabf818f2a">&#9670;&#160;</a></span>setSeriesDashed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setSeriesDashed </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>dashed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draw the series dashed. </p>
+
+</div>
+</div>
+<a id="aa163cdc82844cc2beb201bc3f99e02b2" name="aa163cdc82844cc2beb201bc3f99e02b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa163cdc82844cc2beb201bc3f99e02b2">&#9670;&#160;</a></span>setSeriesLabel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setSeriesLabel </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>label</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Name of the series in the legend (drawn above the footer when at least one series has a label). </p>
+
+</div>
+</div>
 <a id="acce946de612c75a27238ad2442c688a0" name="acce946de612c75a27238ad2442c688a0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acce946de612c75a27238ad2442c688a0">&#9670;&#160;</a></span>setTitle()</h2>
 
@@ -758,6 +894,55 @@ class tinymd::LineChart&lt; RGB_T &gt;</div><p>Line chart with one or more serie
 </table>
 </div><div class="memdoc">
 <p>Fixed spacing for <code>count</code> points with the newest at the right edge (see the class comment); 0 stretches all points over the width (default). </p>
+
+</div>
+</div>
+<a id="ab4133d734bc9da1fb38022658c4c8389" name="ab4133d734bc9da1fb38022658c4c8389"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4133d734bc9da1fb38022658c4c8389">&#9670;&#160;</a></span>setXAxis()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setXAxis </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>first</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>last</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ticks</em> = <code>3</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtinymd_1_1LineChart.html#a07466646533c8c8a0b318b6e747df259">AxisFormatter</a>&#160;</td>
+          <td class="paramname"><em>format</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Labels the X axis: the left edge of the plot is <code>first</code>, the right edge <code>last</code>, with <code>ticks</code> (&gt;= 2) evenly spaced labels and tick marks including both edges. The values only label the axis - the points are still placed as described in the class comment. Example for a rolling minute: chart.setXAxis(-60, 0, 4, [](float v, char* b, size_t n) { snprintf(b, n, v == 0 ? "now" : "%.0fs", v); }); </p>
 
 </div>
 </div>

@@ -1,0 +1,5 @@
+<map id="SliderRow&lt; RGB_T &gt;" name="SliderRow&lt; RGB_T &gt;">
+<area shape="rect" id="node1" title="Caption and formatted value on one line, a Slider below. The value is quantized to step:" alt="" coords="10,157,169,184"/>
+<area shape="rect" id="node2" href="$classtinymd_1_1SettingRow.html" title="Common part of the rows: caption and background." alt="" coords="5,81,174,109"/>
+<area shape="rect" id="node3" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="19,5,160,33"/>
+</map>
