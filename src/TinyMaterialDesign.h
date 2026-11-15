@@ -59,8 +59,10 @@
 #include "TinyMaterialDesign/Widgets/StatTile.h"
 #include "TinyMaterialDesign/Widgets/SettingRows.h"
 #include "TinyMaterialDesign/Core/Page.h"
+#if defined(ARDUINO)  // WiFi needs the Arduino WiFi stack
 #include "TinyMaterialDesign/Wifi/WifiControl.h"
 #include "TinyMaterialDesign/Widgets/WifiLoginPage.h"
+#endif
 
 #if defined(ARDUINO) || defined(TINYMD_AUTO_NAMESPACE)
 using namespace tinymd;

@@ -8,7 +8,18 @@
 #include "TinyMaterialDesign/Core/Screen.h"
 #include "TinyMaterialDesign/Theme/MaterialTheme.h"
 
+#include <stdio.h>
+#if !(defined(ARDUINO) || __has_include(<Print.h>))
+// Plain desktop build: TinyGPU's byte-output interface stands in for Arduino's Print.
+#include "TinyGPU/IO/AVIWriter.h"
+#endif
+
 namespace tinymd {
+
+#if !(defined(ARDUINO) || __has_include(<Print.h>))
+using Print = tinygpu::Print;
+#endif
+
 
 /**
  * @brief Bundles the surface + display + gesture routing + Screen
@@ -109,9 +120,14 @@ class App {
     display_.begin();
     directRender_ = !surface_.begin();
     if (directRender_) {
+#if defined(ARDUINO)
       Serial.println(
           "App: full-screen framebuffer allocation failed - falling back to "
           "Screen::drawDirect()");
+#else
+      fprintf(stderr, "App: full-screen framebuffer allocation failed - falling back to "
+                      "Screen::drawDirect()\n");
+#endif
       scratch_.begin();
     }
     gestures_.onGesture = &App::onGestureTrampoline;
@@ -123,7 +139,7 @@ class App {
   /// Screen::isDirty().
   void update() {
     gestures_.update(*board_.touch());
-    screen_.update(millis());
+    screen_.update(nowMillis());
     if (screen_.isDirty()) {
       if (directRender_) {
         screen_.drawDirect(board_.display(), scratch_, static_cast<int32_t>(width()),
@@ -142,6 +158,15 @@ class App {
   /// image always matches what is on screen. Returns false while
   /// usesDirectRender() is true - there is no full-screen framebuffer to
   /// export then.
+  /// Milliseconds since start: Arduino's millis(), or TinyGPU's clock on the desktop.
+  static uint32_t nowMillis() {
+#if defined(ARDUINO)
+    return millis();
+#else
+    return tinygpu::millis();
+#endif
+  }
+
   bool saveScreenshot(Print& out) {
     if (directRender_) return false;
     if (screen_.isDirty()) {
