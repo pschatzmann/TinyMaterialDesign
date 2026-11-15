@@ -75,6 +75,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classtinymd_1_1App-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">App&lt; RGB_T &gt; Class Template Reference</div></div>
 </div><!--header-->
@@ -93,7 +94,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab0bdf5cca484fb2ba637c39384b27fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5c54df7ed3b930268c8d7752c101725"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#ac5c54df7ed3b930268c8d7752c101725">update</a> ()</td></tr>
 <tr class="separator:ac5c54df7ed3b930268c8d7752c101725"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a238e0c16e59458f19772cf647bc8da6a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#a238e0c16e59458f19772cf647bc8da6a">saveScreenshot</a> (Print &amp;out)</td></tr>
+<tr class="memitem:a238e0c16e59458f19772cf647bc8da6a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#a238e0c16e59458f19772cf647bc8da6a">saveScreenshot</a> (<a class="el" href="namespacetinymd.html#a1fee7fd2d38fb4a66b1c3032ac865928">Print</a> &amp;out)</td></tr>
 <tr class="separator:a238e0c16e59458f19772cf647bc8da6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a209db6f1800a11219113bab5da02cea3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#a209db6f1800a11219113bab5da02cea3">usesDirectRender</a> () const</td></tr>
 <tr class="separator:a209db6f1800a11219113bab5da02cea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,6 +108,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9ce99f5dfa1514cb108665e3810b2c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc662cea5b05cd9852d5a4538586d662"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#adc662cea5b05cd9852d5a4538586d662">height</a> () const</td></tr>
 <tr class="separator:adc662cea5b05cd9852d5a4538586d662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a8dba8d07c804de34bc001668f0be37dc"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1App.html#a8dba8d07c804de34bc001668f0be37dc">nowMillis</a> ()</td></tr>
+<tr class="separator:a8dba8d07c804de34bc001668f0be37dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename RGB_T = TINYMD_DEFAULT_RGB_T&gt;<br />
@@ -212,6 +218,32 @@ class tinymd::App&lt; RGB_T &gt;</div><p>Bundles the surface + display + gesture
 
 </div>
 </div>
+<a id="a8dba8d07c804de34bc001668f0be37dc" name="a8dba8d07c804de34bc001668f0be37dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8dba8d07c804de34bc001668f0be37dc">&#9670;&#160;</a></span>nowMillis()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint32_t nowMillis </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Writes the current screen content as an uncompressed 24-bit BMP image to <code>out</code> - anything that is a <code>Print</code>: a <code>File</code> on an SD card or LittleFS, a network client, Serial, or on the desktop a file stream. Pending changes are drawn (and written to the display) first, so the image always matches what is on screen. Returns false while <a class="el" href="classtinymd_1_1App.html#a209db6f1800a11219113bab5da02cea3">usesDirectRender()</a> is true - there is no full-screen framebuffer to export then. Milliseconds since start: Arduino's millis(), or TinyGPU's clock on the desktop. </p>
+
+</div>
+</div>
 <a id="a238e0c16e59458f19772cf647bc8da6a" name="a238e0c16e59458f19772cf647bc8da6a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a238e0c16e59458f19772cf647bc8da6a">&#9670;&#160;</a></span>saveScreenshot()</h2>
 
@@ -224,7 +256,7 @@ class tinymd::App&lt; RGB_T &gt;</div><p>Bundles the surface + display + gesture
         <tr>
           <td class="memname">bool saveScreenshot </td>
           <td>(</td>
-          <td class="paramtype">Print &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetinymd.html#a1fee7fd2d38fb4a66b1c3032ac865928">Print</a> &amp;&#160;</td>
           <td class="paramname"><em>out</em></td><td>)</td>
           <td></td>
         </tr>
@@ -235,7 +267,6 @@ class tinymd::App&lt; RGB_T &gt;</div><p>Bundles the surface + display + gesture
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Writes the current screen content as an uncompressed 24-bit BMP image to <code>out</code> - anything that is a <code>Print</code>: a <code>File</code> on an SD card or LittleFS, a network client, Serial, or on the desktop a file stream. Pending changes are drawn (and written to the display) first, so the image always matches what is on screen. Returns false while <a class="el" href="classtinymd_1_1App.html#a209db6f1800a11219113bab5da02cea3">usesDirectRender()</a> is true - there is no full-screen framebuffer to export then. </p>
 
 </div>
 </div>

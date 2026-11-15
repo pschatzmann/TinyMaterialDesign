@@ -75,7 +75,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">App.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -87,41 +88,45 @@ $(function() {
 <code>#include &quot;<a class="el" href="TinyMaterialDesignConfig_8h_source.html">TinyMaterialDesignConfig.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Screen_8h_source.html">TinyMaterialDesign/Core/Screen.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="MaterialTheme_8h_source.html">TinyMaterialDesign/Theme/MaterialTheme.h</a>&quot;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &quot;TinyGPU/IO/AVIWriter.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for App.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="App_8h__incl.png" border="0" usemap="#asrc_2TinyMaterialDesign_2Core_2App_8h" alt=""/></div>
 <map name="asrc_2TinyMaterialDesign_2Core_2App_8h" id="asrc_2TinyMaterialDesign_2Core_2App_8h">
-<area shape="rect" title=" " alt="" coords="516,5,688,50"/>
-<area shape="rect" title=" " alt="" coords="262,561,475,589"/>
+<area shape="rect" title=" " alt="" coords="719,5,890,50"/>
+<area shape="rect" title=" " alt="" coords="159,561,373,589"/>
 <area shape="rect" title=" " alt="" coords="47,106,280,134"/>
-<area shape="rect" title=" " alt="" coords="303,106,498,134"/>
-<area shape="rect" title=" " alt="" coords="253,384,489,412"/>
-<area shape="rect" title=" " alt="" coords="572,106,768,134"/>
-<area shape="rect" href="TinyMaterialDesignConfig_8h.html" title=" " alt="" coords="933,477,1135,505"/>
-<area shape="rect" href="Screen_8h.html" title=" " alt="" coords="874,98,1023,143"/>
-<area shape="rect" href="MaterialTheme_8h.html" title=" " alt="" coords="1467,376,1652,421"/>
-<area shape="rect" title=" " alt="" coords="1004,561,1064,589"/>
-<area shape="rect" title=" " alt="" coords="1749,561,1833,589"/>
-<area shape="rect" title=" " alt="" coords="1231,292,1290,320"/>
-<area shape="rect" title=" " alt="" coords="540,292,602,320"/>
-<area shape="rect" title=" " alt="" coords="591,199,823,227"/>
-<area shape="rect" title=" " alt="" coords="847,191,1050,235"/>
-<area shape="rect" href="Container_8h.html" title=" " alt="" coords="1074,191,1223,235"/>
-<area shape="rect" title=" " alt="" coords="887,292,973,320"/>
-<area shape="rect" href="Widget_8h.html" title=" " alt="" coords="677,283,825,328"/>
-<area shape="rect" href="OffsetSurface_8h.html" title=" " alt="" coords="997,283,1156,328"/>
-<area shape="rect" title=" " alt="" coords="801,561,872,589"/>
-<area shape="rect" title=" " alt="" coords="789,384,988,412"/>
-<area shape="rect" href="Bounds_8h.html" title=" " alt="" coords="565,376,713,421"/>
-<area shape="rect" title=" " alt="" coords="603,477,676,505"/>
-<area shape="rect" title=" " alt="" coords="1416,477,1599,505"/>
-<area shape="rect" title=" " alt="" coords="1624,477,1807,505"/>
-<area shape="rect" title=" " alt="" coords="1832,477,2015,505"/>
-<area shape="rect" title=" " alt="" coords="2039,477,2167,505"/>
-<area shape="rect" href="MaterialColors_8h.html" title=" " alt="" coords="1159,469,1341,513"/>
-<area shape="rect" title=" " alt="" coords="1219,561,1281,589"/>
-<area shape="rect" title=" " alt="" coords="1063,384,1290,412"/>
+<area shape="rect" title=" " alt="" coords="304,106,498,134"/>
+<area shape="rect" title=" " alt="" coords="47,384,283,412"/>
+<area shape="rect" title=" " alt="" coords="610,106,805,134"/>
+<area shape="rect" href="TinyMaterialDesignConfig_8h.html" title=" " alt="" coords="727,477,928,505"/>
+<area shape="rect" href="Screen_8h.html" title=" " alt="" coords="829,98,978,143"/>
+<area shape="rect" href="MaterialTheme_8h.html" title=" " alt="" coords="1260,376,1445,421"/>
+<area shape="rect" title=" " alt="" coords="1311,106,1376,134"/>
+<area shape="rect" title=" " alt="" coords="1400,106,1572,134"/>
+<area shape="rect" title=" " alt="" coords="797,561,858,589"/>
+<area shape="rect" title=" " alt="" coords="1543,561,1627,589"/>
+<area shape="rect" title=" " alt="" coords="1024,292,1084,320"/>
+<area shape="rect" title=" " alt="" coords="342,292,404,320"/>
+<area shape="rect" title=" " alt="" coords="393,199,625,227"/>
+<area shape="rect" title=" " alt="" coords="649,191,851,235"/>
+<area shape="rect" href="Container_8h.html" title=" " alt="" coords="876,191,1024,235"/>
+<area shape="rect" title=" " alt="" coords="680,292,767,320"/>
+<area shape="rect" href="Widget_8h.html" title=" " alt="" coords="479,283,627,328"/>
+<area shape="rect" href="OffsetSurface_8h.html" title=" " alt="" coords="790,283,950,328"/>
+<area shape="rect" title=" " alt="" coords="595,561,665,589"/>
+<area shape="rect" title=" " alt="" coords="582,384,782,412"/>
+<area shape="rect" href="Bounds_8h.html" title=" " alt="" coords="359,376,507,421"/>
+<area shape="rect" title=" " alt="" coords="396,477,469,505"/>
+<area shape="rect" title=" " alt="" coords="1209,477,1392,505"/>
+<area shape="rect" title=" " alt="" coords="1417,477,1600,505"/>
+<area shape="rect" title=" " alt="" coords="1625,477,1808,505"/>
+<area shape="rect" title=" " alt="" coords="1833,477,1961,505"/>
+<area shape="rect" href="MaterialColors_8h.html" title=" " alt="" coords="953,469,1134,513"/>
+<area shape="rect" title=" " alt="" coords="1012,561,1075,589"/>
+<area shape="rect" title=" " alt="" coords="856,384,1084,412"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -146,6 +151,11 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacetinymd"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetinymd.html">tinymd</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a1fee7fd2d38fb4a66b1c3032ac865928"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetinymd.html#a1fee7fd2d38fb4a66b1c3032ac865928">Print</a> = tinygpu::Print</td></tr>
+<tr class="separator:a1fee7fd2d38fb4a66b1c3032ac865928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

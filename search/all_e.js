@@ -11,5 +11,6 @@ var searchData=
   ['presentdialog_8',['presentDialog',['../classtinymd_1_1Screen.html#a8c33b9d50ff563c1b7969868e26fcaf9',1,'tinymd::Screen']]],
   ['primary_9',['primary',['../structtinymd_1_1ColorScheme.html#ac56b89eda1cbc3242e688620121cba08',1,'tinymd::ColorScheme']]],
   ['primarycontainer_10',['primaryContainer',['../structtinymd_1_1ColorScheme.html#afdf5801b576a322c7f103fb985af6265',1,'tinymd::ColorScheme']]],
-  ['progressindicator_2eh_11',['ProgressIndicator.h',['../ProgressIndicator_8h.html',1,'']]]
+  ['print_11',['Print',['../namespacetinymd.html#a1fee7fd2d38fb4a66b1c3032ac865928',1,'tinymd']]],
+  ['progressindicator_2eh_12',['ProgressIndicator.h',['../ProgressIndicator_8h.html',1,'']]]
 ];
