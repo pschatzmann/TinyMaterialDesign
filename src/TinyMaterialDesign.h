@@ -38,6 +38,7 @@
 #include "TinyMaterialDesign/Widgets/Chip.h"
 #include "TinyMaterialDesign/Widgets/AppBar.h"
 #include "TinyMaterialDesign/Widgets/Dialog.h"
+#include "TinyMaterialDesign/Widgets/FileDialog.h"
 #include "TinyMaterialDesign/Widgets/ListItem.h"
 #include "TinyMaterialDesign/Widgets/Drawer.h"
 #include "TinyMaterialDesign/Widgets/MediaCard.h"
