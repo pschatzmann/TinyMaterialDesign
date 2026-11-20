@@ -2,8 +2,8 @@ var searchData=
 [
   ['savescreenshot_0',['saveScreenshot',['../classtinymd_1_1App.html#a238e0c16e59458f19772cf647bc8da6a',1,'tinymd::App']]],
   ['scandone_1',['scanDone',['../classtinymd_1_1WifiControl.html#aaff5b87c49acb7e8934fd8611c154530',1,'tinymd::WifiControl::scanDone()'],['../classtinymd_1_1Esp32Wifi.html#acbc88799bf35fc349dd4dab35d724958',1,'tinymd::Esp32Wifi::scanDone()'],['../classtinymd_1_1SimulatedWifi.html#acbc88799bf35fc349dd4dab35d724958',1,'tinymd::SimulatedWifi::scanDone()']]],
-  ['screen_2',['screen',['../classtinymd_1_1App.html#a9f438812bf2bb65cec29cb12c86055e1',1,'tinymd::App']]],
-  ['screen_3',['Screen',['../classtinymd_1_1Screen.html#a261bb3958a10afdccc74310bfe1d387d',1,'tinymd::Screen::Screen()'],['../classtinymd_1_1Screen.html#abc4637ed423a0288e2772f2402cf4d93',1,'tinymd::Screen::Screen(const MaterialTheme&lt; RGB_T &gt; &amp;theme)']]],
+  ['screen_2',['Screen',['../classtinymd_1_1Screen.html#a261bb3958a10afdccc74310bfe1d387d',1,'tinymd::Screen::Screen()'],['../classtinymd_1_1Screen.html#abc4637ed423a0288e2772f2402cf4d93',1,'tinymd::Screen::Screen(const MaterialTheme&lt; RGB_T &gt; &amp;theme)']]],
+  ['screen_3',['screen',['../classtinymd_1_1App.html#a9f438812bf2bb65cec29cb12c86055e1',1,'tinymd::App']]],
   ['scrolloffset_4',['scrollOffset',['../classtinymd_1_1Container.html#a28ec531e5f5b3b99bfacd907147b2cd3',1,'tinymd::Container']]],
   ['scrollthumbheight_5',['scrollThumbHeight',['../classtinymd_1_1Container.html#a275678ae5ef8d5220d290e38401ac832',1,'tinymd::Container']]],
   ['scrolltochild_6',['scrollToChild',['../classtinymd_1_1Container.html#a9765e74aa68f52a02c223abd877eb251',1,'tinymd::Container']]],

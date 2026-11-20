@@ -1,5 +1,6 @@
 <map id="src/TinyMaterialDesign/Widgets/Button.h" name="src/TinyMaterialDesign/Widgets/Button.h">
-<area shape="rect" id="node1" title=" " alt="" coords="115,5,287,50"/>
-<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="5,106,189,134"/>
-<area shape="rect" id="node3" href="$WifiLoginPage_8h.html" title=" " alt="" coords="212,98,398,143"/>
+<area shape="rect" id="node1" title=" " alt="" coords="73,5,244,50"/>
+<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="5,191,189,218"/>
+<area shape="rect" id="node3" href="$FileDialog_8h.html" title=" " alt="" coords="73,98,244,143"/>
+<area shape="rect" id="node4" href="$WifiLoginPage_8h.html" title=" " alt="" coords="268,98,454,143"/>
 </map>

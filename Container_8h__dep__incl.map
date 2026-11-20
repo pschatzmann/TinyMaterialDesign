@@ -1,11 +1,12 @@
 <map id="src/TinyMaterialDesign/Core/Container.h" name="src/TinyMaterialDesign/Core/Container.h">
-<area shape="rect" id="node1" title=" " alt="" coords="501,5,673,50"/>
-<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="563,292,747,320"/>
-<area shape="rect" id="node3" href="$Page_8h.html" title=" " alt="" coords="251,191,422,235"/>
-<area shape="rect" id="node5" href="$Screen_8h.html" title=" " alt="" coords="440,98,611,143"/>
-<area shape="rect" id="node7" href="$BottomSheet_8h.html" title=" " alt="" coords="685,98,865,143"/>
-<area shape="rect" id="node8" href="$Drawer_8h.html" title=" " alt="" coords="889,98,1061,143"/>
-<area shape="rect" id="node9" href="$Menu_8h.html" title=" " alt="" coords="5,191,177,235"/>
-<area shape="rect" id="node4" href="$WifiLoginPage_8h.html" title=" " alt="" coords="121,283,306,328"/>
-<area shape="rect" id="node6" href="$App_8h.html" title=" " alt="" coords="447,191,618,235"/>
+<area shape="rect" id="node1" title=" " alt="" coords="548,5,719,50"/>
+<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="553,292,736,320"/>
+<area shape="rect" id="node3" href="$Page_8h.html" title=" " alt="" coords="201,191,373,235"/>
+<area shape="rect" id="node5" href="$Screen_8h.html" title=" " alt="" coords="352,98,523,143"/>
+<area shape="rect" id="node7" href="$BottomSheet_8h.html" title=" " alt="" coords="793,191,973,235"/>
+<area shape="rect" id="node8" href="$Drawer_8h.html" title=" " alt="" coords="903,98,1074,143"/>
+<area shape="rect" id="node9" href="$FileDialog_8h.html" title=" " alt="" coords="548,98,719,143"/>
+<area shape="rect" id="node10" href="$Menu_8h.html" title=" " alt="" coords="5,191,177,235"/>
+<area shape="rect" id="node4" href="$WifiLoginPage_8h.html" title=" " alt="" coords="194,283,380,328"/>
+<area shape="rect" id="node6" href="$App_8h.html" title=" " alt="" coords="497,191,669,235"/>
 </map>

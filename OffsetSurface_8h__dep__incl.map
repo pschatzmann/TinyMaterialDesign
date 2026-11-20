@@ -1,12 +1,13 @@
 <map id="src/TinyMaterialDesign/Core/OffsetSurface.h" name="src/TinyMaterialDesign/Core/OffsetSurface.h">
-<area shape="rect" id="node1" title=" " alt="" coords="501,5,673,50"/>
-<area shape="rect" id="node2" href="$Container_8h.html" title=" " alt="" coords="501,98,673,143"/>
-<area shape="rect" id="node3" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="563,384,747,412"/>
-<area shape="rect" id="node4" href="$Page_8h.html" title=" " alt="" coords="251,283,422,328"/>
-<area shape="rect" id="node6" href="$Screen_8h.html" title=" " alt="" coords="440,191,611,235"/>
-<area shape="rect" id="node8" href="$BottomSheet_8h.html" title=" " alt="" coords="685,191,865,235"/>
-<area shape="rect" id="node9" href="$Drawer_8h.html" title=" " alt="" coords="889,191,1061,235"/>
-<area shape="rect" id="node10" href="$Menu_8h.html" title=" " alt="" coords="5,283,177,328"/>
-<area shape="rect" id="node5" href="$WifiLoginPage_8h.html" title=" " alt="" coords="121,376,306,421"/>
-<area shape="rect" id="node7" href="$App_8h.html" title=" " alt="" coords="447,283,618,328"/>
+<area shape="rect" id="node1" title=" " alt="" coords="548,5,719,50"/>
+<area shape="rect" id="node2" href="$Container_8h.html" title=" " alt="" coords="548,98,719,143"/>
+<area shape="rect" id="node3" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="553,384,736,412"/>
+<area shape="rect" id="node4" href="$Page_8h.html" title=" " alt="" coords="201,283,373,328"/>
+<area shape="rect" id="node6" href="$Screen_8h.html" title=" " alt="" coords="352,191,523,235"/>
+<area shape="rect" id="node8" href="$BottomSheet_8h.html" title=" " alt="" coords="793,283,973,328"/>
+<area shape="rect" id="node9" href="$Drawer_8h.html" title=" " alt="" coords="903,191,1074,235"/>
+<area shape="rect" id="node10" href="$FileDialog_8h.html" title=" " alt="" coords="548,191,719,235"/>
+<area shape="rect" id="node11" href="$Menu_8h.html" title=" " alt="" coords="5,283,177,328"/>
+<area shape="rect" id="node5" href="$WifiLoginPage_8h.html" title=" " alt="" coords="194,376,380,421"/>
+<area shape="rect" id="node7" href="$App_8h.html" title=" " alt="" coords="497,283,669,328"/>
 </map>

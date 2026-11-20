@@ -1,8 +1,9 @@
 <map id="src/TinyMaterialDesign/Widgets/Label.h" name="src/TinyMaterialDesign/Widgets/Label.h">
-<area shape="rect" id="node1" title=" " alt="" coords="225,5,396,50"/>
-<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="167,199,350,227"/>
-<area shape="rect" id="node3" href="$ListItem_8h.html" title=" " alt="" coords="421,98,592,143"/>
-<area shape="rect" id="node4" href="$WifiLoginPage_8h.html" title=" " alt="" coords="466,191,651,235"/>
-<area shape="rect" id="node5" href="$StatTile_8h.html" title=" " alt="" coords="29,98,200,143"/>
-<area shape="rect" id="node6" href="$TextBlock_8h.html" title=" " alt="" coords="225,98,396,143"/>
+<area shape="rect" id="node1" title=" " alt="" coords="210,5,381,50"/>
+<area shape="rect" id="node2" href="$TinyMaterialDesign_8h.html" title=" " alt="" coords="141,283,325,311"/>
+<area shape="rect" id="node3" href="$FileDialog_8h.html" title=" " alt="" coords="25,191,196,235"/>
+<area shape="rect" id="node4" href="$ListItem_8h.html" title=" " alt="" coords="149,98,320,143"/>
+<area shape="rect" id="node5" href="$WifiLoginPage_8h.html" title=" " alt="" coords="271,191,456,235"/>
+<area shape="rect" id="node6" href="$StatTile_8h.html" title=" " alt="" coords="481,191,652,235"/>
+<area shape="rect" id="node7" href="$TextBlock_8h.html" title=" " alt="" coords="565,98,736,143"/>
 </map>
