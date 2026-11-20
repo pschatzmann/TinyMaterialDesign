@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <functional>
 #include <memory>
 #include <string>
@@ -137,6 +139,14 @@ class FileDialog {
     }
     std::vector<FileEntry> entries;
     if (listDirectory) entries = listDirectory(dir_);
+    // hidden entries (names starting with '.') are not shown; the rest are sorted by name
+    entries.erase(std::remove_if(entries.begin(), entries.end(),
+                                 [](const FileEntry& e) { return !e.name.empty() && e.name[0] == '.'; }),
+                  entries.end());
+    std::sort(entries.begin(), entries.end(), [](const FileEntry& a, const FileEntry& b) {
+      if (a.isDirectory != b.isDirectory) return a.isDirectory;
+      return lowerCase(a.name) < lowerCase(b.name);
+    });
     // folders first, then the files of the filter
     for (int pass = 0; pass < 2; ++pass) {
       for (const FileEntry& e : entries) {
@@ -185,6 +195,11 @@ class FileDialog {
   static std::string join(const std::string& dir, const std::string& name) {
     if (dir.empty() || dir.back() == '/') return dir + name;
     return dir + "/" + name;
+  }
+
+  static std::string lowerCase(std::string s) {
+    for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    return s;
   }
 
   /// The end of a long path, so that the current folder stays visible.
