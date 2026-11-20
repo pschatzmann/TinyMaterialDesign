@@ -73,14 +73,16 @@ class FileDialog {
 
   /// The folder shown now.
   const std::string& directory() const { return dir_; }
-
   /// Shows a folder that was chosen by a tap. Call this from the application's
-  /// loop (or update): the rows are rebuilt here, not inside the tap, because a
-  /// row must not be destroyed while its own click handler is running.
-  void poll() {
-    if (!hasPending_) return;
+  /// loop (or update), and invalidate the screen when it returns true: the rows
+  /// are rebuilt here, not inside the tap, because a row must not be destroyed
+  /// while its own click handler is running.
+  /// Returns true if the folder changed (the screen then needs a redraw).
+  bool poll() {
+    if (!hasPending_) return false;
     hasPending_ = false;
     navigate(pendingDir_);
+    return true;
   }
 
  private:
@@ -121,7 +123,7 @@ class FileDialog {
   /// Rebuilds the list of the folder dir (the scrolling part).
   void navigate(const std::string& dir) {
     dir_ = dir;
-    pathLabel_.setText(dir_.c_str());
+    pathLabel_.setText(shortened(dir_).c_str());
     rows_.clear();
     const int32_t footer = onCancel ? kFooterHeight : 0;
     const Bounds listBounds(bounds_.x, bounds_.y + kHeaderHeight, bounds_.w, bounds_.h - kHeaderHeight - footer);
@@ -183,6 +185,13 @@ class FileDialog {
   static std::string join(const std::string& dir, const std::string& name) {
     if (dir.empty() || dir.back() == '/') return dir + name;
     return dir + "/" + name;
+  }
+
+  /// The end of a long path, so that the current folder stays visible.
+  static std::string shortened(const std::string& path) {
+    constexpr size_t kMaxChars = 28;
+    if (path.size() <= kMaxChars) return path;
+    return "..." + path.substr(path.size() - (kMaxChars - 3));
   }
 
   static std::string parentOf(const std::string& dir) {
