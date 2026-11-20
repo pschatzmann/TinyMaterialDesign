@@ -26,17 +26,18 @@ struct FileEntry {
  * listDirectory(), which returns the entries of a folder, so the same dialog
  * works with SD cards, flash file systems and the desktop.
  *
- * The dialog is a panel (panel()) to show with Screen::presentDialog(). It
- * lists the folders first, then the files whose extension is in the filter (all
- * files if the filter is empty). A row "..", shown below the root, goes to the
+ * The dialog is a fixed panel (panel()) with a frame, a title, the current
+ * folder and a Cancel button. The folders and files are listed in a scrolling
+ * list inside the frame. Folders come first, then the files whose extension is
+ * in the filter (all files if the filter is empty). A row ".." goes to the
  * parent folder. Tapping a file calls onSelect(path); the application should
- * dismiss the dialog then. Tapping Cancel calls onCancel (if set) and the
- * dialog stays open unless the application dismisses it.
+ * then dismiss the dialog.
  *
  * @code
  *   FileDialog<RGB565> dialog;
  *   dialog.listDirectory = [](const std::string& dir) { ... SD entries ... };
  *   dialog.onSelect = [&](const std::string& path) { screen.dismissDialog(); open(path); };
+ *   dialog.setTheme(theme);
  *   dialog.open(Bounds(8, 8, 224, 304), "Open book", "/", ".mobi,.azw,.azw3");
  *   screen.presentDialog(dialog.panel());
  * @endcode
@@ -48,11 +49,17 @@ class FileDialog {
   std::function<std::vector<FileEntry>(const std::string& dir)> listDirectory;
   /// Called with the full path of the chosen file.
   std::function<void(const std::string& path)> onSelect;
-  /// Called when Cancel is tapped. The Cancel row is only shown when set.
+  /// Called when Cancel is tapped. The Cancel button is only shown when set.
   std::function<void()> onCancel;
 
   /// The panel to show with Screen::presentDialog().
   Container<RGB_T>& panel() { return panel_; }
+
+  /// Sets the theme of the dialog (call before presenting it).
+  void setTheme(const MaterialTheme<RGB_T>& theme) {
+    theme_ = &theme;
+    panel_.setTheme(theme);
+  }
 
   /// Opens the dialog at directory dir. extensions is a comma separated list such as
   /// ".mobi,.azw" (empty: all files).
@@ -60,7 +67,7 @@ class FileDialog {
     bounds_ = bounds;
     title_ = title;
     extensions_ = extensions;
-    cancelButton_ = Button<RGB_T>();
+    build();
     navigate(dir.empty() ? "/" : dir);
   }
 
@@ -69,25 +76,44 @@ class FileDialog {
 
  private:
   static constexpr int32_t kRowHeight = 36;
+  static constexpr int32_t kHeaderHeight = 64;
+  static constexpr int32_t kFooterHeight = 52;
   static constexpr size_t kMaxRows = 200;
 
-  /// Builds the panel for the folder dir.
-  void navigate(const std::string& dir) {
-    dir_ = dir;
-    rows_.clear();
+  /// The fixed part: frame, title, path and Cancel. The list is added inside it.
+  void build() {
     panel_ = Container<RGB_T>(bounds_);
+    if (theme_ != nullptr) panel_.setTheme(*theme_);
     background_ = Card<RGB_T>(bounds_);
-    panel_.addChild(background_);
-
     titleLabel_ = Label<RGB_T>(Bounds(bounds_.x + 12, bounds_.y + 8, bounds_.w - 24, 28), title_.c_str(),
                                TypographyRole::kTitle);
-    pathLabel_ = Label<RGB_T>(Bounds(bounds_.x + 12, bounds_.y + 38, bounds_.w - 24, 20), dir_.c_str(),
+    pathLabel_ = Label<RGB_T>(Bounds(bounds_.x + 12, bounds_.y + 38, bounds_.w - 24, 20), "",
                               TypographyRole::kLabel);
+    panel_.addChild(background_);
     panel_.addChild(titleLabel_);
     panel_.addChild(pathLabel_);
+    panel_.addChild(list_);
+    if (onCancel) {
+      cancelButton_ = Button<RGB_T>(Bounds(bounds_.right() - 112, bounds_.bottom() - kFooterHeight + 8, 100, 36),
+                                    "Cancel", ButtonVariant::kText);
+      cancelButton_.onClick = [this]() {
+        if (onCancel) onCancel();
+      };
+      panel_.addChild(cancelButton_);
+    }
+  }
 
-    int32_t y = bounds_.y + 64;
-    const int32_t bottom = bounds_.bottom() - (onCancel ? 52 : 12);
+  /// Rebuilds the list of the folder dir (the scrolling part).
+  void navigate(const std::string& dir) {
+    dir_ = dir;
+    pathLabel_.setText(dir_.c_str());
+    rows_.clear();
+    const int32_t footer = onCancel ? kFooterHeight : 0;
+    const Bounds listBounds(bounds_.x, bounds_.y + kHeaderHeight, bounds_.w, bounds_.h - kHeaderHeight - footer);
+    list_ = Container<RGB_T>(listBounds);
+    if (theme_ != nullptr) list_.setTheme(*theme_);
+
+    int32_t y = listBounds.y + 4;
     if (dir_ != "/") {
       addRow(y, "..", [this]() { navigate(parentOf(dir_)); });
       y += kRowHeight;
@@ -115,23 +141,14 @@ class FileDialog {
       addRow(y, "No files", nullptr);
       rows_.back()->enabled = false;
     }
-
-    if (onCancel) {
-      cancelButton_ = Button<RGB_T>(Bounds(bounds_.right() - 112, bottom + 8, 100, 36), "Cancel",
-                                    ButtonVariant::kText);
-      cancelButton_.onClick = [this]() {
-        if (onCancel) onCancel();
-      };
-      panel_.addChild(cancelButton_);
-    }
   }
 
   void addRow(int32_t y, const std::string& label, std::function<void()> onClick) {
-    std::unique_ptr<ListItem<RGB_T>> row(new ListItem<RGB_T>(
-        Bounds(bounds_.x + 8, y, bounds_.w - 16, kRowHeight), label.c_str()));
+    std::unique_ptr<ListItem<RGB_T>> row(
+        new ListItem<RGB_T>(Bounds(bounds_.x + 8, y, bounds_.w - 24, kRowHeight), label.c_str()));
     row->enabled = static_cast<bool>(onClick);
     row->onClick = std::move(onClick);
-    panel_.addChild(*row);
+    list_.addChild(*row);
     rows_.push_back(std::move(row));
   }
 
@@ -163,10 +180,12 @@ class FileDialog {
   std::string title_;
   std::string extensions_;
   std::string dir_;
+  const MaterialTheme<RGB_T>* theme_ = nullptr;
   Container<RGB_T> panel_;
   Card<RGB_T> background_;
   Label<RGB_T> titleLabel_;
   Label<RGB_T> pathLabel_;
+  Container<RGB_T> list_;
   Button<RGB_T> cancelButton_;
   std::vector<std::unique_ptr<ListItem<RGB_T>>> rows_;
 };
