@@ -6,5 +6,6 @@ var searchData=
   ['pagenavigator_3',['PageNavigator',['../classtinymd_1_1PageNavigator.html#aef403d13b5152316ab1ba4fa4a01448a',1,'tinymd::PageNavigator']]],
   ['panel_4',['panel',['../classtinymd_1_1FileDialog.html#ac468f5fd8a393c51774d4249ec762622',1,'tinymd::FileDialog']]],
   ['passwordmode_5',['passwordMode',['../classtinymd_1_1TextField.html#a88e6fe242cd2ef193162f7c63198fe5d',1,'tinymd::TextField']]],
-  ['presentdialog_6',['presentDialog',['../classtinymd_1_1Screen.html#a8c33b9d50ff563c1b7969868e26fcaf9',1,'tinymd::Screen']]]
+  ['poll_6',['poll',['../classtinymd_1_1FileDialog.html#a9dfab88c373c2f12a06353ea7365d4b0',1,'tinymd::FileDialog']]],
+  ['presentdialog_7',['presentDialog',['../classtinymd_1_1Screen.html#a8c33b9d50ff563c1b7969868e26fcaf9',1,'tinymd::Screen']]]
 ];

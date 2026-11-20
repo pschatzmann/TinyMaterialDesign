@@ -10,9 +10,10 @@ var searchData=
   ['panel_7',['panel',['../classtinymd_1_1FileDialog.html#ac468f5fd8a393c51774d4249ec762622',1,'tinymd::FileDialog']]],
   ['password_8',['password',['../classtinymd_1_1SimulatedWifi.html#a36531f1b290721250b384bbae34f9f1f',1,'tinymd::SimulatedWifi']]],
   ['passwordmode_9',['passwordMode',['../classtinymd_1_1TextField.html#a88e6fe242cd2ef193162f7c63198fe5d',1,'tinymd::TextField']]],
-  ['presentdialog_10',['presentDialog',['../classtinymd_1_1Screen.html#a8c33b9d50ff563c1b7969868e26fcaf9',1,'tinymd::Screen']]],
-  ['primary_11',['primary',['../structtinymd_1_1ColorScheme.html#ac56b89eda1cbc3242e688620121cba08',1,'tinymd::ColorScheme']]],
-  ['primarycontainer_12',['primaryContainer',['../structtinymd_1_1ColorScheme.html#afdf5801b576a322c7f103fb985af6265',1,'tinymd::ColorScheme']]],
-  ['print_13',['Print',['../namespacetinymd.html#a1fee7fd2d38fb4a66b1c3032ac865928',1,'tinymd']]],
-  ['progressindicator_2eh_14',['ProgressIndicator.h',['../ProgressIndicator_8h.html',1,'']]]
+  ['poll_10',['poll',['../classtinymd_1_1FileDialog.html#a9dfab88c373c2f12a06353ea7365d4b0',1,'tinymd::FileDialog']]],
+  ['presentdialog_11',['presentDialog',['../classtinymd_1_1Screen.html#a8c33b9d50ff563c1b7969868e26fcaf9',1,'tinymd::Screen']]],
+  ['primary_12',['primary',['../structtinymd_1_1ColorScheme.html#ac56b89eda1cbc3242e688620121cba08',1,'tinymd::ColorScheme']]],
+  ['primarycontainer_13',['primaryContainer',['../structtinymd_1_1ColorScheme.html#afdf5801b576a322c7f103fb985af6265',1,'tinymd::ColorScheme']]],
+  ['print_14',['Print',['../namespacetinymd.html#a1fee7fd2d38fb4a66b1c3032ac865928',1,'tinymd']]],
+  ['progressindicator_2eh_15',['ProgressIndicator.h',['../ProgressIndicator_8h.html',1,'']]]
 ];

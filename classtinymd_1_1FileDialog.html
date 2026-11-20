@@ -99,6 +99,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abfc4cb5f6b066b62fd37fead90343021"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1FileDialog.html#abfc4cb5f6b066b62fd37fead90343021">directory</a> () const</td></tr>
 <tr class="memdesc:abfc4cb5f6b066b62fd37fead90343021"><td class="mdescLeft">&#160;</td><td class="mdescRight">The folder shown now.  <br /></td></tr>
 <tr class="separator:abfc4cb5f6b066b62fd37fead90343021"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dfab88c373c2f12a06353ea7365d4b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1FileDialog.html#a9dfab88c373c2f12a06353ea7365d4b0">poll</a> ()</td></tr>
+<tr class="separator:a9dfab88c373c2f12a06353ea7365d4b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -230,6 +232,32 @@ class tinymd::FileDialog&lt; RGB_T &gt;</div><p>Open file dialog: browse folders
 </div><div class="memdoc">
 
 <p>The panel to show with <a class="el" href="classtinymd_1_1Screen.html#a8c33b9d50ff563c1b7969868e26fcaf9">Screen::presentDialog()</a>. </p>
+
+</div>
+</div>
+<a id="a9dfab88c373c2f12a06353ea7365d4b0" name="a9dfab88c373c2f12a06353ea7365d4b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dfab88c373c2f12a06353ea7365d4b0">&#9670;&#160;</a></span>poll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void poll </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Shows a folder that was chosen by a tap. Call this from the application's loop (or update): the rows are rebuilt here, not inside the tap, because a row must not be destroyed while its own click handler is running. </p>
 
 </div>
 </div>
