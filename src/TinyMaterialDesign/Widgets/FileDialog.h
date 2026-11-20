@@ -74,11 +74,26 @@ class FileDialog {
   /// The folder shown now.
   const std::string& directory() const { return dir_; }
 
+  /// Shows a folder that was chosen by a tap. Call this from the application's
+  /// loop (or update): the rows are rebuilt here, not inside the tap, because a
+  /// row must not be destroyed while its own click handler is running.
+  void poll() {
+    if (!hasPending_) return;
+    hasPending_ = false;
+    navigate(pendingDir_);
+  }
+
  private:
   static constexpr int32_t kRowHeight = 36;
   static constexpr int32_t kHeaderHeight = 64;
   static constexpr int32_t kFooterHeight = 52;
   static constexpr size_t kMaxRows = 200;
+
+  /// Changes the folder for the next poll().
+  void requestFolder(const std::string& dir) {
+    pendingDir_ = dir;
+    hasPending_ = true;
+  }
 
   /// The fixed part: frame, title, path and Cancel. The list is added inside it.
   void build() {
@@ -115,7 +130,7 @@ class FileDialog {
 
     int32_t y = listBounds.y + 4;
     if (dir_ != "/") {
-      addRow(y, "..", [this]() { navigate(parentOf(dir_)); });
+      addRow(y, "..", [this]() { requestFolder(parentOf(dir_)); });
       y += kRowHeight;
     }
     std::vector<FileEntry> entries;
@@ -128,7 +143,7 @@ class FileDialog {
         if (!e.isDirectory && !matches(e.name)) continue;
         const std::string name = e.name;
         if (e.isDirectory) {
-          addRow(y, name + "/", [this, name]() { navigate(join(dir_, name)); });
+          addRow(y, name + "/", [this, name]() { requestFolder(join(dir_, name)); });
         } else {
           addRow(y, name, [this, name]() {
             if (onSelect) onSelect(join(dir_, name));
@@ -181,6 +196,8 @@ class FileDialog {
   std::string extensions_;
   std::string dir_;
   const MaterialTheme<RGB_T>* theme_ = nullptr;
+  std::string pendingDir_;
+  bool hasPending_ = false;
   Container<RGB_T> panel_;
   Card<RGB_T> background_;
   Label<RGB_T> titleLabel_;
