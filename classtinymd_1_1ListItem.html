@@ -76,12 +76,13 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classtinymd_1_1ListItem-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">ListItem&lt; RGB_T &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Tappable row: optional leading icon + title, with a selected state.  
+<p>List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting text, a trailing text or icon, and an optional divider. Selected rows draw as a filled pill (the navigation-drawer look). Everything beyond the headline is opt-in, so a plain <a class="el" href="classtinymd_1_1ListItem.html" title="List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting...">ListItem</a> looks as before.  
  <a href="classtinymd_1_1ListItem.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ListItem_8h_source.html">ListItem.h</a>&gt;</code></p>
@@ -90,7 +91,7 @@ Inheritance diagram for ListItem&lt; RGB_T &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classtinymd_1_1ListItem__inherit__graph.png" border="0" usemap="#aListItem_3_01RGB__T_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="aListItem_3_01RGB__T_01_4_inherit__map" id="aListItem_3_01RGB__T_01_4_inherit__map">
-<area shape="rect" title="Tappable row: optional leading icon + title, with a selected state." alt="" coords="5,81,153,109"/>
+<area shape="rect" title="List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting..." alt="" coords="5,81,153,109"/>
 <area shape="rect" href="classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="9,5,149,33"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -99,7 +100,7 @@ Collaboration diagram for ListItem&lt; RGB_T &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classtinymd_1_1ListItem__coll__graph.png" border="0" usemap="#aListItem_3_01RGB__T_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="aListItem_3_01RGB__T_01_4_coll__map" id="aListItem_3_01RGB__T_01_4_coll__map">
-<area shape="rect" title="Tappable row: optional leading icon + title, with a selected state." alt="" coords="71,302,218,329"/>
+<area shape="rect" title="List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting..." alt="" coords="71,302,218,329"/>
 <area shape="rect" href="classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="74,225,215,252"/>
 <area shape="rect" href="structtinymd_1_1Bounds.html" title="Axis&#45;aligned pixel rectangle used for widget bounds and hit&#45;testing." alt="" coords="70,124,139,151"/>
 <area shape="rect" href="structtinymd_1_1MaterialTheme.html" title=" " alt="" coords="163,115,350,160"/>
@@ -117,14 +118,51 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a222adbedc6e54089679d48f9f3cebd1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acce946de612c75a27238ad2442c688a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#acce946de612c75a27238ad2442c688a0">setTitle</a> (const char *title)</td></tr>
 <tr class="separator:acce946de612c75a27238ad2442c688a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88ff40732f6ebf1aae51626dc0e81b16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a88ff40732f6ebf1aae51626dc0e81b16">setSupportingText</a> (const char *text)</td></tr>
+<tr class="memdesc:a88ff40732f6ebf1aae51626dc0e81b16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supporting text under the headline (a two-line item), in the label role.  <br /></td></tr>
+<tr class="separator:a88ff40732f6ebf1aae51626dc0e81b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab7e063ed2ec23ce2f7b77264a1a3897"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#aab7e063ed2ec23ce2f7b77264a1a3897">setSubtitle</a> (const char *subtitle)</td></tr>
+<tr class="memdesc:aab7e063ed2ec23ce2f7b77264a1a3897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as <a class="el" href="classtinymd_1_1ListItem.html#a88ff40732f6ebf1aae51626dc0e81b16" title="Supporting text under the headline (a two-line item), in the label role.">setSupportingText()</a> (earlier name)  <br /></td></tr>
+<tr class="separator:aab7e063ed2ec23ce2f7b77264a1a3897"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a066baf074f9cef293163f0294549630f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a066baf074f9cef293163f0294549630f">setTypographyRole</a> (<a class="el" href="namespacetinymd.html#a5a7184b2d3e760908141409546b77df7">TypographyRole</a> role)</td></tr>
+<tr class="memdesc:a066baf074f9cef293163f0294549630f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Text size of the headline - kBody (the default) down to kLabel.  <br /></td></tr>
+<tr class="separator:a066baf074f9cef293163f0294549630f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ff3c5b3b409697f3c57980813b5c5b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a5ff3c5b3b409697f3c57980813b5c5b3">setTitleFont</a> (tinygpu::IFont&lt; RGB_T &gt; &amp;font)</td></tr>
+<tr class="separator:a5ff3c5b3b409697f3c57980813b5c5b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3a77787d0f81f654ad5619c92d6caa3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#af3a77787d0f81f654ad5619c92d6caa3">setSubtitleFont</a> (tinygpu::IFont&lt; RGB_T &gt; &amp;font)</td></tr>
+<tr class="separator:af3a77787d0f81f654ad5619c92d6caa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a830dbd019c763fd189d3a791afb09541"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a830dbd019c763fd189d3a791afb09541">setTitleColor</a> (RGB_T color)</td></tr>
+<tr class="memdesc:a830dbd019c763fd189d3a791afb09541"><td class="mdescLeft">&#160;</td><td class="mdescRight">Colour of the headline (default: the text colour of the row).  <br /></td></tr>
+<tr class="separator:a830dbd019c763fd189d3a791afb09541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80d0b09d8eb0503db712d96beebecc02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a80d0b09d8eb0503db712d96beebecc02">setLeadingText</a> (const char *text)</td></tr>
+<tr class="memdesc:a80d0b09d8eb0503db712d96beebecc02"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 40 dp circle with this text (typically one letter) at the start of the row.  <br /></td></tr>
+<tr class="separator:a80d0b09d8eb0503db712d96beebecc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a965fdd6e89bb03ff884a7e19f2409902"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a965fdd6e89bb03ff884a7e19f2409902">setIcon</a> (<a class="el" href="namespacetinymd.html#a883df5ad2227e4d4b0f35c6bb99833b9">IconPainter</a>&lt; RGB_T &gt; icon)</td></tr>
+<tr class="memdesc:a965fdd6e89bb03ff884a7e19f2409902"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 24 dp icon at the start of the row (ignored when there is a leading text).  <br /></td></tr>
 <tr class="separator:a965fdd6e89bb03ff884a7e19f2409902"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab64d0a009be0a6c94136cda91704d837"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#ab64d0a009be0a6c94136cda91704d837">setTrailingText</a> (const char *text)</td></tr>
+<tr class="separator:ab64d0a009be0a6c94136cda91704d837"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40b005ce53765cf8b581ab051d01c719"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a40b005ce53765cf8b581ab051d01c719">setTrailingIcon</a> (<a class="el" href="namespacetinymd.html#a883df5ad2227e4d4b0f35c6bb99833b9">IconPainter</a>&lt; RGB_T &gt; icon)</td></tr>
+<tr class="separator:a40b005ce53765cf8b581ab051d01c719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32c0e2894b29e0a9b9e91ee131804c62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a32c0e2894b29e0a9b9e91ee131804c62">setDivider</a> (bool divider)</td></tr>
+<tr class="memdesc:a32c0e2894b29e0a9b9e91ee131804c62"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 1 dp line along the bottom edge of the row.  <br /></td></tr>
+<tr class="separator:a32c0e2894b29e0a9b9e91ee131804c62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac52f71c038c92488c2da78ba870591e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#ac52f71c038c92488c2da78ba870591e1">setDividerInset</a> (bool inset)</td></tr>
+<tr class="memdesc:ac52f71c038c92488c2da78ba870591e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">true: the divider starts after the leading slot (inset); false: full width.  <br /></td></tr>
+<tr class="separator:ac52f71c038c92488c2da78ba870591e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3d662991595c509857a34d4c0cb4ab3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#aa3d662991595c509857a34d4c0cb4ab3">setDividerColor</a> (RGB_T color)</td></tr>
+<tr class="separator:aa3d662991595c509857a34d4c0cb4ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac">setBackgroundColor</a> (RGB_T color)</td></tr>
+<tr class="separator:a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b1bb0a417134a89e191bdd63088be15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a4b1bb0a417134a89e191bdd63088be15">clearBackgroundColor</a> ()</td></tr>
+<tr class="separator:a4b1bb0a417134a89e191bdd63088be15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c9e9fd2eab21361414c88eeeaaa0fb1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a9c9e9fd2eab21361414c88eeeaaa0fb1">selected</a> () const</td></tr>
 <tr class="separator:a9c9e9fd2eab21361414c88eeeaaa0fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad42accd39af295a957386c68dac3dcae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#ad42accd39af295a957386c68dac3dcae">setSelected</a> (bool <a class="el" href="classtinymd_1_1ListItem.html#a9c9e9fd2eab21361414c88eeeaaa0fb1">selected</a>)</td></tr>
 <tr class="separator:ad42accd39af295a957386c68dac3dcae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a066baf074f9cef293163f0294549630f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a066baf074f9cef293163f0294549630f">setTypographyRole</a> (<a class="el" href="namespacetinymd.html#a5a7184b2d3e760908141409546b77df7">TypographyRole</a> role)</td></tr>
-<tr class="separator:a066baf074f9cef293163f0294549630f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bda0ebf50e44c5f385b2fa587793db5"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a5bda0ebf50e44c5f385b2fa587793db5">preferredHeight</a> () const</td></tr>
+<tr class="memdesc:a5bda0ebf50e44c5f385b2fa587793db5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Height the row needs: a two-line item when it has supporting text.  <br /></td></tr>
+<tr class="separator:a5bda0ebf50e44c5f385b2fa587793db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9b29dcd644b6729d8be1b9edef7112c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#aa9b29dcd644b6729d8be1b9edef7112c">draw</a> (tinygpu::ISurface&lt; RGB_T &gt; &amp;target) override</td></tr>
 <tr class="separator:aa9b29dcd644b6729d8be1b9edef7112c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27cc3a69c6b2408aa53101ddb953b9d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a27cc3a69c6b2408aa53101ddb953b9d0">onGesture</a> (const tinygpu::GestureEvent &amp;event) override</td></tr>
@@ -170,6 +208,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8740ba80e30dd75e71d09fa1dcf04f3d inherit pub_attribs_classtinymd_1_1Widget"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1Widget.html#a8740ba80e30dd75e71d09fa1dcf04f3d">enabled</a> = true</td></tr>
 <tr class="separator:a8740ba80e30dd75e71d09fa1dcf04f3d inherit pub_attribs_classtinymd_1_1Widget"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a1d79dfd15db1fa2e66455dc6f5b037d0"><td class="memItemLeft" align="right" valign="top">static constexpr int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a1d79dfd15db1fa2e66455dc6f5b037d0">kOneLineHeight</a> = 56</td></tr>
+<tr class="memdesc:a1d79dfd15db1fa2e66455dc6f5b037d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Height of a one-line item (headline only), Material 3.  <br /></td></tr>
+<tr class="separator:a1d79dfd15db1fa2e66455dc6f5b037d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b7ccd26043d59b45c767d3449b70079"><td class="memItemLeft" align="right" valign="top">static constexpr int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1ListItem.html#a4b7ccd26043d59b45c767d3449b70079">kTwoLineHeight</a> = 72</td></tr>
+<tr class="memdesc:a4b7ccd26043d59b45c767d3449b70079"><td class="mdescLeft">&#160;</td><td class="mdescRight">Height of a two-line item (headline and supporting text), Material 3.  <br /></td></tr>
+<tr class="separator:a4b7ccd26043d59b45c767d3449b70079"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_methods_classtinymd_1_1Widget"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtinymd_1_1Widget')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtinymd_1_1Widget.html">Widget&lt; RGB_T &gt;</a></td></tr>
@@ -182,8 +229,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename RGB_T = TINYMD_DEFAULT_RGB_T&gt;<br />
-class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading icon + title, with a selected state. </p>
-<p>The building block for <a class="el" href="classtinymd_1_1Drawer.html" title="Modal side navigation panel, holding a list of items (typically ListItem) that scrolls automatically ...">Drawer</a> (<a class="el" href="Drawer_8h.html">Drawer.h</a>), but usable standalone for any settings-style list. Selected items draw as a filled pill (Material's navigation-drawer look); unselected items are flat. </p>
+class tinymd::ListItem&lt; RGB_T &gt;</div><p>List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting text, a trailing text or icon, and an optional divider. Selected rows draw as a filled pill (the navigation-drawer look). Everything beyond the headline is opt-in, so a plain <a class="el" href="classtinymd_1_1ListItem.html" title="List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting...">ListItem</a> looks as before. </p>
+<p>ListItem&lt;RGB565&gt; row(Bounds(0, y, 240, ListItem&lt;RGB565&gt;::kOneLineHeight), "Quarterly report"); row.setSupportingText("Alice &lt;alice@example.com&gt;"); // two-line item row.setLeadingText("A"); // 40 dp avatar with a letter row.setTrailingText("2 files"); // label on the right row.setDivider(true); // divider at the bottom edge</p>
+<p>Sizes (dp, the same as px here): one-line item 56, two-line item 72, avatar 40, icon 24, dividers 1 with an inset of 16 from the text. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adba449170e55c77eb203cc578f6201bd" name="adba449170e55c77eb203cc578f6201bd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adba449170e55c77eb203cc578f6201bd">&#9670;&#160;</a></span>ListItem() <span class="overload">[1/2]</span></h2>
@@ -253,6 +301,31 @@ class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading ico
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4b1bb0a417134a89e191bdd63088be15" name="a4b1bb0a417134a89e191bdd63088be15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b1bb0a417134a89e191bdd63088be15">&#9670;&#160;</a></span>clearBackgroundColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void clearBackgroundColor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa9b29dcd644b6729d8be1b9edef7112c" name="aa9b29dcd644b6729d8be1b9edef7112c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9b29dcd644b6729d8be1b9edef7112c">&#9670;&#160;</a></span>draw()</h2>
 
@@ -312,6 +385,33 @@ class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading ico
 
 </div>
 </div>
+<a id="a5bda0ebf50e44c5f385b2fa587793db5" name="a5bda0ebf50e44c5f385b2fa587793db5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bda0ebf50e44c5f385b2fa587793db5">&#9670;&#160;</a></span>preferredHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32_t preferredHeight </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Height the row needs: a two-line item when it has supporting text. </p>
+
+</div>
+</div>
 <a id="a9c9e9fd2eab21361414c88eeeaaa0fb1" name="a9c9e9fd2eab21361414c88eeeaaa0fb1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c9e9fd2eab21361414c88eeeaaa0fb1">&#9670;&#160;</a></span>selected()</h2>
 
@@ -334,6 +434,116 @@ class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading ico
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac" name="a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a9f1a5fa85d2bdca0cd50a8b6f5d4ac">&#9670;&#160;</a></span>setBackgroundColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setBackgroundColor </td>
+          <td>(</td>
+          <td class="paramtype">RGB_T&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Fills the whole row with a rounded rectangle of this colour (the row's bounds give its width, so a narrower, centred row is a card). Selected rows keep their own colour. </p>
+
+</div>
+</div>
+<a id="a32c0e2894b29e0a9b9e91ee131804c62" name="a32c0e2894b29e0a9b9e91ee131804c62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32c0e2894b29e0a9b9e91ee131804c62">&#9670;&#160;</a></span>setDivider()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setDivider </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>divider</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A 1 dp line along the bottom edge of the row. </p>
+
+</div>
+</div>
+<a id="aa3d662991595c509857a34d4c0cb4ab3" name="aa3d662991595c509857a34d4c0cb4ab3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3d662991595c509857a34d4c0cb4ab3">&#9670;&#160;</a></span>setDividerColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setDividerColor </td>
+          <td>(</td>
+          <td class="paramtype">RGB_T&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Colour of the divider (default: the outline colour of the theme). A divider in the page background colour reads as a gap between two filled items. </p>
+
+</div>
+</div>
+<a id="ac52f71c038c92488c2da78ba870591e1" name="ac52f71c038c92488c2da78ba870591e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac52f71c038c92488c2da78ba870591e1">&#9670;&#160;</a></span>setDividerInset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setDividerInset </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>inset</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>true: the divider starts after the leading slot (inset); false: full width. </p>
 
 </div>
 </div>
@@ -360,6 +570,36 @@ class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading ico
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>A 24 dp icon at the start of the row (ignored when there is a leading text). </p>
+
+</div>
+</div>
+<a id="a80d0b09d8eb0503db712d96beebecc02" name="a80d0b09d8eb0503db712d96beebecc02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80d0b09d8eb0503db712d96beebecc02">&#9670;&#160;</a></span>setLeadingText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setLeadingText </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A 40 dp circle with this text (typically one letter) at the start of the row. </p>
 
 </div>
 </div>
@@ -389,6 +629,88 @@ class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading ico
 
 </div>
 </div>
+<a id="aab7e063ed2ec23ce2f7b77264a1a3897" name="aab7e063ed2ec23ce2f7b77264a1a3897"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab7e063ed2ec23ce2f7b77264a1a3897">&#9670;&#160;</a></span>setSubtitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setSubtitle </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>subtitle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Same as <a class="el" href="classtinymd_1_1ListItem.html#a88ff40732f6ebf1aae51626dc0e81b16" title="Supporting text under the headline (a two-line item), in the label role.">setSupportingText()</a> (earlier name) </p>
+
+</div>
+</div>
+<a id="af3a77787d0f81f654ad5619c92d6caa3" name="af3a77787d0f81f654ad5619c92d6caa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3a77787d0f81f654ad5619c92d6caa3">&#9670;&#160;</a></span>setSubtitleFont()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setSubtitleFont </td>
+          <td>(</td>
+          <td class="paramtype">tinygpu::IFont&lt; RGB_T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>font</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a88ff40732f6ebf1aae51626dc0e81b16" name="a88ff40732f6ebf1aae51626dc0e81b16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88ff40732f6ebf1aae51626dc0e81b16">&#9670;&#160;</a></span>setSupportingText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setSupportingText </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Supporting text under the headline (a two-line item), in the label role. </p>
+
+</div>
+</div>
 <a id="acce946de612c75a27238ad2442c688a0" name="acce946de612c75a27238ad2442c688a0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acce946de612c75a27238ad2442c688a0">&#9670;&#160;</a></span>setTitle()</h2>
 
@@ -403,6 +725,113 @@ class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading ico
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>title</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a830dbd019c763fd189d3a791afb09541" name="a830dbd019c763fd189d3a791afb09541"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a830dbd019c763fd189d3a791afb09541">&#9670;&#160;</a></span>setTitleColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setTitleColor </td>
+          <td>(</td>
+          <td class="paramtype">RGB_T&#160;</td>
+          <td class="paramname"><em>color</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Colour of the headline (default: the text colour of the row). </p>
+
+</div>
+</div>
+<a id="a5ff3c5b3b409697f3c57980813b5c5b3" name="a5ff3c5b3b409697f3c57980813b5c5b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ff3c5b3b409697f3c57980813b5c5b3">&#9670;&#160;</a></span>setTitleFont()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setTitleFont </td>
+          <td>(</td>
+          <td class="paramtype">tinygpu::IFont&lt; RGB_T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>font</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Fonts of the headline and of the supporting text (default: the fonts of the typography roles of the theme). The text is clipped to the row. </p>
+
+</div>
+</div>
+<a id="a40b005ce53765cf8b581ab051d01c719" name="a40b005ce53765cf8b581ab051d01c719"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40b005ce53765cf8b581ab051d01c719">&#9670;&#160;</a></span>setTrailingIcon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setTrailingIcon </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacetinymd.html#a883df5ad2227e4d4b0f35c6bb99833b9">IconPainter</a>&lt; RGB_T &gt;&#160;</td>
+          <td class="paramname"><em>icon</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab64d0a009be0a6c94136cda91704d837" name="ab64d0a009be0a6c94136cda91704d837"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab64d0a009be0a6c94136cda91704d837">&#9670;&#160;</a></span>setTrailingText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setTrailingText </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>text</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -438,11 +867,60 @@ class tinymd::ListItem&lt; RGB_T &gt;</div><p>Tappable row: optional leading ico
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Text size - kBody (the default, matching this row's original fixed size) down to kLabel for a denser list (e.g. a navigation drawer with several rows that don't need to be as prominent as body text). </p>
+
+<p>Text size of the headline - kBody (the default) down to kLabel. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a1d79dfd15db1fa2e66455dc6f5b037d0" name="a1d79dfd15db1fa2e66455dc6f5b037d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d79dfd15db1fa2e66455dc6f5b037d0">&#9670;&#160;</a></span>kOneLineHeight</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int32_t kOneLineHeight = 56</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Height of a one-line item (headline only), Material 3. </p>
+
+</div>
+</div>
+<a id="a4b7ccd26043d59b45c767d3449b70079" name="a4b7ccd26043d59b45c767d3449b70079"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b7ccd26043d59b45c767d3449b70079">&#9670;&#160;</a></span>kTwoLineHeight</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int32_t kTwoLineHeight = 72</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Height of a two-line item (headline and supporting text), Material 3. </p>
+
+</div>
+</div>
 <a id="ad4443d02bbfe4640917915c157bda780" name="ad4443d02bbfe4640917915c157bda780"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad4443d02bbfe4640917915c157bda780">&#9670;&#160;</a></span>onClick</h2>
 

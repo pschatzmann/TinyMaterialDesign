@@ -2,7 +2,7 @@
 <area shape="rect" id="node1" href="$classtinymd_1_1TextInputTarget.html" title=" " alt="" coords="15,100,136,128"/>
 <area shape="rect" id="node2" href="$classtinymd_1_1TextField.html" title=" " alt="" coords="196,5,406,50"/>
 <area shape="rect" id="node3" href="$classtinymd_1_1SearchBar.html" title="Pill&#45;shaped search input: leading magnifier glyph, typed text, and a trailing &quot;x&quot; clear glyph shown o..." alt="" coords="221,74,382,102"/>
-<area shape="rect" id="node4" href="$classtinymd_1_1TextArea.html" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="226,126,377,154"/>
+<area shape="rect" id="node4" href="$classtinymd_1_1TextArea.html" title="Multi&#45;line, word&#45;wrapped text input box with scrolling." alt="" coords="226,126,377,154"/>
 <area shape="rect" id="node5" href="$classtinymd_1_1TextField.html" title="Single&#45;line text input box." alt="" coords="225,178,378,206"/>
 <area shape="rect" id="node6" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="5,1590,146,1618"/>
 <area shape="rect" id="node7" href="$classtinymd_1_1Button.html" title=" " alt="" coords="204,853,399,898"/>
@@ -39,7 +39,7 @@
 <area shape="rect" id="node43" href="$classtinymd_1_1Label.html" title="Single line of themed, non&#45;interactive text." alt="" coords="237,2739,366,2767"/>
 <area shape="rect" id="node44" href="$classtinymd_1_1LineChart.html" title="Line chart with one or more series, a vertical value scale with round&#45;numbered grid lines,..." alt="" coords="223,2791,380,2819"/>
 <area shape="rect" id="node45" href="$classtinymd_1_1LinearProgressIndicator.html" title="Horizontal progress bar. Determinate (value in [0,1]) or indeterminate (a segment sweeps back and for..." alt="" coords="214,2843,388,2887"/>
-<area shape="rect" id="node46" href="$classtinymd_1_1ListItem.html" title="Tappable row: optional leading icon + title, with a selected state." alt="" coords="228,2911,375,2939"/>
+<area shape="rect" id="node46" href="$classtinymd_1_1ListItem.html" title="List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting..." alt="" coords="228,2911,375,2939"/>
 <area shape="rect" id="node47" href="$classtinymd_1_1MediaCard.html" title="Tappable card with a thumbnail image and a caption &#45; e.g. one tile in a grid of stations/genres/count..." alt="" coords="219,2963,384,2991"/>
 <area shape="rect" id="node48" href="$classtinymd_1_1Menu.html" title="Popover list of items (typically ListItem), anchored near whatever opened it &#45; e.g...." alt="" coords="236,3015,366,3043"/>
 <area shape="rect" id="node49" href="$classtinymd_1_1NavigationBar.html" title="Bottom navigation bar: 3&#45;5 exclusive destinations, each an icon with a label underneath and a pill hi..." alt="" coords="208,3067,395,3095"/>

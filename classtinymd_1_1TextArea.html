@@ -81,7 +81,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Multi-line, word-wrapped text input box.  
+<p>Multi-line, word-wrapped text input box with scrolling.  
  <a href="classtinymd_1_1TextArea.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="TextArea_8h_source.html">TextArea.h</a>&gt;</code></p>
@@ -90,7 +90,7 @@ Inheritance diagram for TextArea&lt; RGB_T &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classtinymd_1_1TextArea__inherit__graph.png" border="0" usemap="#aTextArea_3_01RGB__T_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="aTextArea_3_01RGB__T_01_4_inherit__map" id="aTextArea_3_01RGB__T_01_4_inherit__map">
-<area shape="rect" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="77,81,228,109"/>
+<area shape="rect" title="Multi&#45;line, word&#45;wrapped text input box with scrolling." alt="" coords="77,81,228,109"/>
 <area shape="rect" href="classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="5,5,146,33"/>
 <area shape="rect" href="classtinymd_1_1TextInputTarget.html" title=" " alt="" coords="170,5,291,33"/>
 </map>
@@ -100,7 +100,7 @@ Collaboration diagram for TextArea&lt; RGB_T &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classtinymd_1_1TextArea__coll__graph.png" border="0" usemap="#aTextArea_3_01RGB__T_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="aTextArea_3_01RGB__T_01_4_coll__map" id="aTextArea_3_01RGB__T_01_4_coll__map">
-<area shape="rect" title="Multi&#45;line, word&#45;wrapped text input box." alt="" coords="146,302,298,329"/>
+<area shape="rect" title="Multi&#45;line, word&#45;wrapped text input box with scrolling." alt="" coords="146,302,298,329"/>
 <area shape="rect" href="classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="74,225,215,252"/>
 <area shape="rect" href="structtinymd_1_1Bounds.html" title="Axis&#45;aligned pixel rectangle used for widget bounds and hit&#45;testing." alt="" coords="70,124,139,151"/>
 <area shape="rect" href="structtinymd_1_1MaterialTheme.html" title=" " alt="" coords="163,115,350,160"/>
@@ -124,6 +124,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1359bfcc4c6f6518d4e6bb97e20cf563"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#a1359bfcc4c6f6518d4e6bb97e20cf563">setMaxLength</a> (size_t maxLength)</td></tr>
 <tr class="memdesc:a1359bfcc4c6f6518d4e6bb97e20cf563"><td class="mdescLeft">&#160;</td><td class="mdescRight">0 (the default) means unlimited.  <br /></td></tr>
 <tr class="separator:a1359bfcc4c6f6518d4e6bb97e20cf563"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14ab2302e1b47075628a550c7a523c2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#a14ab2302e1b47075628a550c7a523c2d">setColors</a> (RGB_T <a class="el" href="classtinymd_1_1TextArea.html#abd3ebe9bce668abd1e9549019d5c2120">text</a>, RGB_T placeholder)</td></tr>
+<tr class="separator:a14ab2302e1b47075628a550c7a523c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28ec531e5f5b3b99bfacd907147b2cd3"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#a28ec531e5f5b3b99bfacd907147b2cd3">scrollOffset</a> () const</td></tr>
+<tr class="memdesc:a28ec531e5f5b3b99bfacd907147b2cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertical position of the text in pixels (0 = the first line)  <br /></td></tr>
+<tr class="separator:a28ec531e5f5b3b99bfacd907147b2cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac81473bf7b971bcb299de8ee4c46c4f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#ac81473bf7b971bcb299de8ee4c46c4f6">focused</a> () const</td></tr>
 <tr class="separator:ac81473bf7b971bcb299de8ee4c46c4f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfd704f3ba532ccf17108280a3efa6e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#acfd704f3ba532ccf17108280a3efa6e6">focus</a> ()</td></tr>
@@ -139,6 +144,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a66ebec5bbf65f734ea7b235fce8484d6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#a66ebec5bbf65f734ea7b235fce8484d6">handleEnter</a> () override</td></tr>
 <tr class="memdesc:a66ebec5bbf65f734ea7b235fce8484d6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtinymd_1_1TextInputTarget.html">TextInputTarget</a>: closes the keyboard, same as <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a> - see <a class="el" href="classtinymd_1_1TextArea.html#aeb4838e5df2b83d614ccc45a88ad6bd8">submit()</a>.  <br /></td></tr>
 <tr class="separator:a66ebec5bbf65f734ea7b235fce8484d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05c8169121b3469215d111076843dc10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#a05c8169121b3469215d111076843dc10">isDraggable</a> () const override</td></tr>
+<tr class="memdesc:a05c8169121b3469215d111076843dc10"><td class="mdescLeft">&#160;</td><td class="mdescRight">A drag over the box scrolls the text, so the box is draggable.  <br /></td></tr>
+<tr class="separator:a05c8169121b3469215d111076843dc10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9b29dcd644b6729d8be1b9edef7112c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#aa9b29dcd644b6729d8be1b9edef7112c">draw</a> (tinygpu::ISurface&lt; RGB_T &gt; &amp;target) override</td></tr>
 <tr class="separator:aa9b29dcd644b6729d8be1b9edef7112c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27cc3a69c6b2408aa53101ddb953b9d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtinymd_1_1TextArea.html#a27cc3a69c6b2408aa53101ddb953b9d0">onGesture</a> (const tinygpu::GestureEvent &amp;event) override</td></tr>
@@ -218,10 +226,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename RGB_T = TINYMD_DEFAULT_RGB_T&gt;<br />
-class tinymd::TextArea&lt; RGB_T &gt;</div><p>Multi-line, word-wrapped text input box. </p>
-<p><a class="el" href="classtinymd_1_1TextArea.html" title="Multi-line, word-wrapped text input box.">TextArea</a> is <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a>'s multi-line counterpart - same focus/keyboard wiring, same <a class="el" href="classtinymd_1_1TextInputTarget.html">TextInputTarget</a> contract (see <a class="el" href="TextInputTarget_8h.html">Core/TextInputTarget.h</a> and <a class="el" href="TextField_8h.html">TextField.h</a>'s class comment for the manage()/Keyboard pairing). Note that a <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a>'s dedicated Enter key (not Done) is what inserts a newline here - Done always finishes editing and closes the keyboard, exactly like <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a>, via the same <a class="el" href="classtinymd_1_1TextArea.html#a66ebec5bbf65f734ea7b235fce8484d6" title="TextInputTarget: closes the keyboard, same as TextField - see submit().">handleEnter()</a>/submit() pair.</p>
-<p>Wrapping reuses TinyGPU's existing LinePrinter (the same one <a class="el" href="classtinymd_1_1Card.html" title="Elevated rounded-rect container with an optional title and word-wrapped body text.">Card</a> and <a class="el" href="classtinymd_1_1Dialog.html" title="Modal alert dialog: full-screen scrim + centered card + title + wrapped message + action widgets (typ...">Dialog</a> use for their body text) rather than reimplementing word wrap. The blinking end-of-text cursor uses LinePrinter::cursorX()/cursorY(), which report where the next character would land after a print() call.</p>
-<p>Known limitation: no scrolling - text past the box's bottom edge is cropped to the box (see ISurface::pushClipRect()) rather than scrolling into view, and the cursor is skipped once it would fall past the box for the same reason. Fine for a few lines of notes; not a substitute for a real multi-page, scrollable text editor. </p>
+class tinymd::TextArea&lt; RGB_T &gt;</div><p>Multi-line, word-wrapped text input box with scrolling. </p>
+<p><a class="el" href="classtinymd_1_1TextArea.html" title="Multi-line, word-wrapped text input box with scrolling.">TextArea</a> is <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a>'s multi-line counterpart - same focus/keyboard wiring, same <a class="el" href="classtinymd_1_1TextInputTarget.html">TextInputTarget</a> contract (see <a class="el" href="TextInputTarget_8h.html">Core/TextInputTarget.h</a> and <a class="el" href="TextField_8h.html">TextField.h</a>'s class comment for the manage()/Keyboard pairing). Note that a <a class="el" href="classtinymd_1_1Keyboard.html" title="On-screen QWERTY keyboard that drives one text input at a time.">Keyboard</a>'s dedicated Enter key (not Done) is what inserts a newline here - Done always finishes editing and closes the keyboard, exactly like <a class="el" href="classtinymd_1_1TextField.html" title="Single-line text input box.">TextField</a>, via the same <a class="el" href="classtinymd_1_1TextArea.html#a66ebec5bbf65f734ea7b235fce8484d6" title="TextInputTarget: closes the keyboard, same as TextField - see submit().">handleEnter()</a>/submit() pair.</p>
+<p>The text is wrapped at word boundaries to the width of the box. When the text is taller than the box it scrolls: a drag over the box moves it, and while typing the end of the text is kept in view. The text is drawn clipped to the box. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae501b0d59b074ade662a958dd699c3af" name="ae501b0d59b074ade662a958dd699c3af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae501b0d59b074ade662a958dd699c3af">&#9670;&#160;</a></span>TextArea() <span class="overload">[1/2]</span></h2>
@@ -481,6 +488,35 @@ class tinymd::TextArea&lt; RGB_T &gt;</div><p>Multi-line, word-wrapped text inpu
 
 </div>
 </div>
+<a id="a05c8169121b3469215d111076843dc10" name="a05c8169121b3469215d111076843dc10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05c8169121b3469215d111076843dc10">&#9670;&#160;</a></span>isDraggable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isDraggable </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A drag over the box scrolls the text, so the box is draggable. </p>
+
+<p>Reimplemented from <a class="el" href="classtinymd_1_1Widget.html#a437cbc71539ad5b1d84c4f40430c826a">Widget&lt; RGB_T &gt;</a>.</p>
+
+</div>
+</div>
 <a id="a27cc3a69c6b2408aa53101ddb953b9d0" name="a27cc3a69c6b2408aa53101ddb953b9d0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a27cc3a69c6b2408aa53101ddb953b9d0">&#9670;&#160;</a></span>onGesture()</h2>
 
@@ -508,6 +544,70 @@ class tinymd::TextArea&lt; RGB_T &gt;</div><p>Multi-line, word-wrapped text inpu
 <p>Handles one gesture event. Returns true if this widget consumed it. </p>
 
 <p>Reimplemented from <a class="el" href="classtinymd_1_1Widget.html#a53dc8b33ce1b4df20b203c8e3af42a4d">Widget&lt; RGB_T &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a28ec531e5f5b3b99bfacd907147b2cd3" name="a28ec531e5f5b3b99bfacd907147b2cd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28ec531e5f5b3b99bfacd907147b2cd3">&#9670;&#160;</a></span>scrollOffset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32_t scrollOffset </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Vertical position of the text in pixels (0 = the first line) </p>
+
+</div>
+</div>
+<a id="a14ab2302e1b47075628a550c7a523c2d" name="a14ab2302e1b47075628a550c7a523c2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14ab2302e1b47075628a550c7a523c2d">&#9670;&#160;</a></span>setColors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setColors </td>
+          <td>(</td>
+          <td class="paramtype">RGB_T&#160;</td>
+          <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RGB_T&#160;</td>
+          <td class="paramname"><em>placeholder</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Colours of the entered text and of the placeholder (default: the theme's onSurface and onSurfaceVariant), as for <a class="el" href="classtinymd_1_1TextField.html#a14ab2302e1b47075628a550c7a523c2d">TextField::setColors()</a>. </p>
 
 </div>
 </div>

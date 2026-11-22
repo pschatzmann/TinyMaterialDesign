@@ -1,5 +1,5 @@
 <map id="ListItem&lt; RGB_T &gt;" name="ListItem&lt; RGB_T &gt;">
-<area shape="rect" id="node1" title="Tappable row: optional leading icon + title, with a selected state." alt="" coords="71,302,218,329"/>
+<area shape="rect" id="node1" title="List row after the Material 3 list spec: a leading avatar or icon, a headline, an optional supporting..." alt="" coords="71,302,218,329"/>
 <area shape="rect" id="node2" href="$classtinymd_1_1Widget.html" title="Base class every TinyMaterialDesign widget derives from." alt="" coords="74,225,215,252"/>
 <area shape="rect" id="node3" href="$structtinymd_1_1Bounds.html" title="Axis&#45;aligned pixel rectangle used for widget bounds and hit&#45;testing." alt="" coords="70,124,139,151"/>
 <area shape="rect" id="node4" href="$structtinymd_1_1MaterialTheme.html" title=" " alt="" coords="163,115,350,160"/>
