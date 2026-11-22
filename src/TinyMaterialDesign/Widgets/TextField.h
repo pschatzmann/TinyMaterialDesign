@@ -85,6 +85,15 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
   /// Shows a '*' for each character (e.g. for a password); text() still
   /// returns the real text.
   void setPasswordMode(bool password) { password_ = password; }
+
+  /// Colours of the entered text and of the placeholder (default: the theme's
+  /// onSurface and onSurfaceVariant). Use grey for the placeholder and black
+  /// for the text when the theme's colours are too close.
+  void setColors(RGB_T text, RGB_T placeholder) {
+    textColor_ = text;
+    placeholderColor_ = placeholder;
+    hasColors_ = true;
+  }
   bool passwordMode() const { return password_; }
 
   /// The field is directly on a page: the label above the box (and the error
@@ -185,7 +194,8 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
       if (!placeholder_.empty()) {
         this->theme().typography.body->drawText(target, static_cast<int16_t>(textX),
                                         static_cast<int16_t>(textY), placeholder_.c_str(),
-                                        this->theme().colors.onSurfaceVariant, this->theme().colors.surface, false);
+                                        hasColors_ ? placeholderColor_ : this->theme().colors.onSurfaceVariant,
+                                        this->theme().colors.surface, false);
       }
       return;
     }
@@ -193,7 +203,8 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
     const std::string shown = password_ ? std::string(text_.size(), '*') : text_;
     this->theme().typography.body->drawText(target, static_cast<int16_t>(textX),
                                     static_cast<int16_t>(textY), shown.c_str(),
-                                    this->theme().colors.onSurface, this->theme().colors.surface, false);
+                                    hasColors_ ? textColor_ : this->theme().colors.onSurface,
+                                    this->theme().colors.surface, false);
 
     if (focused_ && cursorVisible_) {
       const size_t textWidth = this->theme().typography.body->measureTextWidth(shown.c_str());
@@ -235,6 +246,9 @@ class TextField : public Widget<RGB_T>, public TextInputTarget {
   bool onBackground_ = false;
   bool password_ = false;
   bool hasLabel_ = false;
+  bool hasColors_ = false;
+  RGB_T textColor_{};
+  RGB_T placeholderColor_{};
 
   void validate() {
     if (validator_) error_ = validator_(text_) ? "" : validatorError_;

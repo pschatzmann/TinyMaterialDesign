@@ -28,6 +28,9 @@ class Chip : public Widget<RGB_T> {
   bool selected() const { return selected_; }
   void setSelected(bool selected) { selected_ = selected; }
 
+  /// Font of the label (default: the label font of the theme). A smaller font makes a compact chip.
+  void setFont(tinygpu::IFont<RGB_T>& font) { font_ = &font; }
+
   void draw(tinygpu::ISurface<RGB_T>& target) override {
     RGB_T background = selected_ ? this->theme().colors.secondaryContainer : this->theme().colors.surfaceVariant;
     RGB_T foreground = selected_ ? this->theme().colors.onSecondaryContainer : this->theme().colors.onSurfaceVariant;
@@ -46,7 +49,7 @@ class Chip : public Widget<RGB_T> {
                            toPx(this->bounds.h), radius, outline);
     }
 
-    tinygpu::IFont<RGB_T>& font = *this->theme().typography.label;
+    tinygpu::IFont<RGB_T>& font = font_ != nullptr ? *font_ : *this->theme().typography.label;
     const size_t textWidth = font.measureTextWidth(label_.c_str());
     const size_t textHeight = font.getHeight(1);
     const int32_t textX = this->bounds.centerX() - static_cast<int32_t>(textWidth) / 2;
@@ -69,6 +72,7 @@ class Chip : public Widget<RGB_T> {
   std::string label_;
   bool selectable_ = false;
   bool selected_ = false;
+  tinygpu::IFont<RGB_T>* font_ = nullptr;
 };
 
 using ChipRGB565 = Chip<tinygpu::RGB565>;

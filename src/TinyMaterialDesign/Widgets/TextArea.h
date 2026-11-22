@@ -1,18 +1,18 @@
 #pragma once
 #include <functional>
 #include <string>
+#include <vector>
 
 #include "TinyGPU/Color/RGB565.h"
 #include "TinyGPU/Color/RGB666.h"
 #include "TinyGPU/Color/RGB888.h"
-#include "TinyGPU/Font/LinePrinter.h"
 #include "TinyMaterialDesign/Core/TextInputTarget.h"
 #include "TinyMaterialDesign/Core/Widget.h"
 
 namespace tinymd {
 
 /**
- * @brief Multi-line, word-wrapped text input box.
+ * @brief Multi-line, word-wrapped text input box with scrolling.
  *
  * TextArea is TextField's multi-line counterpart - same focus/keyboard
  * wiring, same TextInputTarget contract (see Core/TextInputTarget.h and
@@ -21,16 +21,10 @@ namespace tinymd {
  * here - Done always finishes editing and closes the keyboard, exactly like
  * TextField, via the same handleEnter()/submit() pair.
  *
- * Wrapping reuses TinyGPU's existing LinePrinter (the same one Card and
- * Dialog use for their body text) rather than reimplementing word wrap. The
- * blinking end-of-text cursor uses LinePrinter::cursorX()/cursorY(), which
- * report where the next character would land after a print() call.
- *
- * Known limitation: no scrolling - text past the box's bottom edge is
- * cropped to the box (see ISurface::pushClipRect()) rather than scrolling
- * into view, and the cursor is skipped once it would fall past the box for
- * the same reason. Fine for a few lines of notes; not a substitute for a
- * real multi-page, scrollable text editor.
+ * The text is wrapped at word boundaries to the width of the box. When the
+ * text is taller than the box it scrolls: a drag over the box moves it, and
+ * while typing the end of the text is kept in view. The text is drawn clipped
+ * to the box.
  */
 template <typename RGB_T = TINYMD_DEFAULT_RGB_T>
 class TextArea : public Widget<RGB_T>, public TextInputTarget {
@@ -56,10 +50,22 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
   const std::string& text() const { return text_; }
   void setText(const char* text) {
     text_ = text != nullptr ? text : "";
+    scrollY_ = 0;
     if (onChange) onChange(text_);
   }
   /// 0 (the default) means unlimited.
   void setMaxLength(size_t maxLength) { maxLength_ = maxLength; }
+
+  /// Colours of the entered text and of the placeholder (default: the theme's
+  /// onSurface and onSurfaceVariant), as for TextField::setColors().
+  void setColors(RGB_T text, RGB_T placeholder) {
+    textColor_ = text;
+    placeholderColor_ = placeholder;
+    hasColors_ = true;
+  }
+
+  /// Vertical position of the text in pixels (0 = the first line)
+  int32_t scrollOffset() const { return scrollY_; }
 
   bool focused() const { return focused_; }
   void focus() {
@@ -93,6 +99,9 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
     return true;
   }
 
+  /// A drag over the box scrolls the text, so the box is draggable.
+  bool isDraggable() const override { return true; }
+
   void draw(tinygpu::ISurface<RGB_T>& target) override {
     const int32_t labelHeight = hasLabel_ ? 14 : 0;
     const Bounds box(this->bounds.x, this->bounds.y + labelHeight, this->bounds.w,
@@ -117,45 +126,50 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
     const bool showPlaceholder = text_.empty() && !focused_ && !placeholder_.empty();
     const std::string& shown = showPlaceholder ? placeholder_ : text_;
 
-    // Defaults for an empty field - overwritten below once the printer
-    // actually runs, so the cursor still has somewhere sensible to sit.
-    size_t cursorX = toPx(box.x + pad);
-    size_t cursorY = toPx(box.y + pad);
+    tinygpu::IFont<RGB_T>& font = *this->theme().typography.body;
+    const int32_t lineH = static_cast<int32_t>(font.getHeight(1));
+    const int32_t viewW = box.w - 2 * pad;
+    const int32_t viewH = box.h - 2 * pad;
+    lines_ = wrap(shown, viewW, font);
+    if (lines_.empty()) lines_.emplace_back();
 
-    if (!shown.empty()) {
-      const int32_t rightEdge = box.right() - pad;
-      const size_t rightBorder = rightEdge < static_cast<int32_t>(target.width())
-                                    ? target.width() - static_cast<size_t>(rightEdge)
-                                    : 0;
+    // the scroll range; while typing the end of the text stays in view
+    const int32_t contentH = static_cast<int32_t>(lines_.size()) * lineH;
+    maxScroll_ = contentH > viewH ? contentH - viewH : 0;
+    if (focused_ && !showPlaceholder && contentH - scrollY_ > viewH) scrollY_ = contentH - viewH;
+    clampScroll();
 
-      // Crops text past the box's bottom edge to the box (see the class
-      // comment) instead of letting it draw past it - LinePrinter/drawText
-      // have no notion of "this widget's own box", only the whole surface,
-      // so without this a long enough value would spill below the box.
-      target.pushClipRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h));
-      tinygpu::LinePrinter<RGB_T> printer;
-      printer.setFont(*this->theme().typography.body);
-      printer.setTarget(target);
-      printer.setColor(showPlaceholder ? this->theme().colors.onSurfaceVariant : this->theme().colors.onSurface);
-      printer.setTopBorder(toPx(box.y + pad));
-      printer.setLeftBorder(toPx(box.x + pad));
-      printer.setRightBorder(rightBorder);
-      printer.print(shown.c_str());
-      cursorX = printer.cursorX();
-      cursorY = printer.cursorY();
-      target.popClipRect();
+    const RGB_T textColor = showPlaceholder ? (hasColors_ ? placeholderColor_ : this->theme().colors.onSurfaceVariant)
+                                            : (hasColors_ ? textColor_ : this->theme().colors.onSurface);
+    target.pushClipRect(toPx(box.x), toPx(box.y), toPx(box.w), toPx(box.h));
+    for (size_t i = 0; i < lines_.size(); i++) {
+      const int32_t y = box.y + pad + static_cast<int32_t>(i) * lineH - scrollY_;
+      font.drawText(target, static_cast<int16_t>(box.x + pad), static_cast<int16_t>(y), lines_[i].c_str(),
+                    textColor, this->theme().colors.surface, false);
     }
+    target.popClipRect();
 
+    // the caret after the last character
     if (focused_ && cursorVisible_ && !showPlaceholder) {
-      const size_t lineHeight = this->theme().typography.body->getHeight(1);
-      if (cursorY + lineHeight <= toPx(box.bottom())) {
-        target.drawLine(cursorX + 1, cursorY, cursorX + 1, cursorY + lineHeight,
+      const int32_t caretY = box.y + pad + static_cast<int32_t>(lines_.size() - 1) * lineH - scrollY_;
+      const int32_t caretX = box.x + pad + static_cast<int32_t>(font.measureTextWidth(lines_.back().c_str()));
+      if (caretY >= box.y && caretY + lineH <= box.bottom()) {
+        target.drawLine(static_cast<size_t>(caretX + 1), static_cast<size_t>(caretY),
+                        static_cast<size_t>(caretX + 1), static_cast<size_t>(caretY + lineH),
                         this->theme().colors.primary);
       }
     }
   }
 
   bool onGesture(const tinygpu::GestureEvent& event) override {
+    if (event.type == tinygpu::GestureType::kPan || event.type == tinygpu::GestureType::kScroll) {
+      // the text follows the finger: a drag up moves the text up
+      if (event.phase == tinygpu::GesturePhase::kChanged) {
+        scrollY_ -= event.stepDeltaY;
+        clampScroll();
+      }
+      return true;
+    }
     if (!isTapGesture(event.type)) return false;
     focus();
     return true;
@@ -185,6 +199,63 @@ class TextArea : public Widget<RGB_T>, public TextInputTarget {
   bool focused_ = false;
   bool cursorVisible_ = true;
   uint32_t lastBlinkMs_ = 0;
+  bool hasColors_ = false;
+  RGB_T textColor_{};
+  RGB_T placeholderColor_{};
+
+  // scrolling: the wrapped lines of the last draw, and how far they are scrolled
+  std::vector<std::string> lines_;
+  int32_t scrollY_ = 0;
+  int32_t maxScroll_ = 0;
+
+  void clampScroll() {
+    if (scrollY_ < 0) scrollY_ = 0;
+    if (scrollY_ > maxScroll_) scrollY_ = maxScroll_;
+  }
+
+  /// Breaks the text into lines no wider than maxW: at spaces, and at newlines.
+  /// A word wider than a line is split between characters.
+  static std::vector<std::string> wrap(const std::string& text, int32_t maxW,
+                                       tinygpu::IFont<RGB_T>& font) {
+    auto fits = [&](const std::string& s) {
+      return static_cast<int32_t>(font.measureTextWidth(s.c_str())) <= maxW;
+    };
+    std::vector<std::string> out;
+    std::string current;
+    std::string word;
+    for (size_t i = 0; i <= text.size(); i++) {
+      const char c = i < text.size() ? text[i] : '\n';
+      if (c != ' ' && c != '\n') {
+        word += c;
+        continue;
+      }
+      if (!word.empty()) {
+        const std::string sep = current.empty() ? "" : " ";
+        if (fits(current + sep + word)) {
+          current += sep + word;
+        } else {
+          if (!current.empty()) {
+            out.push_back(current);
+            current.clear();
+          }
+          current = word;
+          while (!fits(current) && current.size() > 1) {
+            size_t k = 1;
+            while (k < current.size() && fits(current.substr(0, k + 1))) k++;
+            out.push_back(current.substr(0, k));
+            current = current.substr(k);
+          }
+        }
+        word.clear();
+      }
+      if (c == '\n') {
+        out.push_back(current);
+        current.clear();
+      }
+    }
+    if (!current.empty()) out.push_back(current);
+    return out;
+  }
 };
 
 using TextAreaRGB565 = TextArea<tinygpu::RGB565>;
