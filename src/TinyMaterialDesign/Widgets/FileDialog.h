@@ -147,12 +147,19 @@ class FileDialog {
       if (a.isDirectory != b.isDirectory) return a.isDirectory;
       return lowerCase(a.name) < lowerCase(b.name);
     });
-    // folders first, then the files of the filter
+    // folders first, then the files of the filter; each group shows at most kMaxRows
+    // entries, and the rows say how many were left out
     for (int pass = 0; pass < 2; ++pass) {
+      size_t shown = 0;
+      size_t hidden = 0;
       for (const FileEntry& e : entries) {
-        if (rows_.size() >= kMaxRows) break;
         if ((pass == 0) != e.isDirectory) continue;
         if (!e.isDirectory && !matches(e.name)) continue;
+        if (shown >= kMaxRows) {
+          ++hidden;
+          continue;
+        }
+        ++shown;
         const std::string name = e.name;
         if (e.isDirectory) {
           addRow(y, name + "/", [this, name]() { requestFolder(join(dir_, name)); });
@@ -163,8 +170,13 @@ class FileDialog {
         }
         y += kRowHeight;
       }
+      if (hidden > 0) {
+        addRow(y, std::to_string(hidden) + " more not shown", nullptr);
+        rows_.back()->enabled = false;
+        y += kRowHeight;
+      }
     }
-    if (rows_.empty()) {
+    if (rows_.empty() || (rows_.size() == 1 && dir_ != "/")) {
       addRow(y, "No files", nullptr);
       rows_.back()->enabled = false;
     }
@@ -179,14 +191,19 @@ class FileDialog {
     rows_.push_back(std::move(row));
   }
 
+  /// True if the name ends with one of the extensions (empty entries are ignored;
+  /// an empty filter matches everything).
   bool matches(const std::string& name) const {
-    if (extensions_.empty()) return true;
+    if (extensions_.find_first_not_of(", ") == std::string::npos) return true;
     size_t start = 0;
     while (start <= extensions_.size()) {
       size_t comma = extensions_.find(',', start);
       if (comma == std::string::npos) comma = extensions_.size();
       const std::string ext = extensions_.substr(start, comma - start);
-      if (name.size() >= ext.size() && name.compare(name.size() - ext.size(), ext.size(), ext) == 0) return true;
+      if (!ext.empty() && name.size() >= ext.size() &&
+          name.compare(name.size() - ext.size(), ext.size(), ext) == 0) {
+        return true;
+      }
       start = comma + 1;
     }
     return false;
