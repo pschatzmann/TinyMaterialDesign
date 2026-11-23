@@ -35,6 +35,9 @@ for touch interaction.
   rolling "newest at the right" mode
 - Screenshots: `App::saveScreenshot()` writes the screen as a BMP image to
   any `Print` (SD card file, Serial, ...)
+- Runs on microcontrollers (Arduino, ESP-IDF) and on the desktop: the
+  examples build with CMake and run in an SDL window (`LCDBoardDesktopSDL`),
+  so you can develop and test a UI before flashing hardware
 
 ## Documentation
 - [Tutorial](https://github.com/pschatzmann/TinyMaterialDesign/wiki/TinyMaterialDesign-Tutorial)
