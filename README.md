@@ -13,7 +13,7 @@ draws them with [TinyGPU](https://github.com/pschatzmann/TinyGPU) - using
 TinyGPU's surfaces for drawing and its `TouchDriver`/`GestureDetector` stack
 for touch interaction.
 
-![alt text](image.png)
+![alt text](docs/images/image.png)
 
 ## Features
 
